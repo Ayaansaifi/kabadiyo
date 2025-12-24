@@ -1,19 +1,15 @@
 /**
- * File Upload API
- * ---------------
+ * File Upload API - Vercel Blob Storage
+ * --------------------------------------
  * POST: Upload images for stories, profiles, and covers.
  * 
  * Supported types: JPEG, PNG, GIF, WebP
  * Max size: 5MB per file
- * Storage: /public/uploads/{type}/
- * 
- * Uses legacy cookie auth for compatibility with current login system.
+ * Storage: Vercel Blob Storage (cloud)
  */
 import { NextRequest, NextResponse } from "next/server"
-import { writeFile, mkdir } from "fs/promises"
-import path from "path"
+import { put } from "@vercel/blob"
 import { cookies } from "next/headers"
-import { db } from "@/lib/db"
 
 // Get current user from cookies (legacy auth)
 async function getCurrentUser() {
@@ -49,27 +45,19 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "File too large. Max 5MB allowed." }, { status: 400 })
         }
 
-        // Create upload directory if it doesn't exist
-        const uploadDir = path.join(process.cwd(), "public", "uploads", type)
-        await mkdir(uploadDir, { recursive: true })
-
         // Generate unique filename
         const ext = file.name.split(".").pop() || "jpg"
-        const filename = `${user.id}-${Date.now()}.${ext}`
+        const filename = `${type}/${user.id}-${Date.now()}.${ext}`
 
-        // Save file
-        const bytes = await file.arrayBuffer()
-        const buffer = Buffer.from(bytes)
-        const filepath = path.join(uploadDir, filename)
-        await writeFile(filepath, buffer)
-
-        // Return public URL
-        const url = `/uploads/${type}/${filename}`
+        // Upload to Vercel Blob Storage
+        const blob = await put(filename, file, {
+            access: 'public',
+        })
 
         return NextResponse.json({
             success: true,
-            url,
-            filename,
+            url: blob.url,
+            filename: blob.pathname,
             size: file.size,
             type: file.type
         })
