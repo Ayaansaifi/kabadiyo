@@ -15,9 +15,6 @@ const nextConfig: NextConfig = {
   compress: true, // Enable Gzip compression
   poweredByHeader: false, // Security: Remove X-Powered-By
   reactStrictMode: true,
-  eslint: {
-    ignoreDuringBuilds: true, // Skip ESLint during Vercel builds
-  },
   typescript: {
     ignoreBuildErrors: true, // Skip TS errors during Vercel builds
   },
