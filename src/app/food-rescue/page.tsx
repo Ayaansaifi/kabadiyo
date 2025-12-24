@@ -112,9 +112,9 @@ export default function FoodRescuePage() {
                             <CardContent className="p-6">
                                 <h3 className="text-xl font-bold mb-2">Urgent Pickup?</h3>
                                 <p className="mb-4 text-orange-100">Call our 24/7 Food Rescue Helpline</p>
-                                <a href="tel:9876543210" className="inline-flex items-center gap-2 bg-white text-orange-600 px-6 py-3 rounded-lg font-bold hover:bg-orange-50 transition-colors">
+                                <a href="tel:8586040076" className="inline-flex items-center gap-2 bg-white text-orange-600 px-6 py-3 rounded-lg font-bold hover:bg-orange-50 transition-colors">
                                     <Phone className="h-5 w-5" />
-                                    Call 98765-43210
+                                    Call 85860-40076
                                 </a>
                             </CardContent>
                         </Card>
