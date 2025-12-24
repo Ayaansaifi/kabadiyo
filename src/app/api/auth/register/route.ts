@@ -86,8 +86,17 @@ export async function POST(req: Request) {
             email: user.email,
             user: { id: user.id, name: user.name, role: user.role }
         })
-    } catch (error) {
-        console.error("Registration error:", error)
-        return NextResponse.json({ error: "Registration failed" }, { status: 500 })
+    } catch (error: any) {
+        console.error("Registration error details:", {
+            message: error.message,
+            code: error.code,
+            meta: error.meta,
+            stack: error.stack
+        })
+        return NextResponse.json({
+            error: "Registration failed",
+            details: error.message,
+            code: error.code
+        }, { status: 500 })
     }
 }
