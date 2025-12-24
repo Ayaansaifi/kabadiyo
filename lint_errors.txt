@@ -1,0 +1,114 @@
+
+File: E:\edrivekabadi\kabadiwala\src\app\admin\content\reviews\page.tsx
+  Line 76: [react/no-unescaped-entities] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+  Line 76: [react/no-unescaped-entities] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+
+File: E:\edrivekabadi\kabadiwala\src\app\admin\insights\page.tsx
+  Line 14: [@typescript-eslint/no-explicit-any] Unexpected any. Specify a different type.
+
+File: E:\edrivekabadi\kabadiwala\src\app\admin\login\page.tsx
+  Line 36: [@typescript-eslint/no-explicit-any] Unexpected any. Specify a different type.
+
+File: E:\edrivekabadi\kabadiwala\src\app\admin\reports\page.tsx
+  Line 74: [react/no-unescaped-entities] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+  Line 74: [react/no-unescaped-entities] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+
+File: E:\edrivekabadi\kabadiwala\src\app\admin\users\user-actions.tsx
+  Line 29: [@typescript-eslint/no-explicit-any] Unexpected any. Specify a different type.
+
+File: E:\edrivekabadi\kabadiwala\src\app\admin\users\user-detail-sheet.tsx
+  Line 16: [@typescript-eslint/no-explicit-any] Unexpected any. Specify a different type.
+
+File: E:\edrivekabadi\kabadiwala\src\app\api\admin\security\route.ts
+  Line 67: [prefer-const] 'updateData' is never reassigned. Use 'const' instead.
+  Line 67: [@typescript-eslint/no-explicit-any] Unexpected any. Specify a different type.
+
+File: E:\edrivekabadi\kabadiwala\src\app\api\kabadiwala\inventory\route.ts
+  Line 29: [@typescript-eslint/ban-ts-comment] Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free.
+
+File: E:\edrivekabadi\kabadiwala\src\app\api\kabadiwala\status\route.ts
+  Line 28: [@typescript-eslint/ban-ts-comment] Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free.
+
+File: E:\edrivekabadi\kabadiwala\src\app\api\profile\route.ts
+  Line 75: [@typescript-eslint/no-explicit-any] Unexpected any. Specify a different type.
+
+File: E:\edrivekabadi\kabadiwala\src\app\api\stories\route.ts
+  Line 71: [@typescript-eslint/no-explicit-any] Unexpected any. Specify a different type.
+
+File: E:\edrivekabadi\kabadiwala\src\app\food-rescue\page.tsx
+  Line 38: [react/no-unescaped-entities] `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.
+  Line 56: [react/no-unescaped-entities] `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.
+
+File: E:\edrivekabadi\kabadiwala\src\app\page.tsx
+  Line 195: [@typescript-eslint/no-explicit-any] Unexpected any. Specify a different type.
+
+File: E:\edrivekabadi\kabadiwala\src\app\profile\page.tsx
+  Line 715: [react/no-unescaped-entities] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+  Line 715: [react/no-unescaped-entities] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+
+File: E:\edrivekabadi\kabadiwala\src\app\rewards\page.tsx
+  Line 175: [react/no-unescaped-entities] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+  Line 175: [react/no-unescaped-entities] `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.
+
+File: E:\edrivekabadi\kabadiwala\src\app\settings\page.tsx
+  Line 25: [react-hooks/set-state-in-effect] Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\edrivekabadi\kabadiwala\src\app\settings\page.tsx:25:9
+  23 |     // Ensure hydration match
+  24 |     useEffect(() => {
+> 25 |         setMounted(true)
+     |         ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  26 |     }, [])
+  27 |
+  28 |     const handleSave = () => {
+
+File: E:\edrivekabadi\kabadiwala\src\components\dashboard\DealerEarningsChart.tsx
+  Line 83: [@typescript-eslint/no-explicit-any] Unexpected any. Specify a different type.
+
+File: E:\edrivekabadi\kabadiwala\src\components\dashboard\ReferralWidget.tsx
+  Line 12: [react-hooks/purity] Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+E:\edrivekabadi\kabadiwala\src\components\dashboard\ReferralWidget.tsx:12:38
+  10 | export function ReferralWidget() {
+  11 |     const [copied, setCopied] = useState(false)
+> 12 |     const referralCode = "KABADI-" + Math.random().toString(36).substring(2, 7).toUpperCase()
+     |                                      ^^^^^^^^^^^^^ Cannot call impure function
+  13 |
+  14 |     const handleCopy = () => {
+  15 |         navigator.clipboard.writeText(referralCode)
+
+File: E:\edrivekabadi\kabadiwala\src\components\profile\EcoImpactVisualizer.tsx
+  Line 31: [react/no-unescaped-entities] `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.
+
+File: E:\edrivekabadi\kabadiwala\src\components\stories\StoryViewer.tsx
+  Line 129: [react-hooks/preserve-manual-memoization] Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `currentGroup.stories.length`, but the source dependencies were [currentStoryIndex, currentGroupIndex, currentGroup?.stories.length, storyGroups.length, onClose]. Inferred different dependency than source.
+
+E:\edrivekabadi\kabadiwala\src\components\stories\StoryViewer.tsx:129:39
+  127 |
+  128 |     // Navigate to next story
+> 129 |     const goToNextStory = useCallback(() => {
+      |                                       ^^^^^^^
+> 130 |         if (currentStoryIndex < currentGroup.stories.length - 1) {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 131 |             setCurrentStoryIndex(prev => prev + 1)
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 144 |         }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 145 |     }, [currentStoryIndex, currentGroupIndex, currentGroup?.stories.length, storyGroups.length, onClose])
+      | ^^^^^^ Could not preserve existing manual memoization
+  146 |
+  147 |     // Progress timer
+  148 |     useEffect(() => {
+
+Total Errors: 26

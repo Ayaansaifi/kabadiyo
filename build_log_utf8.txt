@@ -1,0 +1,25 @@
+
+> kabadiwala@0.1.0 build
+> next build
+
+   ▲ Next.js 15.1.0
+   - Environments: .env
+
+   Creating an optimized production build ...
+node:internal/buffer:963
+class FastBuffer extends Uint8Array {}
+^
+
+RangeError: Array buffer allocation failed
+    at new ArrayBuffer (<anonymous>)
+    at new Uint8Array (<anonymous>)
+    at new FastBuffer (node:internal/buffer:963:1)
+    at createUnsafeBuffer (node:internal/buffer:1107:12)
+    at Buffer.allocUnsafeSlow (node:buffer:431:10)
+    at read (E:\edrivekabadi\kabadiwala\node_modules\next\dist\compiled\webpack\bundle5.js:28:1253609)
+    at E:\edrivekabadi\kabadiwala\node_modules\next\dist\compiled\webpack\bundle5.js:28:1254024
+    at E:\edrivekabadi\kabadiwala\node_modules\next\dist\compiled\webpack\bundle5.js:1:268393
+    at FSReqCallback.oncomplete (node:fs:180:23)
+
+Node.js v25.2.0
+Static worker exited with code: 1 and signal: null

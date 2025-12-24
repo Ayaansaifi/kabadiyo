@@ -1,0 +1,267 @@
+
+> kabadiwala@0.1.0 build
+> next build
+
+   ▲ Next.js 15.1.0
+   - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+
+Failed to compile.
+
+./src/app/admin/orders/order-admin-actions.tsx
+17:46  Warning: 'currentStatus' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/admin/page.tsx
+3:36  Warning: 'Coins' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/admin/recover/page.tsx
+8:46  Warning: 'CardFooter' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/admin/users/user-detail-sheet.tsx
+16:11  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/admin/content/reviews/[id]/route.ts
+22:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/admin/content/stories/[id]/route.ts
+22:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/admin/kabadiwalas/[id]/verify/route.ts
+35:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/admin/orders/[id]/force-update/route.ts
+32:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/admin/reports/[id]/resolve/route.ts
+65:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/admin/security/route.ts
+67:35  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/admin/users/[id]/route.ts
+29:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+59:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/auth/verify/route.ts
+2:10  Warning: 'db' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/chat/message/[messageId]/route.ts
+41:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+90:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/kabadiwala/[id]/route.ts
+2:10  Warning: 'cookies' is defined but never used.  @typescript-eslint/no-unused-vars
+40:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/orders/route.ts
+54:27  Warning: 'req' is defined but never used.  @typescript-eslint/no-unused-vars
+86:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/orders/[id]/route.ts
+69:38  Warning: 'cancelReason' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/profile/addresses/route.ts
+56:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/profile/addresses/[id]/default/route.ts
+32:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/profile/addresses/[id]/route.ts
+30:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/profile/favorites/[id]/route.ts
+22:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/profile/route.ts
+37:17  Warning: 'password' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+54:39  Warning: 'notificationsEnabled' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+54:61  Warning: 'emailNotifications' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+54:81  Warning: 'smsNotifications' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+75:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/setup/admin/route.ts
+23:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/setup/admin-password/route.ts
+42:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/stories/route.ts
+71:18  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/api/upload/route.ts
+16:10  Warning: 'db' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/book/[kabadiwalaId]/page.tsx
+65:34  Warning: 'e' is defined but never used.  @typescript-eslint/no-unused-vars
+68:22  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+156:18  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/chat/[id]/page.tsx
+72:12  Warning: 'editContent' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/dashboard/DashboardClient.tsx
+5:52  Warning: 'CardDescription' is defined but never used.  @typescript-eslint/no-unused-vars
+10:57  Warning: 'Leaf' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/favorites/page.tsx
+4:29  Warning: 'CardHeader' is defined but never used.  @typescript-eslint/no-unused-vars
+4:41  Warning: 'CardTitle' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/food-rescue/page.tsx
+10:17  Warning: 'Utensils' is defined but never used.  @typescript-eslint/no-unused-vars
+10:27  Warning: 'Truck' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/kabadiwala/dashboard/page.tsx
+5:52  Warning: 'CardDescription' is defined but never used.  @typescript-eslint/no-unused-vars
+10:48  Warning: 'XCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+11:17  Warning: 'Users' is defined but never used.  @typescript-eslint/no-unused-vars
+12:5  Warning: 'Settings' is defined but never used.  @typescript-eslint/no-unused-vars
+12:15  Warning: 'Shield' is defined but never used.  @typescript-eslint/no-unused-vars
+77:11  Warning: 'cancelledOrders' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/kabadiwala/profile/page.tsx
+15:26  Warning: 'MapPin' is defined but never used.  @typescript-eslint/no-unused-vars
+16:5  Warning: 'TrendingUp' is defined but never used.  @typescript-eslint/no-unused-vars
+82:8  Warning: React Hook useEffect has a missing dependency: 'fetchProfile'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+211:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/market/page.tsx
+20:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/orders/page.tsx
+4:10  Warning: 'Tabs' is defined but never used.  @typescript-eslint/no-unused-vars
+4:16  Warning: 'TabsContent' is defined but never used.  @typescript-eslint/no-unused-vars
+4:29  Warning: 'TabsList' is defined but never used.  @typescript-eslint/no-unused-vars
+4:39  Warning: 'TabsTrigger' is defined but never used.  @typescript-eslint/no-unused-vars
+5:29  Warning: 'CardHeader' is defined but never used.  @typescript-eslint/no-unused-vars
+5:41  Warning: 'CardTitle' is defined but never used.  @typescript-eslint/no-unused-vars
+6:10  Warning: 'Badge' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/page.tsx
+195:41  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/app/profile/page.tsx
+23:90  Warning: 'Leaf' is defined but never used.  @typescript-eslint/no-unused-vars
+23:96  Warning: 'Recycle' is defined but never used.  @typescript-eslint/no-unused-vars
+83:8  Warning: React Hook useEffect has a missing dependency: 'fetchProfile'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+330:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+463:45  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/app/register/page.tsx
+10:16  Warning: 'TabsContent' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/reviews/[orderId]/page.tsx
+40:8  Warning: React Hook useEffect has a missing dependency: 'fetchOrder'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/app/rewards/page.tsx
+7:31  Warning: 'CheckCircle' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/settings/page.tsx
+11:76  Warning: 'Maximize2' is defined but never used.  @typescript-eslint/no-unused-vars
+11:87  Warning: 'Trash2' is defined but never used.  @typescript-eslint/no-unused-vars
+25:9  Error: Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\edrivekabadi\kabadiwala\src\app\settings\page.tsx:25:9
+  23 |     // Ensure hydration match
+  24 |     useEffect(() => {
+> 25 |         setMounted(true)
+     |         ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  26 |         // eslint-disable-next-line react-hooks/set-state-in-effect
+  27 |     }, [])
+  28 |  react-hooks/set-state-in-effect
+26:9  Warning: Unused eslint-disable directive (no problems were reported from 'react-hooks/set-state-in-effect').
+
+./src/app/verify/page.tsx
+20:18  Warning: 'setType' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/chat/QuickChatSheet.tsx
+3:39  Warning: 'useCallback' is defined but never used.  @typescript-eslint/no-unused-vars
+8:10  Warning: 'Badge' is defined but never used.  @typescript-eslint/no-unused-vars
+10:40  Warning: 'X' is defined but never used.  @typescript-eslint/no-unused-vars
+10:43  Warning: 'Check' is defined but never used.  @typescript-eslint/no-unused-vars
+11:18  Warning: 'AnimatePresence' is defined but never used.  @typescript-eslint/no-unused-vars
+34:5  Warning: 'userName' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/dashboard/BusinessStatus.tsx
+5:10  Warning: 'Label' is defined but never used.  @typescript-eslint/no-unused-vars
+6:10  Warning: 'Badge' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/dashboard/DealerEarningsChart.tsx
+83:28  Warning: 'variant' is defined but never used.  @typescript-eslint/no-unused-vars
+83:50  Error: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
+
+./src/components/dashboard/InventoryManager.tsx
+6:10  Warning: 'Input' is defined but never used.  @typescript-eslint/no-unused-vars
+8:10  Warning: 'Package' is defined but never used.  @typescript-eslint/no-unused-vars
+18:54  Warning: 'kabadiwalaId' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/dashboard/RateManager.tsx
+9:10  Warning: 'Switch' is defined but never used.  @typescript-eslint/no-unused-vars
+10:19  Warning: 'Save' is defined but never used.  @typescript-eslint/no-unused-vars
+34:45  Warning: 'kabadiwalaId' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/dashboard/ReferralWidget.tsx
+6:10  Warning: 'Input' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/favorites/FavoriteCard.tsx
+72:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/kabadiwala-card.tsx
+4:46  Warning: 'Phone' is defined but never used.  @typescript-eslint/no-unused-vars
+49:21  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/orders/OrderCard.tsx
+6:29  Warning: 'CardHeader' is defined but never used.  @typescript-eslint/no-unused-vars
+6:41  Warning: 'CardTitle' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/stories/StoriesBar.tsx
+149:34  Warning: 'idx' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/stories/StoryCreator.tsx
+16:62  Warning: 'Camera' is defined but never used.  @typescript-eslint/no-unused-vars
+306:49  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/stories/StoryRing.tsx
+67:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/stories/StoryViewer.tsx
+129:39  Error: Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `currentGroup.stories.length`, but the source dependencies were [currentStoryIndex, currentGroupIndex, currentGroup?.stories.length, storyGroups.length, onClose]. Inferred different dependency than source.
+
+E:\edrivekabadi\kabadiwala\src\components\stories\StoryViewer.tsx:129:39
+  127 |
+  128 |     // Navigate to next story
+> 129 |     const goToNextStory = useCallback(() => {
+      |                                       ^^^^^^^
+> 130 |         if (currentStoryIndex < currentGroup.stories.length - 1) {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 131 |             setCurrentStoryIndex(prev => prev + 1)
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 144 |         }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 145 |     }, [currentStoryIndex, currentGroupIndex, currentGroup?.stories.length, storyGroups.length, onClose])
+      | ^^^^^^ Could not preserve existing manual memoization
+  146 |
+  147 |     // Progress timer
+  148 |     useEffect(() => {  react-hooks/preserve-manual-memoization
+189:18  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+280:29  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+366:61  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/user-tracker.tsx
+28:17  Warning: 'locAccess' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+34:22  Warning: '_e' is defined but never used.  @typescript-eslint/no-unused-vars
+51:30  Warning: '_error' is defined but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

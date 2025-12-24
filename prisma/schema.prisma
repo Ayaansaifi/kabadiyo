@@ -1,0 +1,313 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Role: USER, AGENT, KABADIWALA, ADMIN (stored as String in SQLite)
+// OrderStatus: REQUESTED, ACCEPTED, COMPLETED, CANCELLED (stored as String in SQLite)
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  phone         String    @unique
+  email         String?   @unique
+  password      String
+  role          String    @default("USER")
+  image         String?   // Profile photo
+  address       String?
+  latitude      Float?
+  longitude     Float?
+  cameraAccess  Boolean   @default(false)
+  locationAccess Boolean  @default(false)
+  lastActive    DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  emailVerified DateTime?
+  phoneVerified DateTime?
+
+  // Relations
+  sellerProfile     SellerProfile?
+  kabadiwalaProfile KabadiwalaProfile?
+  
+  // As Seller
+  sentOrders        Order[] @relation("SellerOrders")
+  reviewsGiven      Review[]
+  savedAddresses    Address[]
+  favorites         Favorite[]
+
+  // As Buyer (Kabadiwala)
+  receivedOrders    Order[] @relation("BuyerOrders")
+  
+  // Chat
+  chatsAsSeller     Chat[] @relation("SellerChats")
+  chatsAsBuyer      Chat[] @relation("BuyerChats")
+  messages          Message[]
+  reportsMade       MessageReport[] @relation("Reporter")
+  stories           Story[]
+  pushSubscriptions PushSubscription[]
+  
+  // Gamification
+  points            Int          @default(0)
+  redemptions       Redemption[]
+}
+
+// NEW: Seller Profile
+model SellerProfile {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio           String?
+  totalOrders   Int       @default(0)
+  totalSpent    Float     @default(0)
+}
+
+// NEW: Saved Addresses for Sellers
+model Address {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String   // "Home", "Office", etc.
+  address   String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// NEW: Favorite Kabadiwalas
+model Favorite {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kabadiwalaId  String
+  createdAt     DateTime @default(now())
+
+  @@unique([userId, kabadiwalaId])
+}
+
+// ENHANCED: Kabadiwala Profile
+model KabadiwalaProfile {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName  String
+  coverImage    String?   // Cover photo for profile
+  bio           String?   // About the business
+  serviceArea   String?
+  rating        Float     @default(0)
+  totalReviews  Int       @default(0)
+  totalPickups  Int       @default(0)
+  isVerified    Boolean   @default(false)
+  verificationDoc String? // Uploaded ID for verification
+  
+  // Service Hours (JSON: {"mon": "9:00-18:00", "tue": "9:00-18:00", ...})
+  serviceHours  String?
+  
+  // Pricing/Rates (JSON: {"iron": 30, "plastic": 15, "paper": 10})
+  rates         String?
+  
+  // Response time in minutes (avg)
+  avgResponseTime Int     @default(0)
+
+  // NEW: Inventory Management (JSON: {"iron": 50, "plastic": 20})
+  inventory     String?
+
+  // NEW: Business Status
+  isAvailable   Boolean   @default(true)
+
+  @@index([serviceArea])
+  @@index([rating])
+  @@index([isVerified])
+}
+
+model Chat {
+  id            String    @id @default(cuid())
+  sellerId      String
+  seller        User      @relation("SellerChats", fields: [sellerId], references: [id], onDelete: Cascade)
+  buyerId       String
+  buyer         User      @relation("BuyerChats", fields: [buyerId], references: [id], onDelete: Cascade)
+  lastMessageAt DateTime  @default(now())
+  messages      Message[]
+
+  @@unique([sellerId, buyerId])
+}
+
+// ENHANCED: Message with read receipts and types
+model Message {
+  id          String   @id @default(cuid())
+  chatId      String
+  chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  senderId    String
+  sender      User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content     String
+  messageType String   @default("TEXT") // TEXT, IMAGE, QUICK_REPLY
+  imageUrl    String?  // For image messages
+  createdAt   DateTime @default(now())
+  isRead      Boolean  @default(false)
+  readAt      DateTime? // When message was read
+  isReported  Boolean  @default(false)
+  
+  isDeleted   Boolean  @default(false)
+  deletedAt   DateTime?
+  editedAt    DateTime?
+
+  reports     MessageReport[]
+}
+
+// NEW: Message Reports for moderation
+model MessageReport {
+  id          String   @id @default(cuid())
+  messageId   String
+  message     Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  reporterId  String
+  reporter    User     @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reason      String   // "spam", "abuse", "inappropriate"
+  createdAt   DateTime @default(now())
+  isResolved  Boolean  @default(false)
+}
+
+model Order {
+  id          String    @id @default(cuid())
+  sellerId    String
+  seller      User      @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: Cascade)
+  buyerId     String
+  buyer       User      @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: Cascade)
+  status      String    @default("REQUESTED")
+  totalAmount Float?
+  pickupDate  DateTime?
+  address     String
+  items       String?     // JSON string of items e.g. [{"type": "iron", "weight": 10}]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  review      Review?
+  
+  @@index([sellerId])
+  @@index([buyerId])
+  @@index([status])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  orderId    String   @unique
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  rating     Int      // 1-5
+  comment    String?
+  reviewerId String
+  reviewer   User     @relation(fields: [reviewerId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
+
+// NEW: Rate Limiting tracking
+model RateLimit {
+  id        String   @id @default(cuid())
+  ip        String
+  endpoint  String
+  count     Int      @default(1)
+  windowStart DateTime @default(now())
+  
+  @@unique([ip, endpoint])
+}
+
+// Story Model - Like WhatsApp Stories (24 hours auto-expire)
+model Story {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaUrl    String?     // Image URL for media stories
+  mediaType   String      @default("IMAGE") // IMAGE, TEXT
+  text        String?     // For text-based stories
+  bgColor     String?     // Background color for text stories
+  caption     String?     // Optional caption
+  createdAt   DateTime    @default(now())
+  expiresAt   DateTime    // Auto-calculated: 24 hours from creation
+  isActive    Boolean     @default(true)
+  views       StoryView[]
+}
+
+// Story View Tracking
+model StoryView {
+  id        String   @id @default(cuid())
+  storyId   String
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  viewerId  String
+  viewedAt  DateTime @default(now())
+
+  @@unique([storyId, viewerId])
+}
+
+// Push Notification Subscriptions
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// NEW: Verification Token
+model VerificationToken {
+  id          String   @id @default(cuid())
+  identifier  String   // phone or email
+  token       String
+  expires     DateTime
+  type        String   // "PHONE" or "EMAIL"
+  
+  createdAt   DateTime @default(now())
+  
+  @@unique([identifier, token])
+}
+
+// ADMIN SECURITY: Admin Configuration
+model AdminConfig {
+  id              String   @id @default(cuid())
+  adminPassword   String   // Hashed unique admin password
+  isSetup         Boolean  @default(false)
+  failedAttempts  Int      @default(0)
+  lockedUntil     DateTime?
+  lastAccess      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// ADMIN SECURITY: Access Log for Audit Trail
+model AdminAccessLog {
+  id          String   @id @default(cuid())
+  userId      String?  // User who attempted access
+  ipAddress   String
+  userAgent   String?
+  action      String   // "LOGIN_SUCCESS", "LOGIN_FAILED", "LOGOUT", "ACTION"
+  details     String?  // Additional details
+  createdAt   DateTime @default(now())
+}
+
+// GAMIFICATION & REWARDS
+model Reward {
+  id          String       @id @default(cuid())
+  title       String
+  description String
+  cost        Int          // Points required (e.g. 20000)
+  isActive    Boolean      @default(true)
+  redemptions Redemption[]
+}
+
+model Redemption {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rewardId  String
+  reward    Reward   @relation(fields: [rewardId], references: [id])
+  status    String   @default("PENDING") // PENDING, APPROVED, COMPLETED, REJECTED
+  createdAt DateTime @default(now())
+}
+
