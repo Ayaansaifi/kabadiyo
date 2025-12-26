@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import {
     User, MapPin, Phone, Mail, Camera, Edit2,
     Award, Star, Shield, TrendingUp, Calendar,
-    Share2, Leaf, Recycle, Medal, Zap
+    Share2, Leaf, Recycle, Medal, Zap, CheckCircle, XCircle, Clock
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -32,8 +32,17 @@ export default function ProfilePage() {
     // File Inputs
     const [uploading, setUploading] = useState(false)
 
-    // Gamification Stats (Static for now - API integration pending)
-    const points = 1250
+    // Data State
+    const [orders, setOrders] = useState<any[]>([])
+    const [stats, setStats] = useState({
+        totalEarnings: 0,
+        pendingOrders: 0,
+        completedOrders: 0,
+        totalWeight: 0
+    })
+
+    // Gamification Stats
+    const points = 1250 // Dynamic later
     const level = 3
     const impact = {
         treesSaved: 5,
@@ -48,17 +57,40 @@ export default function ProfilePage() {
 
     const fetchProfile = async () => {
         try {
-            const res = await fetch("/api/profile")
-            if (res.ok) {
-                const data = await res.json()
+            // Parallel Fetch: Profile + Orders
+            const [profileRes, ordersRes] = await Promise.all([
+                fetch("/api/profile"),
+                fetch("/api/orders")
+            ])
+
+            if (profileRes.ok) {
+                const data = await profileRes.json()
                 setName(data.name || session?.user?.name || "")
                 setAddress(data.address || "")
                 setProfileImage(data.image || session?.user?.image || "")
-                setCoverImage(data.coverImage || "") // Now supported
+                setCoverImage(data.coverImage || "")
+            }
+
+            if (ordersRes.ok) {
+                const ordersData = await ordersRes.json()
+                setOrders(ordersData)
+                calculateStats(ordersData)
             }
         } catch (e) {
-            console.error("Profile fetch failed", e)
+            console.error("Data fetch failed", e)
         }
+    }
+
+    const calculateStats = (ordersData: any[]) => {
+        const completed = ordersData.filter(o => o.status === "COMPLETED")
+        const earnings = completed.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0)
+
+        setStats({
+            totalEarnings: earnings,
+            pendingOrders: ordersData.filter(o => o.status === "REQUESTED" || o.status === "ACCEPTED").length,
+            completedOrders: completed.length,
+            totalWeight: completed.reduce((acc, curr) => acc + (curr.totalWeight || 0), 0)
+        })
     }
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: "profile" | "cover") => {
@@ -250,14 +282,14 @@ export default function ProfilePage() {
                     </CardContent>
                 </Card>
 
-                <Card>
+                <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 border-indigo-100 dark:border-indigo-900">
                     <CardContent className="pt-6 flex items-center gap-4">
-                        <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                            <TrendingUp className="h-6 w-6 text-blue-600" />
+                        <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-full">
+                            <TrendingUp className="h-6 w-6 text-indigo-600" />
                         </div>
                         <div>
-                            <p className="text-2xl font-bold">Top 5%</p>
-                            <p className="text-sm text-muted-foreground">Local Ranking</p>
+                            <p className="text-2xl font-bold">₹{stats.totalEarnings}</p>
+                            <p className="text-sm text-muted-foreground">Total Earnings</p>
                         </div>
                     </CardContent>
                 </Card>
@@ -376,26 +408,58 @@ export default function ProfilePage() {
                 <TabsContent value="activity">
                     <Card>
                         <CardHeader>
-                            <CardTitle>Recent Activity</CardTitle>
+                            <CardTitle>Ordering History</CardTitle>
+                            <CardDescription>Your recent sell requests and pickups</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="space-y-8">
-                                {[1, 2, 3].map((_, i) => (
-                                    <div key={i} className="flex gap-4">
-                                        <div className="relative">
-                                            <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
-                                                <Recycle className="h-5 w-5 text-green-600" />
-                                            </div>
-                                            {i !== 2 && (
-                                                <div className="absolute top-10 left-1/2 -translate-x-1/2 h-full w-0.5 bg-border" />
-                                            )}
+                            <div className="space-y-6">
+                                {orders.length === 0 ? (
+                                    <div className="text-center py-8 text-muted-foreground">
+                                        <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <Calendar className="h-6 w-6" />
                                         </div>
-                                        <div>
-                                            <p className="font-medium">Sold 15kg Newspaper</p>
-                                            <p className="text-sm text-muted-foreground">Earned ₹250 • 2 days ago</p>
-                                        </div>
+                                        <p>No recent activity</p>
+                                        <Button variant="link" asChild className="mt-2">
+                                            <a href="/market">Find a Kabadiwala</a>
+                                        </Button>
                                     </div>
-                                ))}
+                                ) : (
+                                    orders.map((order: any, i) => (
+                                        <div key={order.id} className="flex gap-4 items-start">
+                                            <div className="relative pt-1">
+                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center z-10 relative 
+                                                    ${order.status === 'COMPLETED' ? 'bg-green-100 text-green-600' :
+                                                        order.status === 'CANCELLED' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'}`}>
+                                                    {order.status === 'COMPLETED' ? <CheckCircle className="h-4 w-4" /> :
+                                                        order.status === 'CANCELLED' ? <XCircle className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
+                                                </div>
+                                                {i !== orders.length - 1 && (
+                                                    <div className="absolute top-8 left-1/2 -translate-x-1/2 h-full w-0.5 bg-border" />
+                                                )}
+                                            </div>
+                                            <div className="flex-1 pb-6 border-b last:border-0 border-muted">
+                                                <div className="flex justify-between items-start">
+                                                    <div>
+                                                        <p className="font-semibold text-sm">
+                                                            {order.buyer?.kabadiwalaProfile?.businessName || "Kabadiwala Pickup"}
+                                                        </p>
+                                                        <p className="text-xs text-muted-foreground">
+                                                            {new Date(order.createdAt).toLocaleDateString()} • {order.items ? order.items.split(',').length : 0} Items
+                                                        </p>
+                                                    </div>
+                                                    <Badge variant={order.status === 'COMPLETED' ? 'outline' : 'secondary'} className="text-xs">
+                                                        {order.status}
+                                                    </Badge>
+                                                </div>
+                                                {order.totalAmount && (
+                                                    <p className="text-sm font-medium text-green-600 mt-1">
+                                                        + ₹{order.totalAmount} Earned
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </CardContent>
                     </Card>
