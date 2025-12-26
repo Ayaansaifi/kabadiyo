@@ -3,9 +3,19 @@ import { db } from "@/lib/db"
 
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
         console.log("Testing DB connection...")
+
+        // Try a simple query
+        let userCount = 0
+        try {
+            userCount = await db.user.count()
+            console.log("DB connection successful. User count:", userCount)
+        } catch (e) {
+            console.error("Count query failed", e)
+        }
+
         // Check columns in User table (Postgres specific)
         let columns: any[] = []
         try {
