@@ -36,8 +36,8 @@ export const AnimatedInput = forwardRef<HTMLInputElement, AnimatedInputProps>(
                     className={cn(
                         "absolute left-3 transition-all duration-200 pointer-events-none",
                         "text-muted-foreground",
-                        (isFocused || hasValue)
-                            ? "-top-2 text-xs bg-background px-1 text-primary"
+                        (isFocused || hasValue || props.value) // Ensure value prop also triggers float
+                            ? "-top-2 text-xs bg-background px-1 text-primary z-10" // Added z-10 for visibility
                             : "top-3 text-sm",
                         error && "text-red-500",
                         success && "text-green-500"

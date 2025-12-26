@@ -63,6 +63,30 @@ export async function POST(request: NextRequest) {
         })
     } catch (error) {
         console.error("Upload error:", error)
-        return NextResponse.json({ error: "Failed to upload file" }, { status: 500 })
+
+        // FALLBACK: If Vercel Blob is not configured/fails, return Base64
+        // This allows the app to work for demo purposes
+        try {
+            const formData = await request.formData()
+            const file = formData.get("file") as File
+            if (file) {
+                const buffer = await file.arrayBuffer()
+                const base64 = Buffer.from(buffer).toString("base64")
+                const dataUrl = `data:${file.type};base64,${base64}`
+
+                return NextResponse.json({
+                    success: true,
+                    url: dataUrl, // Return base64 as URL
+                    filename: file.name,
+                    size: file.size,
+                    type: file.type,
+                    fallback: true
+                })
+            }
+        } catch (fallbackError) {
+            console.error("Fallback error:", fallbackError)
+        }
+
+        return NextResponse.json({ error: "Failed to upload file. Ensure Vercel Blob is configured." }, { status: 500 })
     }
 }

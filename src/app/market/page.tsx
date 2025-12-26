@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { MarketList } from "@/components/market/MarketList"
 import { db } from "@/lib/db"
 import { cookies } from "next/headers"
 import { KabadiwalaCard } from "@/components/kabadiwala-card"
@@ -45,26 +46,10 @@ export default async function MarketPage() {
                 <p className="text-muted-foreground">Browse verified scrap dealers in your area</p>
             </div>
 
-            <div className="flex gap-4 mb-8">
-                <Input placeholder="Search by area or name..." className="max-w-md" />
-                <Button>Search</Button>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {kabadiwalas.length === 0 ? (
-                    <p className="col-span-full text-center text-muted-foreground py-12">
-                        No verified Kabadiwalas found. Please try seeding the database.
-                    </p>
-                ) : (
-                    kabadiwalas.map((profile) => (
-                        <KabadiwalaCard
-                            key={profile.id}
-                            profile={profile}
-                            isFavorited={favoriteIds.includes(profile.userId)}
-                        />
-                    ))
-                )}
-            </div>
+            <MarketList initialKabadiwalas={kabadiwalas} favoriteIds={favoriteIds} />
         </div>
+    )
+}
+        </div >
     )
 }
