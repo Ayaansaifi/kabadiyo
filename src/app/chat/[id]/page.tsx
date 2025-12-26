@@ -90,12 +90,41 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
         }
     }, [otherUserId, router])
 
+    // Real-time integration
     useEffect(() => {
         fetchMessages()
-        // Poll for new messages every 2 seconds
-        const interval = setInterval(fetchMessages, 2000)
-        return () => clearInterval(interval)
     }, [fetchMessages])
+
+    // Subscribe to SSE events
+    useEffect(() => {
+        if (!userId) return
+
+        const eventSource = new EventSource(`/api/realtime?userId=${userId}`)
+
+        eventSource.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data)
+
+                if (data.type === 'message' && data.data.chatId === resolvedParams.id) {
+                    // Append new message if it belongs to current chat
+                    setMessages(prev => {
+                        // Avoid duplicates
+                        if (prev.find(m => m.id === data.data.message.id)) return prev
+                        return [...prev, data.data.message]
+                    })
+
+                    // Mark as read immediately if window is focused (simplified)
+                    fetch(`/api/chat/${otherUserId}/read`, { method: "POST" })
+                }
+            } catch (error) {
+                console.error('SSE Error:', error)
+            }
+        }
+
+        return () => {
+            eventSource.close()
+        }
+    }, [userId, resolvedParams.id, otherUserId])
 
     // Auto scroll to bottom
     useEffect(() => {

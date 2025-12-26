@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -58,6 +58,52 @@ model User {
   // Gamification
   points            Int          @default(0)
   redemptions       Redemption[]
+  achievements      UserAchievement[]
+
+  // Security
+  twoFactorEnabled  Boolean      @default(false)
+  twoFactorSecret   String?      // TOTP Secret
+  sessions          Session[]
+}
+
+// NEW: Session Management
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Enhanced Tracking
+  userAgent    String?
+  ipAddress    String?
+  city         String?
+  country      String?
+  isMobile     Boolean  @default(false)
+  lastActive   DateTime @default(now())
+  createdAt    DateTime @default(now())
+}
+
+// NEW: Achievements/Badges System
+model Achievement {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String
+  icon        String   // Icon identifier
+  points      Int      // Points awarded
+  condition   String   // JSON rule: {"type": "orders_count", "value": 10}
+  users       UserAchievement[]
+}
+
+model UserAchievement {
+  id            String      @id @default(cuid())
+  userId        String
+  achievementId String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  unlockedAt    DateTime    @default(now())
+
+  @@unique([userId, achievementId])
 }
 
 // NEW: Seller Profile

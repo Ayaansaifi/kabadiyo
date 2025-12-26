@@ -20,13 +20,13 @@ export default async function DashboardPage() {
     const user = await getUser()
     if (!user) redirect("/login")
 
-    // Redirect based on role
+    // Redirect Kabadiwala to their specific dashboard
     if (user.role === "KABADIWALA") {
         redirect("/kabadiwala/dashboard")
     }
-    if (user.role === "ADMIN") {
-        redirect("/admin")
-    }
+
+    // ADMIN and USER both see the regular dashboard
+    // ADMIN can access /admin manually from the navigation
 
     return (
         <DashboardClient

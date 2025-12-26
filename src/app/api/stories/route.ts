@@ -39,10 +39,12 @@ export async function GET() {
                         }
                     }
                 },
-                views: currentUser ? {
-                    where: { viewerId: currentUser.id },
-                    select: { id: true }
-                } : false
+                ...(currentUser ? {
+                    views: {
+                        where: { viewerId: currentUser.id },
+                        select: { id: true }
+                    }
+                } : {})
             },
             orderBy: { createdAt: "desc" }
         })

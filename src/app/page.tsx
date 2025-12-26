@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ArrowRight, MapPin, MessageCircle, Star, Phone, Recycle, LayoutDashboard, Heart, Utensils } from "lucide-react"
 import { StoriesSection } from "@/components/stories/StoriesSection"
 import { ScrapRatesTicker } from "@/components/dashboard/ScrapRatesTicker"
+import { ImpactStats } from "@/components/dashboard/ImpactStats"
 import { db } from "@/lib/db"
 import { KabadiwalaCard } from "@/components/kabadiwala-card"
 import { cookies } from "next/headers"
@@ -98,6 +99,11 @@ export default async function LandingPage() {
         {/* Daily Rates Ticker */}
         <section className="container mx-auto px-4 -mt-6 relative z-10 mb-8">
           <ScrapRatesTicker />
+        </section>
+
+        {/* Impact Stats Section */}
+        <section className="container mx-auto px-4 mb-12">
+          <ImpactStats />
         </section>
 
         {/* COMMUNITY IMPACT SECTION (NEW) */}
@@ -288,10 +294,54 @@ export default async function LandingPage() {
         </section>
       </main>
 
-      <footer className="border-t py-8 text-center text-muted-foreground mb-20 md:mb-0">
-        <div className="container mx-auto">
-          <p className="mb-2">Need help? Call: <a href={`tel:${HELPLINE_NUMBER}`} className="text-primary font-semibold">{HELPLINE_NUMBER}</a></p>
-          <p>&copy; 2024 Kabadiwala App. All rights reserved.</p>
+      <footer className="border-t py-10 text-muted-foreground mb-20 md:mb-0 bg-muted/30">
+        <div className="container mx-auto px-4">
+          {/* Footer Links Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+            {/* Quick Links */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-3">Quick Links</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/market" className="hover:text-primary transition-colors">Find Kabadiwala</Link></li>
+                <li><Link href="/dashboard" className="hover:text-primary transition-colors">Dashboard</Link></li>
+                <li><Link href="/rewards" className="hover:text-primary transition-colors">Rewards</Link></li>
+              </ul>
+            </div>
+
+            {/* Support */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-3">Support</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/help" className="hover:text-primary transition-colors">Help Center</Link></li>
+                <li><Link href="/food-rescue" className="hover:text-primary transition-colors">Food Rescue</Link></li>
+                <li><a href={`tel:${HELPLINE_NUMBER}`} className="hover:text-primary transition-colors">Call: {HELPLINE_NUMBER}</a></li>
+              </ul>
+            </div>
+
+            {/* Account */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-3">Account</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/profile" className="hover:text-primary transition-colors">My Profile</Link></li>
+                <li><Link href="/settings" className="hover:text-primary transition-colors">Settings</Link></li>
+                <li><Link href="/login" className="hover:text-primary transition-colors">Login</Link></li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 className="font-semibold text-foreground mb-3">Legal</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+                <li><Link href="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link></li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Copyright */}
+          <div className="text-center pt-6 border-t">
+            <p>&copy; 2024 Kabadiwala App. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>

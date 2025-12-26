@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, LayoutDashboard, ShoppingCart, MessageCircle, User } from "lucide-react"
+import { Home, LayoutDashboard, ShoppingCart, MessageCircle, Settings } from "lucide-react"
 
 export function MobileNav() {
     const pathname = usePathname()
@@ -22,7 +22,7 @@ export function MobileNav() {
         {
             name: "Dashboard",
             href: "/dashboard",
-            icon: LayoutDashboard // Changed from 'Home' icon to 'LayoutDashboard'
+            icon: LayoutDashboard
         },
         {
             name: "Book",
@@ -35,9 +35,9 @@ export function MobileNav() {
             icon: MessageCircle
         },
         {
-            name: "Profile",
-            href: "/profile",
-            icon: User
+            name: "Settings",
+            href: "/settings",
+            icon: Settings
         }
     ]
 

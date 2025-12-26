@@ -48,6 +48,9 @@ export async function Header() {
                     <Link href="/market" className="text-sm font-medium hover:text-primary transition-colors">
                         Find Kabadiwala
                     </Link>
+                    <Link href="/help" className="text-sm font-medium hover:text-primary transition-colors">
+                        Help
+                    </Link>
                     {user && user.role === "KABADIWALA" && (
                         <>
                             <Link href="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
@@ -56,15 +59,17 @@ export async function Header() {
                             <Link href="/orders" className="text-sm font-medium hover:text-primary transition-colors">
                                 Orders
                             </Link>
-                            <Link href="/favorites" className="text-sm font-medium hover:text-primary transition-colors">
-                                Favorites
-                            </Link>
                         </>
                     )}
                     {user && (
-                        <Link href="/chat" className="text-sm font-medium hover:text-primary transition-colors">
-                            Messages
-                        </Link>
+                        <>
+                            <Link href="/chat" className="text-sm font-medium hover:text-primary transition-colors">
+                                Messages
+                            </Link>
+                            <Link href="/settings" className="text-sm font-medium hover:text-primary transition-colors">
+                                Settings
+                            </Link>
+                        </>
                     )}
                 </nav>
 

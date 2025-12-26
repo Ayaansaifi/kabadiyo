@@ -6,6 +6,8 @@ import { MobileNav } from "@/components/layout/MobileNav";
 import { Toaster } from "@/components/ui/sonner";
 import { UserTracker } from "@/components/user-tracker";
 import { Providers } from "@/components/providers";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { ConnectionStatus } from "@/components/ui/realtime-status";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -160,11 +162,14 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background`}
       >
         <Providers>
-          <Header />
-          <main className="pb-20 md:pb-0">{children}</main>
-          <MobileNav />
-          <Toaster />
-          <UserTracker />
+          <ErrorBoundary>
+            <ConnectionStatus />
+            <Header />
+            <main className="pb-20 md:pb-0">{children}</main>
+            <MobileNav />
+            <Toaster />
+            <UserTracker />
+          </ErrorBoundary>
         </Providers>
         {/* Service Worker Registration */}
         <script
