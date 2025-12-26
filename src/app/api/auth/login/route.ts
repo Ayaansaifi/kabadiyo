@@ -42,8 +42,14 @@ export async function POST(req: Request) {
             success: true,
             user: { id: user.id, name: user.name, role: user.role }
         })
-    } catch (error) {
-        console.error("Login error:", error)
-        return NextResponse.json({ error: "Login failed" }, { status: 500 })
+    } catch (error: any) {
+        console.error("Login critical error:", {
+            message: error.message,
+            stack: error.stack,
+            code: error.code
+        })
+        return NextResponse.json({
+            error: "Login failed due to server error. Check console."
+        }, { status: 500 })
     }
 }

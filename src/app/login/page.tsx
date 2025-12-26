@@ -87,6 +87,21 @@ export default function LoginPage() {
                 body: JSON.stringify({ phone, password }),
             })
 
+            let data
+            try {
+                const text = await res.text()
+                try {
+                    data = JSON.parse(text)
+                } catch {
+                    console.error("Failed to parse JSON response:", text)
+                    throw new Error("Server Error: " + (res.statusText || "Unknown Error"))
+                }
+            } catch (e) {
+                console.error("Network or Parse Error:", e)
+                setError("सर्वर एरर / Server Error (Check Console)")
+                return
+            }
+
             if (res.ok) {
                 // Clear failed attempts on success
                 clearFailedAttempts(phone)
@@ -102,8 +117,6 @@ export default function LoginPage() {
                 router.push("/dashboard")
                 router.refresh()
             } else {
-                const data = await res.json()
-
                 // Record failed attempt
                 const result = recordFailedAttempt(phone)
                 setAttempts(result.remainingAttempts)
@@ -116,7 +129,8 @@ export default function LoginPage() {
                     setError(data.error || "गलत लॉगिन जानकारी / Invalid credentials")
                 }
             }
-        } catch {
+        } catch (e) {
+            console.error("Login Error:", e)
             setError("कुछ गलत हो गया / Something went wrong")
         } finally {
             setLoading(false)
