@@ -50,6 +50,4 @@ export default async function MarketPage() {
         </div>
     )
 }
-        </div >
-    )
-}
+
