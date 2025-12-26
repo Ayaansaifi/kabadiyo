@@ -3,6 +3,8 @@ import { db } from "@/lib/db"
 import bcrypt from "bcryptjs"
 import { cookies } from "next/headers"
 
+import { checkBruteForce, recordFailedAttempt, clearFailedAttempts } from "@/lib/security"
+
 export async function POST(req: Request) {
     try {
         const { phone, password } = await req.json()
@@ -11,17 +13,34 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing fields" }, { status: 400 })
         }
 
+        // 1. Check Brute Force Lock
+        const bruteCheck = checkBruteForce(phone)
+        if (!bruteCheck.allowed) {
+            return NextResponse.json({
+                error: bruteCheck.messageHi || bruteCheck.message
+            }, { status: 429 })
+        }
+
         // Find user
         const user = await db.user.findUnique({ where: { phone } })
         if (!user) {
+            // Record failed attempt even for non-existent user to prevent enumeration
+            recordFailedAttempt(phone)
             return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })
         }
 
         // Check password
         const passwordMatch = await bcrypt.compare(password, user.password)
         if (!passwordMatch) {
-            return NextResponse.json({ error: "Invalid credentials" }, { status: 401 })
+            const result = recordFailedAttempt(phone)
+            return NextResponse.json({
+                error: "Invalid credentials",
+                remainingAttempts: result.remainingAttempts
+            }, { status: 401 })
         }
+
+        // Clear failed attempts on success
+        clearFailedAttempts(phone)
 
         // Set session cookie (simplified for now, use NextAuth in production)
         const cookieStore = await cookies()

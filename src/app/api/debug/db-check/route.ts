@@ -18,7 +18,10 @@ export async function GET() {
                 // Do NOT return the full string for security, just check if it exists and starts correctly
                 DATABASE_URL_SET: !!process.env.DATABASE_URL,
                 DATABASE_URL_START: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 15) + "..." : "NOT_SET",
-                NODE_ENV: process.env.NODE_ENV
+                AUTH_SECRET_SET: !!process.env.AUTH_SECRET,
+                NEXTAUTH_URL_SET: !!process.env.NEXTAUTH_URL,
+                NODE_ENV: process.env.NODE_ENV,
+                DB_PROVIDER: "sqlite" // Confirming provider
             }
         })
     } catch (error: any) {
