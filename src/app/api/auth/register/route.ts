@@ -78,7 +78,15 @@ export async function POST(req: Request) {
             }
         })
 
-        await sendOtpEmail(email, otpCode)
+        const emailSent = await sendOtpEmail(email, otpCode)
+
+        if (!emailSent) {
+            // Rollback user creation if email fails (optional but good practice)
+            await db.user.delete({ where: { id: user.id } })
+            return NextResponse.json({
+                error: "Failed to send OTP email. Please check server logs/configuration."
+            }, { status: 500 })
+        }
 
         return NextResponse.json({
             success: true,

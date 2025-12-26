@@ -106,7 +106,20 @@ export default function RegisterPage() {
                 }),
             })
 
-            const data = await res.json()
+            let data
+            try {
+                const text = await res.text()
+                try {
+                    data = JSON.parse(text)
+                } catch {
+                    console.error("Failed to parse JSON response:", text)
+                    throw new Error("Server Error: " + (res.statusText || "Unknown Error"))
+                }
+            } catch (e) {
+                console.error("Network or Parse Error:", e)
+                setError("सर्वर एरर / Server Error (Check Console)")
+                return
+            }
 
             if (res.ok) {
                 if (data.requireVerification) {
@@ -121,7 +134,8 @@ export default function RegisterPage() {
             } else {
                 setError(data.error || "रजिस्ट्रेशन विफल / Registration failed")
             }
-        } catch {
+        } catch (e) {
+            console.error("Registration Error:", e)
             setError("कुछ गलत हो गया / Something went wrong")
         } finally {
             setLoading(false)
