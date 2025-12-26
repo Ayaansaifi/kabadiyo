@@ -61,6 +61,7 @@ export async function PUT(request: NextRequest) {
         if (name !== undefined) updateData.name = name
         if (address !== undefined) updateData.address = address
         if (image !== undefined) updateData.image = image
+        if (coverImage !== undefined) updateData.coverImage = coverImage
 
         // Transaction to update both User and KabadiwalaProfile if needed
         const updated = await db.$transaction(async (prisma) => {

@@ -26,6 +26,11 @@ export default function ProfilePage() {
     // Form Stats
     const [name, setName] = useState("")
     const [address, setAddress] = useState("")
+    const [profileImage, setProfileImage] = useState("")
+    const [coverImage, setCoverImage] = useState("")
+
+    // File Inputs
+    const [uploading, setUploading] = useState(false)
 
     // Gamification Stats (Static for now - API integration pending)
     const points = 1250
@@ -38,23 +43,77 @@ export default function ProfilePage() {
 
     useEffect(() => {
         setMounted(true)
-        if (session?.user) {
-            setName(session.user.name || "")
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setAddress((session.user as any).address || "")
-        }
+        fetchProfile()
     }, [session])
+
+    const fetchProfile = async () => {
+        try {
+            const res = await fetch("/api/profile")
+            if (res.ok) {
+                const data = await res.json()
+                setName(data.name || session?.user?.name || "")
+                setAddress(data.address || "")
+                setProfileImage(data.image || session?.user?.image || "")
+                setCoverImage(data.coverImage || "") // Now supported
+            }
+        } catch (e) {
+            console.error("Profile fetch failed", e)
+        }
+    }
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: "profile" | "cover") => {
+        const file = e.target.files?.[0]
+        if (!file) return
+
+        setUploading(true)
+        const formData = new FormData()
+        formData.append("file", file)
+        formData.append("type", type)
+
+        try {
+            const res = await fetch("/api/upload", {
+                method: "POST",
+                body: formData
+            })
+
+            const data = await res.json()
+            if (res.ok) {
+                if (type === "profile") setProfileImage(data.url)
+                if (type === "cover") setCoverImage(data.url)
+                toast.success("Image uploaded, click Save to apply")
+            } else {
+                toast.error(data.error || "Upload failed")
+            }
+        } catch {
+            toast.error("Upload failed")
+        } finally {
+            setUploading(false)
+        }
+    }
 
     if (!mounted) return null
 
     const handleSave = async () => {
         setLoading(true)
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000))
-            await update({ name, address })
+            const res = await fetch("/api/profile", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name,
+                    address,
+                    image: profileImage,
+                    coverImage
+                })
+            })
+
+            if (!res.ok) throw new Error("Failed to update")
+
+            // Update session if possible (client side)
+            await update({ name, image: profileImage })
+
             setIsEditing(false)
-            toast.success("Profile updated successfully")
+            toast.success("Profile updated successfully!")
         } catch {
             toast.error("Failed to update profile")
         } finally {
@@ -78,11 +137,29 @@ export default function ProfilePage() {
         <div className="container max-w-4xl mx-auto p-4 space-y-8 pb-24">
             {/* Header / Cover */}
             <div className="relative h-48 md:h-64 rounded-xl overflow-hidden bg-gradient-to-r from-green-400 to-emerald-600">
-                <div className="absolute inset-0 bg-black/10" />
+                {coverImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+                ) : (
+                    <div className="absolute inset-0 bg-black/10" />
+                )}
+
                 <div className="absolute bottom-4 right-4">
-                    <Button size="sm" variant="secondary" className="gap-2">
-                        <Camera className="h-4 w-4" /> Change Cover
-                    </Button>
+                    <label>
+                        <input
+                            type="file"
+                            hidden
+                            accept="image/*"
+                            onChange={(e) => handleFileUpload(e, "cover")}
+                            disabled={uploading}
+                        />
+                        <Button size="sm" variant="secondary" className="gap-2 cursor-pointer" asChild>
+                            <span>
+                                <Camera className="h-4 w-4" />
+                                {uploading ? "Uploading..." : "Change Cover"}
+                            </span>
+                        </Button>
+                    </label>
                 </div>
             </div>
 
@@ -91,18 +168,28 @@ export default function ProfilePage() {
                 <div className="flex flex-col md:flex-row gap-6 items-start md:items-end">
                     <div className="relative">
                         <Avatar className="h-32 w-32 border-4 border-background shadow-xl">
-                            <AvatarImage src={session?.user?.image || ""} />
+                            <AvatarImage src={profileImage || session?.user?.image || ""} />
                             <AvatarFallback className="text-4xl">
                                 {name[0]?.toUpperCase()}
                             </AvatarFallback>
                         </Avatar>
-                        <Button
-                            size="icon"
-                            variant="secondary"
-                            className="absolute bottom-0 right-0 rounded-full shadow-lg"
-                        >
-                            <Camera className="h-4 w-4" />
-                        </Button>
+                        <label className="absolute bottom-0 right-0">
+                            <input
+                                type="file"
+                                hidden
+                                accept="image/*"
+                                onChange={(e) => handleFileUpload(e, "profile")}
+                                disabled={uploading}
+                            />
+                            <Button
+                                size="icon"
+                                variant="secondary"
+                                className="rounded-full shadow-lg cursor-pointer"
+                                asChild
+                            >
+                                <span><Camera className="h-4 w-4" /></span>
+                            </Button>
+                        </label>
                     </div>
 
                     <div className="flex-1 space-y-2 mb-2">

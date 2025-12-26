@@ -22,6 +22,7 @@ model User {
   password      String
   role          String    @default("USER")
   image         String?   // Profile photo
+  coverImage    String?   // Banner image
   address       String?
   latitude      Float?
   longitude     Float?
