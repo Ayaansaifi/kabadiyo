@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { AppShell } from "@/components/layout/AppShell";
 import { Toaster } from "@/components/ui/sonner";
 import { UserTracker } from "@/components/user-tracker";
 import { Providers } from "@/components/providers";
@@ -165,7 +166,9 @@ export default function RootLayout({
           <ErrorBoundary>
             <ConnectionStatus />
             <Header />
-            <main className="pb-20 md:pb-0">{children}</main>
+            <AppShell>
+              <main className="pb-20 md:pb-0">{children}</main>
+            </AppShell>
             <MobileNav />
             <Toaster />
             <UserTracker />

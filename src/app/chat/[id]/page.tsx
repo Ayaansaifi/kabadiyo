@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { motion, AnimatePresence } from "framer-motion"
 import { toast } from "sonner"
+import { useOnlineStatus, OnlineStatusDot } from "@/hooks/useOnlineStatus"
 
 interface Message {
     id: string
@@ -66,6 +67,9 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
     const [isTyping] = useState(false)
     const [showQuickReplies, setShowQuickReplies] = useState(false)
     const [loading, setLoading] = useState(true)
+
+    // Online status
+    const { isOnline, lastSeenText } = useOnlineStatus(otherUserId)
 
     // Edit state
     const [editingMessageId, setEditingMessageId] = useState<string | null>(null)
@@ -317,11 +321,16 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                 </Link>
-                <Avatar>
-                    <AvatarFallback>
-                        {otherUser?.kabadiwalaProfile?.businessName?.[0] || otherUser?.name?.[0] || 'U'}
-                    </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                    <Avatar>
+                        <AvatarFallback>
+                            {otherUser?.kabadiwalaProfile?.businessName?.[0] || otherUser?.name?.[0] || 'U'}
+                        </AvatarFallback>
+                    </Avatar>
+                    <span className="absolute bottom-0 right-0">
+                        <OnlineStatusDot isOnline={isOnline} size="sm" />
+                    </span>
+                </div>
                 <div className="flex-1">
                     <p className="font-semibold flex items-center gap-2">
                         {otherUser?.kabadiwalaProfile?.businessName || otherUser?.name}
@@ -329,8 +338,12 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
                             <Badge className="text-xs bg-blue-500">Verified</Badge>
                         )}
                     </p>
-                    {isTyping && (
-                        <p className="text-xs text-muted-foreground animate-pulse">typing...</p>
+                    {isTyping ? (
+                        <p className="text-xs text-green-500 animate-pulse">typing...</p>
+                    ) : (
+                        <p className={`text-xs ${isOnline ? 'text-green-500' : 'text-muted-foreground'}`}>
+                            {lastSeenText}
+                        </p>
                     )}
                 </div>
                 <DropdownMenu>
