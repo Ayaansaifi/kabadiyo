@@ -35,14 +35,19 @@ export async function POST(request: NextRequest) {
         }
 
         // Validate file type
-        const allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+        const allowedTypes = [
+            "image/jpeg", "image/png", "image/gif", "image/webp",
+            "video/mp4", "video/webm", "video/quicktime",
+            "application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ]
+
         if (!allowedTypes.includes(file.type)) {
-            return NextResponse.json({ error: "Invalid file type. Only JPEG, PNG, GIF, WebP allowed." }, { status: 400 })
+            return NextResponse.json({ error: "Invalid file type. Allowed: Images, Videos, PDF, Docs." }, { status: 400 })
         }
 
-        // Validate file size (5MB max)
-        if (file.size > 5 * 1024 * 1024) {
-            return NextResponse.json({ error: "File too large. Max 5MB allowed." }, { status: 400 })
+        // Validate file size (50MB max)
+        if (file.size > 50 * 1024 * 1024) {
+            return NextResponse.json({ error: "File too large. Max 50MB allowed." }, { status: 400 })
         }
 
         // Generate unique filename
