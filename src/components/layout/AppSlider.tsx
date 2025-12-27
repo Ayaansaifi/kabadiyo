@@ -24,7 +24,7 @@ const slides: SlideItem[] = [
     {
         id: 2,
         title: "Free Doorstep Pickup",
-        subtitle: "Kabadiwala comes to your home",
+        subtitle: "Our team comes to your home",
         icon: <Truck className="h-16 w-16 text-white" />,
         gradient: "from-blue-500 to-cyan-600"
     },

@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/dashboard/', '/admin/', '/profile/', '/api/'],
         },
-        sitemap: 'https://kabadiwala.app/sitemap.xml',
+        sitemap: 'https://kabadiyo.com/sitemap.xml',
     }
 }

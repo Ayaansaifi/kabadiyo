@@ -43,7 +43,7 @@ export async function Header() {
                 {user && <MobileProfileButton userName={user.name} />}
 
                 <Link href="/" className="mr-6 flex items-center space-x-2 ml-2 md:ml-0">
-                    <span className="font-bold text-xl text-primary">Kabadiwala</span>
+                    <span className="font-bold text-xl text-primary">Kabadiyo</span>
                 </Link>
 
                 {/* Desktop Nav */}

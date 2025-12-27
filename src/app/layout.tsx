@@ -23,11 +23,12 @@ const geistMono = Geist_Mono({
 // Advanced SEO Metadata
 export const metadata: Metadata = {
   title: {
-    default: "Kabadiwala - Sell Scrap from Home | Best Prices Guaranteed",
-    template: "%s | Kabadiwala App"
+    default: "Kabadiyo - Sell Scrap from Home | Best Prices Guaranteed",
+    template: "%s | Kabadiyo"
   },
   description: "India's #1 scrap selling platform. Connect with verified Kabadiwalas near you. Get best prices for iron, plastic, paper, e-waste. Free doorstep pickup, instant cash payment.",
   keywords: [
+    "kabadiyo",
     "kabadiwala",
     "scrap dealer",
     "sell scrap online",
@@ -45,15 +46,15 @@ export const metadata: Metadata = {
     "रद्दी",
     "कबाड़"
   ],
-  authors: [{ name: "Kabadiwala App" }],
-  creator: "Kabadiwala App",
-  publisher: "Kabadiwala App",
+  authors: [{ name: "Kabadiyo" }],
+  creator: "Kabadiyo",
+  publisher: "Kabadiyo",
   formatDetection: {
     email: false,
     address: false,
     telephone: true,
   },
-  metadataBase: new URL("https://kabadiwala.app"),
+  metadataBase: new URL("https://kabadiyo.com"),
   alternates: {
     canonical: "/",
     languages: {
@@ -64,25 +65,25 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://kabadiwala.app",
-    siteName: "Kabadiwala App",
-    title: "Kabadiwala - Sell Your Scrap from Home",
+    url: "https://kabadiyo.com",
+    siteName: "Kabadiyo",
+    title: "Kabadiyo - Sell Your Scrap from Home",
     description: "Connect with verified Kabadiwalas. Best prices for iron, plastic, paper, e-waste. Free pickup, instant cash.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Kabadiwala App - Sell Scrap from Home",
+        alt: "Kabadiyo - Sell Scrap from Home",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kabadiwala - Sell Your Scrap from Home",
+    title: "Kabadiyo - Sell Your Scrap from Home",
     description: "Connect with verified Kabadiwalas. Best prices for iron, plastic, paper, e-waste. Free pickup, instant cash.",
     images: ["/og-image.png"],
-    creator: "@kabadiwalaapp",
+    creator: "@kabadiyo",
   },
   robots: {
     index: true,
@@ -119,9 +120,9 @@ export const viewport: Viewport = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  name: "Kabadiwala App",
+  name: "Kabadiyo",
   description: "India's #1 scrap selling platform. Connect with verified Kabadiwalas near you.",
-  url: "https://kabadiwala.app",
+  url: "https://kabadiyo.com",
   applicationCategory: "BusinessApplication",
   operatingSystem: "Web",
   offers: {
@@ -136,8 +137,8 @@ const jsonLd = {
   },
   creator: {
     "@type": "Organization",
-    name: "Kabadiwala App",
-    url: "https://kabadiwala.app",
+    name: "Kabadiyo",
+    url: "https://kabadiyo.com",
   },
 };
 

@@ -308,7 +308,7 @@ export default async function LandingPage() {
 
           {/* Copyright */}
           <div className="text-center pt-6 mt-6 border-t border-muted">
-            <p className="text-xs">&copy; 2024 Kabadiwala App. All rights reserved.</p>
+            <p className="text-xs">&copy; 2025 Kabadiyo.com. All rights reserved.</p>
           </div>
         </div>
       </footer>
