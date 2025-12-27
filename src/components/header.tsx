@@ -73,73 +73,51 @@ export async function Header() {
                     )}
                 </nav>
 
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
                     {user ? (
                         <>
+                            {/* Desktop: Full Name + Avatar */}
                             <Link href="/profile" className="hidden md:flex items-center gap-2 hover:opacity-80 transition-opacity">
                                 <span className="text-sm text-muted-foreground">
                                     Hi, {user.name}
                                 </span>
-                                <Avatar className="h-8 w-8">
-                                    <AvatarFallback>{user.name?.[0] || 'U'}</AvatarFallback>
+                                <Avatar className="h-8 w-8 ring-2 ring-primary/20">
+                                    <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                                        {user.name?.[0] || 'U'}
+                                    </AvatarFallback>
                                 </Avatar>
                             </Link>
-                            <form action={logout}>
+
+                            {/* Mobile: Just Avatar (Profile Button) */}
+                            <Link href="/profile" className="md:hidden">
+                                <Avatar className="h-9 w-9 ring-2 ring-primary/30 active:scale-95 transition-transform">
+                                    <AvatarFallback className="bg-gradient-to-br from-primary/20 to-green-600/20 text-primary font-bold">
+                                        {user.name?.[0] || 'U'}
+                                    </AvatarFallback>
+                                </Avatar>
+                            </Link>
+
+                            {/* Desktop Only: Logout Button */}
+                            <form action={logout} className="hidden md:block">
                                 <Button variant="ghost" size="icon" type="submit">
                                     <LogOut className="h-4 w-4" />
                                 </Button>
                             </form>
                         </>
                     ) : (
-                        <div className="hidden md:flex gap-2">
-                            <Link href="/login"><Button variant="ghost">Login</Button></Link>
-                            <Link href="/register"><Button>Sign Up</Button></Link>
-                        </div>
-                    )}
+                        <>
+                            {/* Desktop: Login/Signup */}
+                            <div className="hidden md:flex gap-2">
+                                <Link href="/login"><Button variant="ghost">Login</Button></Link>
+                                <Link href="/register"><Button>Sign Up</Button></Link>
+                            </div>
 
-                    {/* Mobile Menu - Hidden on mobile as we now have Bottom Nav */}
-                    <Sheet>
-                        <SheetTrigger asChild className="hidden">
-                            <Button variant="ghost" size="icon">
-                                <Menu className="h-5 w-5" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="right" className="w-[300px]">
-                            <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
-                            <nav className="flex flex-col gap-4 mt-8">
-                                <Link href="/profile" className="flex items-center gap-2 mb-4">
-                                    <Avatar className="h-10 w-10">
-                                        <AvatarFallback>{user?.name?.[0] || 'U'}</AvatarFallback>
-                                    </Avatar>
-                                    <div className="flex flex-col">
-                                        <span className="font-medium">{user?.name || "User"}</span>
-                                        <span className="text-xs text-muted-foreground">View Profile</span>
-                                    </div>
-                                </Link>
-                                <Link href="/market" className="text-lg font-medium">Find Kabadiwala</Link>
-                                {user ? (
-                                    <>
-                                        {user.role === "KABADIWALA" && (
-                                            <>
-                                                <Link href="/dashboard" className="text-lg font-medium">Dashboard</Link>
-                                                <Link href="/orders" className="text-lg font-medium">Orders</Link>
-                                                <Link href="/favorites" className="text-lg font-medium">Favorites</Link>
-                                            </>
-                                        )}
-                                        <Link href="/chat" className="text-lg font-medium">Messages</Link>
-                                        <form action={logout} className="mt-4">
-                                            <Button variant="destructive" className="w-full">Logout</Button>
-                                        </form>
-                                    </>
-                                ) : (
-                                    <>
-                                        <Link href="/login"><Button variant="outline" className="w-full">Login</Button></Link>
-                                        <Link href="/register"><Button className="w-full">Sign Up</Button></Link>
-                                    </>
-                                )}
-                            </nav>
-                        </SheetContent>
-                    </Sheet>
+                            {/* Mobile: Just Login Button */}
+                            <Link href="/login" className="md:hidden">
+                                <Button size="sm" variant="outline">Login</Button>
+                            </Link>
+                        </>
+                    )}
                 </div>
             </div>
         </header>
