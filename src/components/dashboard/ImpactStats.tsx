@@ -62,6 +62,20 @@ function StatItem({ icon, value, suffix, label, color, delay }: StatItemProps) {
 }
 
 export function ImpactStats() {
+    const [stats, setStats] = useState({
+        users: 0,
+        pickups: 0,
+        co2: 0,
+        earnings: 0
+    })
+
+    useEffect(() => {
+        fetch("/api/stats")
+            .then(res => res.json())
+            .then(data => setStats(data))
+            .catch(err => console.error("Stats fetch failed", err))
+    }, [])
+
     return (
         <Card className="border-0 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 shadow-lg">
             <CardContent className="p-8">
@@ -71,7 +85,7 @@ export function ImpactStats() {
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     <StatItem
                         icon={<Users className="h-6 w-6 text-blue-600" />}
-                        value={500}
+                        value={stats.users}
                         suffix="+"
                         label="Happy Users"
                         color="bg-blue-100 dark:bg-blue-900/30"
@@ -79,7 +93,7 @@ export function ImpactStats() {
                     />
                     <StatItem
                         icon={<Package className="h-6 w-6 text-orange-600" />}
-                        value={1200}
+                        value={stats.pickups}
                         suffix="+"
                         label="Pickups Completed"
                         color="bg-orange-100 dark:bg-orange-900/30"
@@ -87,7 +101,7 @@ export function ImpactStats() {
                     />
                     <StatItem
                         icon={<Leaf className="h-6 w-6 text-green-600" />}
-                        value={85}
+                        value={stats.co2}
                         suffix=" tons"
                         label="CO₂ Saved"
                         color="bg-green-100 dark:bg-green-900/30"
@@ -95,7 +109,7 @@ export function ImpactStats() {
                     />
                     <StatItem
                         icon={<TrendingUp className="h-6 w-6 text-purple-600" />}
-                        value={3}
+                        value={stats.earnings}
                         suffix="L+"
                         label="Earnings Paid"
                         color="bg-purple-100 dark:bg-purple-900/30"

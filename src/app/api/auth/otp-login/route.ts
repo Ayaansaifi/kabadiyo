@@ -88,6 +88,36 @@ export async function POST(req: Request) {
 
             // Create session
             const cookieStore = await cookies()
+
+            // Create Session Record
+            const sessionToken = crypto.randomUUID()
+            // In OTP route, we might not have 'req' in formatting above easily access headers if it was cleaner, 
+            // but we do have 'req' object at top.
+            const userAgent = req.headers.get("user-agent") || "Unknown Device"
+            const ip = req.headers.get("x-forwarded-for") || "Unknown IP"
+
+            const deviceName = userAgent.includes("Windows") ? "Windows PC" :
+                userAgent.includes("Mac") ? "Mac" :
+                    userAgent.includes("Android") ? "Android" :
+                        userAgent.includes("iPhone") ? "iPhone" : "Unknown Device"
+
+            await db.session.create({
+                data: {
+                    userId: user.id,
+                    sessionToken,
+                    userAgent: deviceName,
+                    ipAddress: ip,
+                    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) // 7 days
+                }
+            })
+
+            cookieStore.set("sessionToken", sessionToken, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 60 * 60 * 24 * 7, // 1 week
+            })
+
             cookieStore.set("userId", user.id, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",

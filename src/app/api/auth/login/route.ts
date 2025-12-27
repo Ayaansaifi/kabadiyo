@@ -44,6 +44,40 @@ export async function POST(req: Request) {
 
         // Set session cookie (simplified for now, use NextAuth in production)
         const cookieStore = await cookies()
+
+        // Create Session Record
+        const sessionToken = crypto.randomUUID()
+        const userAgent = req.headers.get("user-agent") || "Unknown Device"
+        const ip = req.headers.get("x-forwarded-for") || "Unknown IP"
+
+        // Simple device detection
+        let deviceType = "Desktop"
+        if (userAgent.includes("Mobile") || userAgent.includes("Android") || userAgent.includes("iPhone")) {
+            deviceType = "Mobile"
+        }
+        const deviceName = userAgent.includes("Windows") ? "Windows PC" :
+            userAgent.includes("Mac") ? "Mac" :
+                userAgent.includes("Android") ? "Android" :
+                    userAgent.includes("iPhone") ? "iPhone" : "Unknown Device"
+
+        await db.session.create({
+            data: {
+                userId: user.id,
+                sessionToken,
+                userAgent: `${deviceName} (${deviceType})`,
+                ipAddress: ip,
+                expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) // 7 days
+            }
+        })
+
+        // Set Cookies
+        cookieStore.set("sessionToken", sessionToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 7, // 1 week
+        })
+
         cookieStore.set("userId", user.id, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",

@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { toast } from "sonner"
 import { signOut } from "next-auth/react"
 import { PasswordStrengthMeter, AnimatedInput } from "@/components/ui/enhanced-input"
+import { ActiveSessions } from "@/components/sessions/ActiveSessions"
 
 export default function SettingsPage() {
     const { theme, setTheme } = useTheme()
@@ -23,10 +24,7 @@ export default function SettingsPage() {
 
     // Security State
     const [twoFactor, setTwoFactor] = useState(false)
-    const [activeSessions, setActiveSessions] = useState([
-        { id: '1', device: 'Chrome on Windows', location: 'New Delhi, India', current: true, time: 'Now' },
-        { id: '2', device: 'Safari on iPhone', location: 'New Delhi, India', current: false, time: '2 hours ago' }
-    ])
+
 
     // Password Change State
     const [currentPassword, setCurrentPassword] = useState("")
@@ -101,19 +99,7 @@ export default function SettingsPage() {
         toast.success(`Language changed to ${value === 'en' ? 'English' : 'Hindi'}`)
     }
 
-    const fetchSessions = async () => {
-        try {
-            const res = await fetch('/api/user/sessions')
-            if (res.ok) {
-                const data = await res.json()
-                if (data.sessions && data.sessions.length > 0) {
-                    setActiveSessions(data.sessions)
-                }
-            }
-        } catch (e) {
-            console.error(e)
-        }
-    }
+
 
     if (!mounted) return null
 
@@ -151,15 +137,7 @@ export default function SettingsPage() {
         }
     }
 
-    const handleLogoutOtherSessions = async () => {
-        try {
-            await fetch('/api/user/sessions', { method: 'DELETE' })
-            setActiveSessions(prev => prev.filter(s => s.current))
-            toast.success("अन्य सभी सत्रों से लॉग आउट किया गया / Logged out from other sessions")
-        } catch {
-            toast.error("Failed to log out sessions")
-        }
-    }
+
 
     const toggleTwoFactor = async (checked: boolean) => {
         // Save to localStorage first (works offline)
@@ -406,57 +384,9 @@ export default function SettingsPage() {
                     </Card>
 
                     {/* Active Sessions */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <History className="h-5 w-5 text-orange-500" />
-                                Active Sessions
-                            </CardTitle>
-                            <CardDescription>Devices currently logged into your account</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            {activeSessions.map((session) => (
-                                <div key={session.id} className="flex items-center justify-between p-3 border rounded-lg">
-                                    <div className="flex items-center gap-3">
-                                        <Laptop className="h-8 w-8 text-muted-foreground" />
-                                        <div>
-                                            <p className="font-medium flex items-center gap-2">
-                                                {session.device}
-                                                {session.current && (
-                                                    <span className="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full dark:bg-green-900/30 dark:text-green-400">
-                                                        Current
-                                                    </span>
-                                                )}
-                                            </p>
-                                            <p className="text-xs text-muted-foreground">{session.location} • {session.time}</p>
-                                        </div>
-                                    </div>
-                                    {!session.current && (
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10"
-                                            onClick={() => {
-                                                setActiveSessions(prev => prev.filter(s => s.id !== session.id))
-                                                toast.success("Session terminated")
-                                            }}
-                                        >
-                                            Revoke
-                                        </Button>
-                                    )}
-                                </div>
-                            ))}
-                            <Button
-                                variant="outline"
-                                className="w-full text-red-500 hover:text-red-600 hover:bg-red-50"
-                                onClick={handleLogoutOtherSessions}
-                                disabled={activeSessions.length <= 1}
-                            >
-                                <LogOut className="h-4 w-4 mr-2" />
-                                Log out from all other devices
-                            </Button>
-                        </CardContent>
-                    </Card>
+                    <ActiveSessions />
+
+                    {/* Danger Zone */}
 
                     {/* Danger Zone */}
                     <Card className="border-red-200 dark:border-red-900">
