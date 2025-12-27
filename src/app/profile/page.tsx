@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import {
     User, MapPin, Phone, Mail, Camera, Edit2,
     Award, Star, Shield, TrendingUp, Calendar,
-    Share2, Leaf, Recycle, Medal, Zap, CheckCircle, XCircle, Clock
+    Share2, Leaf, Recycle, Medal, Zap, CheckCircle, XCircle, Clock, LogOut
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -248,8 +248,23 @@ export default function ProfilePage() {
                             <Edit2 className="h-4 w-4" />
                             {isEditing ? "Cancel" : "Edit Profile"}
                         </Button>
-                        <Button variant="outline" size="icon">
+                        <Button variant="outline" size="icon" title="Share Profile">
                             <Share2 className="h-4 w-4" />
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            size="icon"
+                            title="Log Out"
+                            onClick={async () => {
+                                try {
+                                    await fetch("/api/auth/logout", { method: "POST" })
+                                    window.location.href = "/"
+                                } catch (e) {
+                                    toast.error("Logout failed")
+                                }
+                            }}
+                        >
+                            <LogOut className="h-4 w-4" />
                         </Button>
                     </div>
                 </div>

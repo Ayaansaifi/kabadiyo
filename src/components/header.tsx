@@ -106,10 +106,15 @@ export async function Header() {
                                 <Link href="/register"><Button>Sign Up</Button></Link>
                             </div>
 
-                            {/* Mobile: Just Login Button */}
-                            <Link href="/login" className="md:hidden">
-                                <Button size="sm" variant="outline">Login</Button>
-                            </Link>
+                            {/* Mobile: Login & Signup Buttons */}
+                            <div className="flex gap-2 md:hidden">
+                                <Link href="/login">
+                                    <Button size="sm" variant="outline">Login</Button>
+                                </Link>
+                                <Link href="/register">
+                                    <Button size="sm">Sign Up</Button>
+                                </Link>
+                            </div>
                         </>
                     )}
                 </div>
