@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs"
 import { cookies } from "next/headers"
 
 import { checkBruteForce, recordFailedAttempt, clearFailedAttempts } from "@/lib/security"
+import { getGeoInfo } from "@/lib/geo"
 
 export async function POST(req: Request) {
     try {
@@ -48,7 +49,10 @@ export async function POST(req: Request) {
         // Create Session Record
         const sessionToken = crypto.randomUUID()
         const userAgent = req.headers.get("user-agent") || "Unknown Device"
-        const ip = req.headers.get("x-forwarded-for") || "Unknown IP"
+        const ip = req.headers.get("x-forwarded-for") || "127.0.0.1" // Fallback for dev
+
+        // Get Location
+        const geo = await getGeoInfo(ip.split(',')[0].trim())
 
         // Simple device detection
         let deviceType = "Desktop"
@@ -66,6 +70,8 @@ export async function POST(req: Request) {
                 sessionToken,
                 userAgent: `${deviceName} (${deviceType})`,
                 ipAddress: ip,
+                city: geo.city,
+                country: geo.country,
                 expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) // 7 days
             }
         })

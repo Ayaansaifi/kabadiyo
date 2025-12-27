@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
 import { db } from "@/lib/db"
 import { sendOtpEmail } from "@/lib/mail"
+import { getGeoInfo } from "@/lib/geo"
 
 // OTP Login - Request OTP or Verify OTP
 export async function POST(req: Request) {
@@ -91,10 +92,10 @@ export async function POST(req: Request) {
 
             // Create Session Record
             const sessionToken = crypto.randomUUID()
-            // In OTP route, we might not have 'req' in formatting above easily access headers if it was cleaner, 
-            // but we do have 'req' object at top.
             const userAgent = req.headers.get("user-agent") || "Unknown Device"
-            const ip = req.headers.get("x-forwarded-for") || "Unknown IP"
+            const ip = req.headers.get("x-forwarded-for") || "127.0.0.1"
+
+            const geo = await getGeoInfo(ip.split(',')[0].trim())
 
             const deviceName = userAgent.includes("Windows") ? "Windows PC" :
                 userAgent.includes("Mac") ? "Mac" :
@@ -107,6 +108,8 @@ export async function POST(req: Request) {
                     sessionToken,
                     userAgent: deviceName,
                     ipAddress: ip,
+                    city: geo.city,
+                    country: geo.country,
                     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) // 7 days
                 }
             })
