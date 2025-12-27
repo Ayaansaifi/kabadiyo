@@ -22,7 +22,7 @@ export async function GET() {
                     ]
                 },
                 senderId: { not: userId },
-                read: false
+                isRead: false
             }
         })
 
