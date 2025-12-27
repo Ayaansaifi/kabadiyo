@@ -64,24 +64,30 @@ export function MobileNav() {
                             {active && (
                                 <motion.div
                                     layoutId="activeTab"
-                                    className="absolute inset-0 m-2 bg-gradient-to-br from-green-400 to-green-600 rounded-full z-0"
+                                    className="absolute top-1 inset-x-0 mx-auto w-12 h-12 bg-white/10 rounded-2xl z-0"
                                     transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                 />
                             )}
 
                             {/* Icon Container */}
-                            <div className="relative z-10 p-2">
-                                <item.icon
-                                    className={`h-6 w-6 transition-all duration-200 ${active
-                                        ? "text-white"
-                                        : "text-gray-400 dark:text-gray-400 group-hover:text-white"
-                                        }`}
-                                />
-
-                                {/* Notification Badge */}
-                                {item.badge && item.badge > 0 && (
-                                    <span className="absolute top-1 right-1 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-black" />
-                                )}
+                            <div className="relative z-10 flex flex-col items-center justify-center pt-1">
+                                <div className={`relative p-1.5 rounded-full transition-all duration-300 ${active ? '-translate-y-1' : ''}`}>
+                                    <item.icon
+                                        className={`h-6 w-6 transition-all duration-200 ${active
+                                            ? "text-white fill-white/20"
+                                            : "text-gray-400 dark:text-gray-400 group-hover:text-white"
+                                            }`}
+                                    />
+                                    {/* Notification Badge */}
+                                    {item.badge && item.badge > 0 && (
+                                        <span className="absolute -top-1 -right-1 h-3.5 w-3.5 bg-red-500 text-[9px] text-white flex items-center justify-center rounded-full border-2 border-black font-bold">
+                                            {item.badge > 9 ? '9+' : item.badge}
+                                        </span>
+                                    )}
+                                </div>
+                                <span className={`text-[10px] font-medium transition-all duration-200 ${active ? 'text-green-400 translate-y-0 opacity-100' : 'text-gray-500 opacity-80 translate-y-1'}`}>
+                                    {item.name}
+                                </span>
                             </div>
                         </Link>
                     )

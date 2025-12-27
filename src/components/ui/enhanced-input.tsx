@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, forwardRef } from 'react'
 import { cn } from '@/lib/utils'
-import { Eye, EyeOff, Check, X, AlertCircle } from 'lucide-react'
+import { Eye, EyeOff, Check, X, AlertCircle, Lock } from 'lucide-react'
 import { checkPasswordStrength, type PasswordStrengthResult } from '@/lib/security'
 
 interface AnimatedInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -60,6 +60,7 @@ export const AnimatedInput = forwardRef<HTMLInputElement, AnimatedInputProps>(
                             "w-full px-3 py-3 border rounded-lg bg-background",
                             "transition-all duration-200",
                             "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary",
+                            "disabled:bg-muted/50 disabled:text-muted-foreground disabled:cursor-not-allowed",
                             "placeholder:text-transparent",
                             icon && "pl-10",
                             isPassword && "pr-10",
@@ -84,9 +85,10 @@ export const AnimatedInput = forwardRef<HTMLInputElement, AnimatedInputProps>(
                         </button>
                     )}
 
-                    {/* Success/Error Icons */}
-                    {!isPassword && (success || error) && (
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {/* Success/Error/Lock Icons */}
+                    {!isPassword && (
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                            {props.disabled && <Lock className="h-4 w-4 text-muted-foreground/50" />}
                             {success && <Check className="h-4 w-4 text-green-500" />}
                             {error && <X className="h-4 w-4 text-red-500" />}
                         </div>

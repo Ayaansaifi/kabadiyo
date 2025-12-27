@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { AnimatedInput } from "@/components/ui/enhanced-input"
+import { EcoImpactVisualizer } from "@/components/profile/EcoImpactVisualizer"
 
 export default function ProfilePage() {
     const { data: session, update } = useSession()
@@ -393,35 +394,40 @@ export default function ProfilePage() {
                 </TabsContent>
 
                 <TabsContent value="impact" className="space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Your Environmental Impact</CardTitle>
-                            <CardDescription>See how your recycling efforts help the planet</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="flex flex-col items-center p-6 bg-green-50 dark:bg-green-900/10 rounded-xl">
-                                    <Leaf className="h-8 w-8 text-green-600 mb-3" />
-                                    <h3 className="text-3xl font-bold text-green-700">{impact.treesSaved}</h3>
-                                    <p className="text-sm text-muted-foreground">Trees Saved</p>
+                    <EcoImpactVisualizer totalWeight={stats.totalWeight} />
+
+                    {/* Additional Impact Info */}
+                    <div className="grid md:grid-cols-2 gap-4">
+                        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 border-blue-100">
+                            <CardHeader>
+                                <CardTitle className="text-lg">Did You Know?</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground">
+                                    Recycling 1 ton of paper saves 17 trees, 7,000 gallons of water, and 4,000 kilowatts of electricity.
+                                </p>
+                            </CardContent>
+                        </Card>
+                        <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-orange-900/10 dark:to-yellow-900/10 border-orange-100">
+                            <CardHeader>
+                                <CardTitle className="text-lg">Community Goal</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-sm font-medium">
+                                        <span>City Target: 10,000kg</span>
+                                        <span>75%</span>
+                                    </div>
+                                    <Progress value={75} className="h-2 bg-orange-200" indicatorClassName="bg-orange-500" />
+                                    <p className="text-xs text-muted-foreground">Together we are making our city cleaner!</p>
                                 </div>
-                                <div className="flex flex-col items-center p-6 bg-blue-50 dark:bg-blue-900/10 rounded-xl">
-                                    <Recycle className="h-8 w-8 text-blue-600 mb-3" />
-                                    <h3 className="text-3xl font-bold text-blue-700">{impact.co2Avoided}kg</h3>
-                                    <p className="text-sm text-muted-foreground">CO₂ Avoided</p>
-                                </div>
-                                <div className="flex flex-col items-center p-6 bg-yellow-50 dark:bg-yellow-900/10 rounded-xl">
-                                    <Zap className="h-8 w-8 text-yellow-600 mb-3" />
-                                    <h3 className="text-3xl font-bold text-yellow-700">{impact.energySaved}kWh</h3>
-                                    <p className="text-sm text-muted-foreground">Energy Conserved</p>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </TabsContent>
 
                 <TabsContent value="activity">
-                    <Card>
+                    <Card className="border-none shadow-md bg-white/50 dark:bg-card/50 backdrop-blur-sm">
                         <CardHeader>
                             <CardTitle>Ordering History</CardTitle>
                             <CardDescription>Your recent sell requests and pickups</CardDescription>
@@ -429,45 +435,47 @@ export default function ProfilePage() {
                         <CardContent>
                             <div className="space-y-6">
                                 {orders.length === 0 ? (
-                                    <div className="text-center py-8 text-muted-foreground">
-                                        <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center mx-auto mb-3">
-                                            <Calendar className="h-6 w-6" />
+                                    <div className="text-center py-12 text-muted-foreground bg-muted/20 rounded-xl border border-dashed border-muted">
+                                        <div className="h-16 w-16 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <Calendar className="h-8 w-8 text-muted-foreground" />
                                         </div>
-                                        <p>No recent activity</p>
-                                        <Button variant="link" asChild className="mt-2">
+                                        <h3 className="font-semibold text-lg mb-1">No Orders Yet</h3>
+                                        <p className="mb-4 max-w-xs mx-auto">Start your recycling journey today and earn rewards!</p>
+                                        <Button asChild className="rounded-full px-8">
                                             <a href="/market">Find a Kabadiwala</a>
                                         </Button>
                                     </div>
                                 ) : (
                                     orders.map((order: any, i) => (
-                                        <div key={order.id} className="flex gap-4 items-start">
+                                        <div key={order.id} className="flex gap-4 items-start group">
                                             <div className="relative pt-1">
-                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center z-10 relative 
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center z-10 relative shadow-sm transition-transform group-hover:scale-110 
                                                     ${order.status === 'COMPLETED' ? 'bg-green-100 text-green-600' :
                                                         order.status === 'CANCELLED' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'}`}>
-                                                    {order.status === 'COMPLETED' ? <CheckCircle className="h-4 w-4" /> :
-                                                        order.status === 'CANCELLED' ? <XCircle className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
+                                                    {order.status === 'COMPLETED' ? <CheckCircle className="h-5 w-5" /> :
+                                                        order.status === 'CANCELLED' ? <XCircle className="h-5 w-5" /> : <Clock className="h-5 w-5" />}
                                                 </div>
                                                 {i !== orders.length - 1 && (
-                                                    <div className="absolute top-8 left-1/2 -translate-x-1/2 h-full w-0.5 bg-border" />
+                                                    <div className="absolute top-10 left-1/2 -translate-x-1/2 h-full w-0.5 bg-border group-hover:bg-muted-foreground/30 transition-colors" />
                                                 )}
                                             </div>
-                                            <div className="flex-1 pb-6 border-b last:border-0 border-muted">
+                                            <div className="flex-1 pb-6 border-b last:border-0 border-muted/50">
                                                 <div className="flex justify-between items-start">
                                                     <div>
-                                                        <p className="font-semibold text-sm">
+                                                        <p className="font-bold text-foreground group-hover:text-primary transition-colors">
                                                             {order.buyer?.kabadiwalaProfile?.businessName || "Kabadiwala Pickup"}
                                                         </p>
-                                                        <p className="text-xs text-muted-foreground">
+                                                        <p className="text-xs text-muted-foreground mt-0.5">
                                                             {new Date(order.createdAt).toLocaleDateString()} • {order.items ? order.items.split(',').length : 0} Items
                                                         </p>
                                                     </div>
-                                                    <Badge variant={order.status === 'COMPLETED' ? 'outline' : 'secondary'} className="text-xs">
+                                                    <Badge variant={order.status === 'COMPLETED' ? 'outline' : 'secondary'} className="text-xs font-mono">
                                                         {order.status}
                                                     </Badge>
                                                 </div>
                                                 {order.totalAmount && (
-                                                    <p className="text-sm font-medium text-green-600 mt-1">
+                                                    <p className="text-sm font-bold text-green-600 mt-2 flex items-center gap-1">
+                                                        <TrendingUp className="h-3 w-3" />
                                                         + ₹{order.totalAmount} Earned
                                                     </p>
                                                 )}
