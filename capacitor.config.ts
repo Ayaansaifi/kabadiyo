@@ -2,11 +2,11 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.kabadiwala.app',
-  appName: 'Kabadiwala',
+  appName: 'Kabadiyo',
   webDir: 'out',
   server: {
     // Use your Vercel URL for production
-    url: 'https://kabadiyo.vercel.app',
+    url: 'https://kabadiyo.com',
     cleartext: true
   }
 };

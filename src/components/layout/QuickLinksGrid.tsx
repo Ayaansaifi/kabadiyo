@@ -17,14 +17,14 @@ interface QuickLinkItem {
 }
 
 const quickLinks: QuickLinkItem[] = [
-    { name: "Find", href: "/market", icon: <Search className="h-6 w-6" />, color: "text-blue-600", bgColor: "bg-blue-50 dark:bg-blue-950/30" },
-    { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="h-6 w-6" />, color: "text-purple-600", bgColor: "bg-purple-50 dark:bg-purple-950/30" },
-    { name: "Rewards", href: "/rewards", icon: <Gift className="h-6 w-6" />, color: "text-yellow-600", bgColor: "bg-yellow-50 dark:bg-yellow-950/30" },
-    { name: "Help", href: "/help", icon: <HelpCircle className="h-6 w-6" />, color: "text-green-600", bgColor: "bg-green-50 dark:bg-green-950/30" },
-    { name: "Food Rescue", href: "/food-rescue", icon: <Utensils className="h-6 w-6" />, color: "text-orange-600", bgColor: "bg-orange-50 dark:bg-orange-950/30" },
-    { name: "Call Us", href: "tel:8586040076", icon: <Phone className="h-6 w-6" />, color: "text-teal-600", bgColor: "bg-teal-50 dark:bg-teal-950/30" },
-    { name: "Profile", href: "/profile", icon: <User className="h-6 w-6" />, color: "text-indigo-600", bgColor: "bg-indigo-50 dark:bg-indigo-950/30" },
-    { name: "Settings", href: "/settings", icon: <Settings className="h-6 w-6" />, color: "text-gray-600", bgColor: "bg-gray-50 dark:bg-gray-800/50" },
+    { name: "Find", href: "/market", icon: <Search className="h-6 w-6" />, color: "text-white", bgColor: "bg-blue-500" },
+    { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="h-6 w-6" />, color: "text-white", bgColor: "bg-purple-500" },
+    { name: "Rewards", href: "/rewards", icon: <Gift className="h-6 w-6" />, color: "text-white", bgColor: "bg-yellow-500" },
+    { name: "Help", href: "/help", icon: <HelpCircle className="h-6 w-6" />, color: "text-white", bgColor: "bg-green-500" },
+    { name: "Food Rescue", href: "/food-rescue", icon: <Utensils className="h-6 w-6" />, color: "text-white", bgColor: "bg-orange-500" },
+    { name: "Call Us", href: "tel:8586040076", icon: <Phone className="h-6 w-6" />, color: "text-white", bgColor: "bg-teal-500" },
+    { name: "Profile", href: "/profile", icon: <User className="h-6 w-6" />, color: "text-white", bgColor: "bg-indigo-500" },
+    { name: "Settings", href: "/settings", icon: <Settings className="h-6 w-6" />, color: "text-white", bgColor: "bg-slate-500" },
 ]
 
 const legalLinks: QuickLinkItem[] = [
@@ -40,7 +40,7 @@ const calculateDelay = (index: number) => (index * 0.05) / goldenRatio
 function AppIconGrid() {
     return (
         <div className="space-y-6">
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-y-6 gap-x-2">
                 {quickLinks.map((link, index) => (
                     <motion.div
                         key={link.name}
@@ -54,15 +54,15 @@ function AppIconGrid() {
                         }}
                         viewport={{ once: true }}
                     >
-                        <Link href={link.href} className="group flex flex-col items-center gap-2 p-3">
+                        <Link href={link.href} className="group flex flex-col items-center gap-2">
                             <motion.div
-                                whileHover={{ scale: 1.15, rotate: 5 }}
+                                whileHover={{ scale: 1.1, rotate: 5 }}
                                 whileTap={{ scale: 0.9 }}
-                                className={`w-14 h-14 rounded-2xl flex items-center justify-center ${link.bgColor} ${link.color} shadow-sm border border-white/20 backdrop-blur-sm group-hover:shadow-lg transition-shadow duration-300`}
+                                className={`w-14 h-14 rounded-full flex items-center justify-center ${link.bgColor} ${link.color} shadow-md group-hover:shadow-lg transition-all duration-300 ring-2 ring-white/50 dark:ring-black/20`}
                             >
                                 {link.icon}
                             </motion.div>
-                            <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors text-center leading-tight">
+                            <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground transition-colors text-center leading-tight">
                                 {link.name}
                             </span>
                         </Link>

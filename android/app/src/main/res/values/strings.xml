@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Kabadiwala</string>
-    <string name="title_activity_main">Kabadiwala</string>
+    <string name="app_name">Kabadiyo</string>
+    <string name="title_activity_main">Kabadiyo</string>
     <string name="package_name">com.kabadiwala.app</string>
     <string name="custom_url_scheme">com.kabadiwala.app</string>
 </resources>
