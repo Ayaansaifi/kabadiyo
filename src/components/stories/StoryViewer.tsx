@@ -192,21 +192,22 @@ export function StoryViewer({ storyGroups, initialGroupIndex, currentUserId, onC
         }
     }
 
-    if (!currentStory) return
-    try {
-        const res = await fetch(`/api/stories/${currentStory.id}`, { method: "DELETE", credentials: 'include' })
-        if (res.ok) {
-            toast.success("Story deleted")
-            // Remove from local state immediately for better UI
-            // Actually goToNextStory handles navigation, but we might want to refresh upstream
-            goToNextStory()
-            onClose() // Close for now to force refresh
-        } else {
-            toast.error("Failed to delete story")
+    const handleDelete = async () => {
+        if (!currentStory) return
+        try {
+            const res = await fetch(`/api/stories/${currentStory.id}`, { method: "DELETE", credentials: 'include' })
+            if (res.ok) {
+                toast.success("Story deleted")
+                // Remove from local state immediately for better UI
+                goToNextStory()
+                onClose() // Close for now to force refresh
+            } else {
+                toast.error("Failed to delete story")
+            }
+        } catch (error) {
+            toast.error("Error deleting story")
+            console.error("Failed to delete story")
         }
-    } catch (error) {
-        toast.error("Error deleting story")
-        console.error("Failed to delete story")
     }
 
     const getDisplayName = () => {
