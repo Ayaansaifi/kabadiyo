@@ -73,8 +73,8 @@ export function StoriesBar({ currentUserId, className }: StoriesBarProps) {
 
     useEffect(() => {
         fetchStories()
-        // Refresh stories every minute
-        const interval = setInterval(fetchStories, 60000)
+        // Refresh stories every 15 seconds for real-time updates
+        const interval = setInterval(fetchStories, 15000)
         return () => clearInterval(interval)
     }, [])
 

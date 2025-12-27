@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { X, ChevronLeft, ChevronRight, Eye, Trash2, MoreVertical, ChevronUp, Users } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
     DropdownMenu,
@@ -100,20 +101,30 @@ export function StoryViewer({ storyGroups, initialGroupIndex, currentUserId, onC
     // Load view count and viewers for own stories
     useEffect(() => {
         if (currentStory && isOwnStory) {
-            fetch(`/api/stories/${currentStory.id}/view`, { credentials: 'include' })
-                .then(res => res.json())
-                .then(data => {
-                    if (isMounted.current) {
-                        setViewCount(data.total || 0)
-                        setViewers(data.views || [])
-                    }
-                })
-                .catch(() => {
-                    if (isMounted.current) {
-                        setViewCount(null)
-                        setViewers([])
-                    }
-                })
+            // Initial fetch
+            const fetchViews = () => {
+                fetch(`/api/stories/${currentStory.id}/view`, { credentials: 'include' })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (isMounted.current) {
+                            setViewCount(data.total || 0)
+                            setViewers(data.views || [])
+                        }
+                    })
+                    .catch(() => {
+                        if (isMounted.current) {
+                            setViewCount(null)
+                            setViewers([])
+                        }
+                    })
+            }
+
+            fetchViews()
+
+            // Poll every 3 seconds for real-time updates
+            const viewInterval = setInterval(fetchViews, 3000)
+
+            return () => clearInterval(viewInterval)
         } else {
             const timer = setTimeout(() => {
                 if (isMounted.current) {
@@ -181,14 +192,21 @@ export function StoryViewer({ storyGroups, initialGroupIndex, currentUserId, onC
         }
     }
 
-    const handleDelete = async () => {
-        if (!currentStory) return
-        try {
-            await fetch(`/api/stories/${currentStory.id}`, { method: "DELETE", credentials: 'include' })
+    if (!currentStory) return
+    try {
+        const res = await fetch(`/api/stories/${currentStory.id}`, { method: "DELETE", credentials: 'include' })
+        if (res.ok) {
+            toast.success("Story deleted")
+            // Remove from local state immediately for better UI
+            // Actually goToNextStory handles navigation, but we might want to refresh upstream
             goToNextStory()
-        } catch (error) {
-            console.error("Failed to delete story")
+            onClose() // Close for now to force refresh
+        } else {
+            toast.error("Failed to delete story")
         }
+    } catch (error) {
+        toast.error("Error deleting story")
+        console.error("Failed to delete story")
     }
 
     const getDisplayName = () => {
