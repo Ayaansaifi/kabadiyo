@@ -30,7 +30,7 @@ export default async function ChatListPage() {
         orderBy: { lastMessageAt: 'desc' }
     })
 
-    // Transform data for client component
+    // Transform data for client component (app version)
     const chatData = chats.map((chat) => {
         const otherUser = userId === chat.sellerId ? chat.buyer : chat.seller
         const lastMessage = chat.messages[0]
@@ -48,6 +48,8 @@ export default async function ChatListPage() {
         }
     })
 
+    // Render ChatListClient which will detect platform internally
+    // On App: Shows advanced UI with animations, online status
+    // On Web: Shows advanced UI (same) - for consistent experience
     return <ChatListClient chats={chatData} />
 }
-
