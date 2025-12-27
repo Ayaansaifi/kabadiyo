@@ -18,6 +18,119 @@ import {
 } from "lucide-react"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
+import { useIsNativePlatform } from "@/hooks/useNativePlatform"
+
+// --- Helper Component for Rates ---
+interface RatesContentProps {
+    rates: any
+    setRates: (rates: any) => void
+    handleSave: (tab: string) => void
+    saving: boolean
+}
+
+function RatesContent({ rates, setRates, handleSave, saving }: RatesContentProps) {
+    const { isNative, isLoading } = useIsNativePlatform()
+
+    if (isLoading) return <div className="p-8"><Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" /></div>
+
+    const rateItems = [
+        { key: "iron", label: "Iron/Metal", icon: <Cog className="h-6 w-6" />, color: "bg-gray-100 dark:bg-gray-800 text-gray-600" },
+        { key: "plastic", label: "Plastic", icon: <Wine className="h-6 w-6" />, color: "bg-blue-50 dark:bg-blue-950/30 text-blue-600" },
+        { key: "paper", label: "Paper", icon: <Newspaper className="h-6 w-6" />, color: "bg-amber-50 dark:bg-amber-950/30 text-amber-600" },
+        { key: "copper", label: "Copper", icon: <CircleDot className="h-6 w-6" />, color: "bg-orange-50 dark:bg-orange-950/30 text-orange-600" },
+        { key: "brass", label: "Brass", icon: <CircleDot className="h-6 w-6" />, color: "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600" },
+        { key: "aluminium", label: "Aluminium", icon: <Package2 className="h-6 w-6" />, color: "bg-slate-50 dark:bg-slate-800 text-slate-600" },
+        { key: "newspaper", label: "Newspaper", icon: <Newspaper className="h-6 w-6" />, color: "bg-stone-50 dark:bg-stone-800 text-stone-600" },
+        { key: "bottles", label: "Glass Bottles", icon: <GlassWater className="h-6 w-6" />, color: "bg-teal-50 dark:bg-teal-950/30 text-teal-600" },
+    ]
+
+    // APP VERSION: Fancy Icons
+    if (isNative) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <TrendingUp className="h-5 w-5 text-green-500" />
+                        Your Rates (₹ per kg)
+                    </CardTitle>
+                    <CardDescription>Set competitive prices to attract more customers</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        {rateItems.map((item, index) => (
+                            <motion.div
+                                key={item.key}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.05 }}
+                                className={`rounded-xl p-4 ${item.color} border border-white/20`}
+                            >
+                                <div className="flex items-center gap-2 mb-3">
+                                    {item.icon}
+                                    <span className="text-sm font-semibold">{item.label}</span>
+                                </div>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-bold">₹</span>
+                                    <Input
+                                        type="number"
+                                        value={rates[item.key as keyof typeof rates]}
+                                        onChange={(e) => setRates({ ...rates, [item.key]: Number(e.target.value) })}
+                                        className="pl-8 text-lg font-bold bg-white/50 dark:bg-black/30 border-0 focus-visible:ring-2"
+                                    />
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <Button
+                            onClick={() => handleSave("rates")}
+                            disabled={saving}
+                            className="w-full md:w-auto bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                        >
+                            {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            <Save className="h-4 w-4 mr-2" /> Save All Rates
+                        </Button>
+                    </motion.div>
+                </CardContent>
+            </Card>
+        )
+    }
+
+    // WEBSITE VERSION: Simple List
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Standard Rates</CardTitle>
+                <CardDescription>Update your scrap prices per kg</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    {rateItems.map((item) => (
+                        <div key={item.key} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+                            <Label htmlFor={`rate-${item.key}`} className="text-base font-medium flex items-center gap-2">
+                                {item.label}
+                            </Label>
+                            <div className="relative w-32">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">₹</span>
+                                <Input
+                                    id={`rate-${item.key}`}
+                                    type="number"
+                                    value={rates[item.key as keyof typeof rates]}
+                                    onChange={(e) => setRates({ ...rates, [item.key]: Number(e.target.value) })}
+                                    className="pl-7"
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <Button onClick={() => handleSave("rates")} disabled={saving}>
+                    {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    <Save className="h-4 w-4 mr-2" /> Save Changes
+                </Button>
+            </CardContent>
+        </Card>
+    )
+}
 
 interface KabadiwalaProfile {
     id: string
@@ -366,62 +479,7 @@ export default function KabadiwalaProfilePage() {
 
                     {/* Rates */}
                     <TabsContent value="rates">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <TrendingUp className="h-5 w-5 text-green-500" />
-                                    Your Rates (₹ per kg)
-                                </CardTitle>
-                                <CardDescription>Set competitive prices to attract more customers</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                                    {/* Material Rate Cards with Icons */}
-                                    {[
-                                        { key: "iron", label: "Iron/Metal", icon: <Cog className="h-6 w-6" />, color: "bg-gray-100 dark:bg-gray-800 text-gray-600" },
-                                        { key: "plastic", label: "Plastic", icon: <Wine className="h-6 w-6" />, color: "bg-blue-50 dark:bg-blue-950/30 text-blue-600" },
-                                        { key: "paper", label: "Paper", icon: <Newspaper className="h-6 w-6" />, color: "bg-amber-50 dark:bg-amber-950/30 text-amber-600" },
-                                        { key: "copper", label: "Copper", icon: <CircleDot className="h-6 w-6" />, color: "bg-orange-50 dark:bg-orange-950/30 text-orange-600" },
-                                        { key: "brass", label: "Brass", icon: <CircleDot className="h-6 w-6" />, color: "bg-yellow-50 dark:bg-yellow-950/30 text-yellow-600" },
-                                        { key: "aluminium", label: "Aluminium", icon: <Package2 className="h-6 w-6" />, color: "bg-slate-50 dark:bg-slate-800 text-slate-600" },
-                                        { key: "newspaper", label: "Newspaper", icon: <Newspaper className="h-6 w-6" />, color: "bg-stone-50 dark:bg-stone-800 text-stone-600" },
-                                        { key: "bottles", label: "Glass Bottles", icon: <GlassWater className="h-6 w-6" />, color: "bg-teal-50 dark:bg-teal-950/30 text-teal-600" },
-                                    ].map((item, index) => (
-                                        <motion.div
-                                            key={item.key}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: index * 0.05 }}
-                                            className={`rounded-xl p-4 ${item.color} border border-white/20`}
-                                        >
-                                            <div className="flex items-center gap-2 mb-3">
-                                                {item.icon}
-                                                <span className="text-sm font-semibold">{item.label}</span>
-                                            </div>
-                                            <div className="relative">
-                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-bold">₹</span>
-                                                <Input
-                                                    type="number"
-                                                    value={rates[item.key as keyof typeof rates]}
-                                                    onChange={(e) => setRates({ ...rates, [item.key]: Number(e.target.value) })}
-                                                    className="pl-8 text-lg font-bold bg-white/50 dark:bg-black/30 border-0 focus-visible:ring-2"
-                                                />
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
-                                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                                    <Button
-                                        onClick={() => handleSave("rates")}
-                                        disabled={saving}
-                                        className="w-full md:w-auto bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
-                                    >
-                                        {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                        <Save className="h-4 w-4 mr-2" /> Save All Rates
-                                    </Button>
-                                </motion.div>
-                            </CardContent>
-                        </Card>
+                        <RatesContent rates={rates} setRates={setRates} handleSave={handleSave} saving={saving} />
                     </TabsContent>
 
                     {/* Service Hours */}

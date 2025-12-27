@@ -7,6 +7,7 @@ import { StoriesSection } from "@/components/stories/StoriesSection"
 import { ScrapRatesTicker } from "@/components/dashboard/ScrapRatesTicker"
 import { ImpactStats } from "@/components/dashboard/ImpactStats"
 import { QuickLinksGrid } from "@/components/layout/QuickLinksGrid"
+import { AppSlider } from "@/components/layout/AppSlider"
 import { db } from "@/lib/db"
 import { KabadiwalaCard } from "@/components/kabadiwala-card"
 import { cookies } from "next/headers"
@@ -52,6 +53,11 @@ export default async function LandingPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="flex-1">
+        {/* APP ONLY: Slider showing collection process */}
+        <div className="container mx-auto px-4 mt-6">
+          <AppSlider />
+        </div>
+
         {/* Hero Section */}
         <section className="relative py-24 px-4 text-center overflow-hidden">
           {/* Animated Background Blob */}

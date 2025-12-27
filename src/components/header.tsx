@@ -14,9 +14,9 @@ import { cookies } from "next/headers"
 import { db } from "@/lib/db"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { LogOut, Menu } from "lucide-react"
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
+import { LogOut } from "lucide-react"
 import { redirect } from "next/navigation"
+import { MobileProfileButton } from "@/components/layout/MobileProfileButton"
 
 async function getUser() {
     const cookieStore = await cookies()
@@ -39,7 +39,10 @@ export async function Header() {
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-14 items-center px-4">
-                <Link href="/" className="mr-6 flex items-center space-x-2">
+                {/* APP ONLY: Profile avatar on LEFT side (before logo on mobile) */}
+                {user && <MobileProfileButton userName={user.name} />}
+
+                <Link href="/" className="mr-6 flex items-center space-x-2 ml-2 md:ml-0">
                     <span className="font-bold text-xl text-primary">Kabadiwala</span>
                 </Link>
 
@@ -73,7 +76,7 @@ export async function Header() {
                     )}
                 </nav>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 ml-auto">
                     {user ? (
                         <>
                             {/* Desktop: Full Name + Avatar */}
@@ -83,15 +86,6 @@ export async function Header() {
                                 </span>
                                 <Avatar className="h-8 w-8 ring-2 ring-primary/20">
                                     <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                                        {user.name?.[0] || 'U'}
-                                    </AvatarFallback>
-                                </Avatar>
-                            </Link>
-
-                            {/* Mobile: Just Avatar (Profile Button) */}
-                            <Link href="/profile" className="md:hidden">
-                                <Avatar className="h-9 w-9 ring-2 ring-primary/30 active:scale-95 transition-transform">
-                                    <AvatarFallback className="bg-gradient-to-br from-primary/20 to-green-600/20 text-primary font-bold">
                                         {user.name?.[0] || 'U'}
                                     </AvatarFallback>
                                 </Avatar>
@@ -123,4 +117,4 @@ export async function Header() {
         </header>
     )
 }
-// Skipping Header update as it is a server component and user request was specific to Profile page.
+
