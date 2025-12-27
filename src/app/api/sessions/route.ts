@@ -3,11 +3,12 @@ import { db } from "@/lib/db"
 import { cookies } from "next/headers"
 
 // GET: List all active sessions for current user
-export async function GET() {
+export async function GET(req: Request) {
     try {
         const cookieStore = await cookies()
         const userId = cookieStore.get("userId")?.value
-        const currentToken = cookieStore.get("sessionToken")?.value // Assuming we store token in cookie
+        const currentToken = cookieStore.get("sessionToken")?.value
+        const currentUserAgent = req.headers.get("user-agent") || ""
 
         if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
@@ -24,7 +25,7 @@ export async function GET() {
             device: session.userAgent || "Unknown Device",
             location: session.city ? `${session.city}, ${session.country || ''}` : "Unknown Location",
             lastActive: session.lastActive,
-            isCurrent: session.sessionToken === currentToken || (session.userAgent?.includes(typeof navigator !== 'undefined' ? navigator.userAgent : "") ?? false), // Rough check if token not avail
+            isCurrent: session.sessionToken === currentToken || (session.userAgent === currentUserAgent),
             ip: session.ipAddress
         }))
 

@@ -51,7 +51,7 @@ export default function SettingsPage() {
 
     useEffect(() => {
         setMounted(true)
-        fetchSessions()
+
 
         // Load settings from localStorage
         const savedNotifications = localStorage.getItem('kabadi_notifications')

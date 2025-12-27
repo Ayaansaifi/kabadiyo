@@ -5,8 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Laptop, Smartphone, Globe, Trash2, Shield, Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { useIsNativePlatform } from "@/hooks/useNativePlatform"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 interface Session {
     id: string
