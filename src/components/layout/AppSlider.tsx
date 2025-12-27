@@ -20,14 +20,16 @@ const slides: SlideItem[] = [
         title: "Sell Your Scrap",
         subtitle: "Get the best prices for your recyclables",
         icon: <Recycle className="h-16 w-16 text-white" />,
-        gradient: "from-green-500 to-emerald-600"
+        gradient: "from-green-500 to-emerald-600",
+        image: "/images/slider/sell-scrap.png"
     },
     {
         id: 2,
         title: "Free Doorstep Pickup",
         subtitle: "Our team comes to your home",
         icon: <Truck className="h-16 w-16 text-white" />,
-        gradient: "from-blue-500 to-cyan-600"
+        gradient: "from-blue-500 to-cyan-600",
+        image: "/images/slider/pickup.png"
     },
     {
         id: 3,
@@ -42,7 +44,8 @@ const slides: SlideItem[] = [
         title: "Save The Planet",
         subtitle: "Every kg recycled makes a difference",
         icon: <Leaf className="h-16 w-16 text-white" />,
-        gradient: "from-teal-500 to-green-600"
+        gradient: "from-teal-500 to-green-600",
+        image: "/images/slider/save-planet.png"
     }
 ]
 
