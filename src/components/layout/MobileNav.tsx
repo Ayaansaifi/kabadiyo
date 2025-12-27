@@ -58,7 +58,7 @@ export function MobileNav() {
                             key={item.name}
                             href={item.href}
                             onClick={() => handleTap(item.name)}
-                            className="relative flex flex-col items-center justify-center w-full h-full"
+                            className="relative flex-1 flex flex-col items-center justify-center h-full"
                         >
                             {/* Active Bubble Background */}
                             {active && (
@@ -93,7 +93,7 @@ export function MobileNav() {
                     )
                 })}
             </div>
-        </div>
+        </div >
     )
 }
 

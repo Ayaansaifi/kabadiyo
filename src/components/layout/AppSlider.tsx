@@ -11,6 +11,7 @@ interface SlideItem {
     subtitle: string
     icon: React.ReactNode
     gradient: string
+    image?: string
 }
 
 const slides: SlideItem[] = [
@@ -31,9 +32,10 @@ const slides: SlideItem[] = [
     {
         id: 3,
         title: "Instant Cash Payment",
-        subtitle: "Get paid on the spot",
+        subtitle: "Direct cash handover at pickup",
         icon: <Banknote className="h-16 w-16 text-white" />,
-        gradient: "from-purple-500 to-pink-600"
+        gradient: "from-purple-500 to-pink-600",
+        image: "/images/slider/payment.png"
     },
     {
         id: 4,
@@ -86,28 +88,50 @@ export function AppSlider() {
     const slide = slides[currentSlide]
 
     return (
-        <div className="relative w-full overflow-hidden rounded-2xl mb-6">
+        <div className="relative w-full overflow-hidden rounded-2xl mb-6 shadow-xl">
             {/* Slider Container */}
-            <div className={`relative h-44 bg-gradient-to-r ${slide.gradient} transition-all duration-500`}>
+            <div className={`relative h-48 bg-gradient-to-r ${slide.gradient} transition-all duration-500`}>
+
+                {/* Background Image if available */}
+                <AnimatePresence mode="wait">
+                    {slide.image && (
+                        <motion.div
+                            key={`bg-${slide.id}`}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="absolute inset-0 z-0"
+                        >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={slide.image} alt="Slide Background" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={slide.id}
-                        initial={{ opacity: 0, x: direction * 50 }}
+                        initial={{ opacity: 0, x: direction * 30 }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -direction * 50 }}
+                        exit={{ opacity: 0, x: -direction * 30 }}
                         transition={{ duration: 0.3 }}
-                        className="absolute inset-0 flex items-center justify-between px-6"
+                        className="absolute inset-0 flex items-center justify-between px-6 z-10"
                     >
                         {/* Content */}
-                        <div className="flex-1">
-                            <h3 className="text-white text-xl font-bold mb-1">{slide.title}</h3>
-                            <p className="text-white/80 text-sm">{slide.subtitle}</p>
+                        <div className="flex-1 max-w-[65%]">
+                            <h3 className="text-white text-2xl font-bold mb-1 leading-tight drop-shadow-md">{slide.title}</h3>
+                            <p className="text-white/90 text-sm font-medium drop-shadow-sm">{slide.subtitle}</p>
                         </div>
 
-                        {/* Icon */}
-                        <div className="opacity-90">
-                            {slide.icon}
-                        </div>
+                        {/* Icon (Only show if no image, or make small if image is there?) 
+                            User wanted "Show Men", so Image is main. I'll keep Icon as subtle or hide it if image exists 
+                        */}
+                        {!slide.image && (
+                            <div className="opacity-90">
+                                {slide.icon}
+                            </div>
+                        )}
                     </motion.div>
                 </AnimatePresence>
 
