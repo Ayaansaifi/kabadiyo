@@ -49,83 +49,43 @@ export function MobileNav() {
     ]
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden pb-safe-area-bottom">
-            <div className="bg-white/95 dark:bg-black/95 backdrop-blur-xl border-t border-gray-200/50 dark:border-white/10 shadow-[0_-4px_30px_-10px_rgba(0,0,0,0.15)]">
-                <div className="flex justify-around items-center h-16 px-1">
-                    {navItems.map((item) => {
-                        const active = isActive(item.href)
-                        return (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                onClick={() => handleTap(item.name)}
-                                className="relative flex flex-col items-center justify-center w-full h-full"
-                            >
-                                {/* Ripple Effect */}
-                                <AnimatePresence>
-                                    {ripple === item.name && (
-                                        <motion.span
-                                            initial={{ scale: 0, opacity: 0.5 }}
-                                            animate={{ scale: 2, opacity: 0 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            className="absolute inset-0 bg-primary/20 rounded-full"
-                                        />
-                                    )}
-                                </AnimatePresence>
-
-                                {/* Active Indicator Line */}
-                                {active && (
-                                    <motion.span
-                                        layoutId="activeTab"
-                                        className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-b-full"
-                                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                                    />
-                                )}
-
-                                {/* Icon Container */}
+        <div className="fixed bottom-6 left-6 right-6 z-50 md:hidden">
+            <div className="bg-black/80 dark:bg-white/10 backdrop-blur-2xl border border-white/10 rounded-full shadow-2xl shadow-black/40 h-16 px-2 flex justify-between items-center">
+                {navItems.map((item) => {
+                    const active = isActive(item.href)
+                    return (
+                        <Link
+                            key={item.name}
+                            href={item.href}
+                            onClick={() => handleTap(item.name)}
+                            className="relative flex flex-col items-center justify-center w-full h-full"
+                        >
+                            {/* Active Bubble Background */}
+                            {active && (
                                 <motion.div
-                                    animate={{
-                                        y: active ? -4 : 0,
-                                        scale: active ? 1.1 : 1
-                                    }}
-                                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                                    className="relative p-1.5"
-                                >
-                                    <item.icon
-                                        className={`h-6 w-6 transition-colors duration-200 ${active
-                                                ? "text-primary fill-primary/20 stroke-[2.5px]"
-                                                : "text-gray-400 dark:text-gray-500"
-                                            }`}
-                                    />
+                                    layoutId="activeTab"
+                                    className="absolute inset-0 m-2 bg-gradient-to-br from-green-400 to-green-600 rounded-full z-0"
+                                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                />
+                            )}
 
-                                    {/* Notification Badge */}
-                                    {item.badge && item.badge > 0 && (
-                                        <motion.span
-                                            initial={{ scale: 0 }}
-                                            animate={{ scale: 1 }}
-                                            className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 shadow-lg"
-                                        >
-                                            {item.badge > 99 ? "99+" : item.badge}
-                                        </motion.span>
-                                    )}
-                                </motion.div>
-
-                                {/* Label */}
-                                <motion.span
-                                    animate={{
-                                        opacity: active ? 1 : 0.6,
-                                        fontWeight: active ? 600 : 400
-                                    }}
-                                    className={`text-[10px] mt-0.5 transition-colors duration-200 ${active ? "text-primary" : "text-gray-500 dark:text-gray-400"
+                            {/* Icon Container */}
+                            <div className="relative z-10 p-2">
+                                <item.icon
+                                    className={`h-6 w-6 transition-all duration-200 ${active
+                                        ? "text-white"
+                                        : "text-gray-400 dark:text-gray-400 group-hover:text-white"
                                         }`}
-                                >
-                                    {item.name}
-                                </motion.span>
-                            </Link>
-                        )
-                    })}
-                </div>
+                                />
+
+                                {/* Notification Badge */}
+                                {item.badge && item.badge > 0 && (
+                                    <span className="absolute top-1 right-1 h-2.5 w-2.5 bg-red-500 rounded-full border-2 border-black" />
+                                )}
+                            </div>
+                        </Link>
+                    )
+                })}
             </div>
         </div>
     )

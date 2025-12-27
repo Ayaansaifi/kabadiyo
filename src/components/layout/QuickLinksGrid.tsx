@@ -17,14 +17,14 @@ interface QuickLinkItem {
 }
 
 const quickLinks: QuickLinkItem[] = [
-    { name: "Find", href: "/market", icon: <Search className="h-6 w-6" />, color: "text-white", bgColor: "bg-blue-500" },
-    { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="h-6 w-6" />, color: "text-white", bgColor: "bg-purple-500" },
-    { name: "Rewards", href: "/rewards", icon: <Gift className="h-6 w-6" />, color: "text-white", bgColor: "bg-yellow-500" },
-    { name: "Help", href: "/help", icon: <HelpCircle className="h-6 w-6" />, color: "text-white", bgColor: "bg-green-500" },
-    { name: "Food Rescue", href: "/food-rescue", icon: <Utensils className="h-6 w-6" />, color: "text-white", bgColor: "bg-orange-500" },
-    { name: "Call Us", href: "tel:8586040076", icon: <Phone className="h-6 w-6" />, color: "text-white", bgColor: "bg-teal-500" },
-    { name: "Profile", href: "/profile", icon: <User className="h-6 w-6" />, color: "text-white", bgColor: "bg-indigo-500" },
-    { name: "Settings", href: "/settings", icon: <Settings className="h-6 w-6" />, color: "text-white", bgColor: "bg-slate-500" },
+    { name: "Find", href: "/market", icon: <Search className="h-6 w-6" />, color: "text-white", bgColor: "from-blue-500 to-blue-600 shadow-blue-500/30" },
+    { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="h-6 w-6" />, color: "text-white", bgColor: "from-purple-500 to-purple-600 shadow-purple-500/30" },
+    { name: "Rewards", href: "/rewards", icon: <Gift className="h-6 w-6" />, color: "text-white", bgColor: "from-yellow-400 to-orange-500 shadow-yellow-500/30" },
+    { name: "Help", href: "/help", icon: <HelpCircle className="h-6 w-6" />, color: "text-white", bgColor: "from-green-500 to-emerald-600 shadow-green-500/30" },
+    { name: "Rescue", href: "/food-rescue", icon: <Utensils className="h-6 w-6" />, color: "text-white", bgColor: "from-orange-500 to-red-500 shadow-orange-500/30" },
+    { name: "Call Us", href: "tel:8586040076", icon: <Phone className="h-6 w-6" />, color: "text-white", bgColor: "from-teal-400 to-cyan-600 shadow-teal-500/30" },
+    { name: "Profile", href: "/profile", icon: <User className="h-6 w-6" />, color: "text-white", bgColor: "from-indigo-500 to-violet-600 shadow-indigo-500/30" },
+    { name: "Settings", href: "/settings", icon: <Settings className="h-6 w-6" />, color: "text-white", bgColor: "from-slate-500 to-slate-600 shadow-slate-500/30" },
 ]
 
 const legalLinks: QuickLinkItem[] = [
@@ -40,7 +40,7 @@ const calculateDelay = (index: number) => (index * 0.05) / goldenRatio
 function AppIconGrid() {
     return (
         <div className="space-y-6">
-            <div className="grid grid-cols-4 gap-y-6 gap-x-2">
+            <div className="grid grid-cols-4 gap-y-7 gap-x-4 px-2">
                 {quickLinks.map((link, index) => (
                     <motion.div
                         key={link.name}
@@ -57,8 +57,11 @@ function AppIconGrid() {
                         <Link href={link.href} className="group flex flex-col items-center gap-2">
                             <motion.div
                                 whileHover={{ scale: 1.1, rotate: 5 }}
-                                whileTap={{ scale: 0.9 }}
-                                className={`w-14 h-14 rounded-full flex items-center justify-center ${link.bgColor} ${link.color} shadow-md group-hover:shadow-lg transition-all duration-300 ring-2 ring-white/50 dark:ring-black/20`}
+                                whileTap={{ scale: 0.95 }}
+                                className={`w-14 h-14 rounded-[18px] flex items-center justify-center bg-gradient-to-br ${link.bgColor} ${link.color} shadow-lg shadow-black/5 ring-1 ring-white/20 backdrop-blur-md transition-all duration-300`}
+                                style={{
+                                    boxShadow: `0 8px 20px -6px ${link.bgColor.replace('bg-', 'var(--')}` // Fallback or custom shadow logic if needed, but Tailwind is easier
+                                }}
                             >
                                 {link.icon}
                             </motion.div>
