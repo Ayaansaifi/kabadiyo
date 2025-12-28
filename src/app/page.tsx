@@ -56,8 +56,13 @@ export default async function LandingPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="flex-1">
+        {/* Stories Section (Moved to Top) */}
+        <section className="pt-4 pb-2 px-0 md:px-4">
+          <StoriesSection />
+        </section>
+
         {/* APP ONLY: Slider showing collection process */}
-        <div className="container mx-auto px-4 mt-6">
+        <div className="container mx-auto px-4 mt-2">
           <AppSlider />
         </div>
 
@@ -186,12 +191,7 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* Stories Section */}
-        <section className="py-6 px-4">
-          <div className="container mx-auto max-w-4xl">
-            <StoriesSection />
-          </div>
-        </section>
+
 
         {/* Featured Kabadiwalas Section */}
         {featuredKabadiwalas.length > 0 && (
