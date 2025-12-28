@@ -15,6 +15,7 @@ import Image from "next/image"
 import { PromoSlider } from "@/components/dashboard/PromoSlider"
 import { FeaturedIcons } from "@/components/dashboard/FeaturedIcons"
 import { PromoCard } from "@/components/dashboard/ImagePromoCards"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 // Direct call number for users who don't want to create profile
 const HELPLINE_NUMBER = "8586040076"
