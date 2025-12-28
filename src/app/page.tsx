@@ -131,16 +131,16 @@ export default async function LandingPage() {
         {/* Daily Rates Ticker */}
         <section className="container mx-auto px-4 -mt-6 relative z-10 mb-8">
           <ScrapRatesTicker />
-          {/* Promo Card 1: Bulk Pickup - using truck-load.jpg */}
+          {/* Promo Card 1: We Buy Everything */}
           <div className="mt-8">
             <ErrorBoundary>
               <PromoCard
-                title="Bulk Scrap Pickup"
-                subtitle="Got more than 50kg? Get special corporate rates."
-                cta="Book Truck"
+                title="We Buy Everything"
+                subtitle="From newspaper to iron, we buy all scraps at your doorstep."
+                cta="Check Rates"
                 href="/market"
                 gradient="from-blue-600 to-indigo-900"
-                image="/images/promo/truck-load.jpg"
+                image="/images/promo/buying-everything.png"
               />
             </ErrorBoundary>
           </div>
@@ -148,37 +148,52 @@ export default async function LandingPage() {
 
         <section className="container mx-auto px-4 mb-4">
           <ImpactStats />
-          {/* Promo Card 2: Accurate Weighing - using weighing-scrap.jpg */}
+          {/* Promo Card 2: Bulk Laptops */}
           <div className="mt-4">
             <ErrorBoundary>
               <PromoCard
-                title="100% Honest Weighing"
-                subtitle="Digital scales used for every pickup. Trust guaranteed."
-                cta="Learn More"
-                href="/help"
-                gradient="from-green-600 to-emerald-900"
-                image="/images/promo/weighing-scrap.jpg"
+                title="Bulk Laptop Buyers"
+                subtitle="Best prices for old/dead laptops & e-waste. Corporate pickup available."
+                cta="Sell Laptops"
+                href="/sell/laptops"
+                gradient="from-purple-600 to-violet-900"
+                image="/images/promo/bulk-laptops.png"
                 delay={0.2}
               />
             </ErrorBoundary>
           </div>
         </section>
 
-        {/* Promo Slider & Featured Icons (New Section) */}
+        {/* Promo Slider & Featured Icons */}
         <section className="container mx-auto px-4 -mt-4 mb-8">
           <PromoSlider />
           <FeaturedIcons />
 
-          {/* Promo Card 3: Shop View - using shop-view.jpg */}
+          {/* Promo Card 3: Office Clearance */}
           <ErrorBoundary>
             <PromoCard
-              title="Verified Dealers Only"
-              subtitle="We partner with registered & verified shops."
-              cta="Find Near Me"
-              href="/market"
+              title="Office Scrap Clearance"
+              subtitle="Full office dismantling & furniture buying service."
+              cta="Get Quote"
+              href="/sell/office-scrap"
               gradient="from-orange-600 to-red-900"
-              image="/images/promo/shop-view.jpg"
+              image="/images/promo/office-clearance.png"
               delay={0.3}
+            />
+          </ErrorBoundary>
+        </section>
+
+        <section className="container mx-auto px-4 mb-12">
+          {/* Promo Card 4: Our Team */}
+          <ErrorBoundary>
+            <PromoCard
+              title="Verified & Trusted Team"
+              subtitle="Our professional team ensures safe & honest service."
+              cta="Meet Us"
+              href="/help"
+              gradient="from-teal-600 to-cyan-900"
+              image="/images/promo/our-team.png"
+              delay={0.4}
             />
           </ErrorBoundary>
         </section>
