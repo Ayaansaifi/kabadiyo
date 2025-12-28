@@ -2,7 +2,7 @@
 
 import { ServiceData } from "@/lib/services-data"
 import { motion } from "framer-motion"
-import { ArrowLeft, CheckCircle2, Phone, Mail, MessageCircle } from "lucide-react"
+import { ArrowLeft, CheckCircle2, Phone, Mail, MessageCircle, Armchair, Sparkles, HelpingHand, Zap, DoorOpen, Cog, Wrench, Laptop, Factory } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -10,8 +10,21 @@ import { Button } from "@/components/ui/button"
 const CONTACT_NUMBER = "8586040076"
 const CONTACT_EMAIL = "contact@kabadiyo.com"
 
+const iconMap: any = {
+    "Armchair": Armchair,
+    "Sparkles": Sparkles,
+    "HelpingHand": HelpingHand,
+    "Zap": Zap,
+    "DoorOpen": DoorOpen,
+    "Cog": Cog,
+    "Wrench": Wrench,
+    "Laptop": Laptop,
+    "Factory": Factory
+}
+
 export default function ServiceDetailPage({ data }: { data: ServiceData }) {
     const router = useRouter()
+    const IconComponent = iconMap[data.iconName] || Sparkles
 
     return (
         <div className="min-h-screen bg-background pb-24">
@@ -56,7 +69,7 @@ export default function ServiceDetailPage({ data }: { data: ServiceData }) {
                 >
                     <div className="flex items-center gap-4 mb-6">
                         <div className="p-3 bg-primary/10 rounded-xl">
-                            <data.icon className="h-8 w-8 text-primary" />
+                            <IconComponent className="h-8 w-8 text-primary" />
                         </div>
                         <div>
                             <h2 className="text-lg font-bold">Details</h2>

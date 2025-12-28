@@ -4,7 +4,7 @@ export interface ServiceData {
     id: string
     title: string
     description: string
-    icon: any // LucideIcon is tricky with direct value assignments in some setups, keeping 'any' for safety or properly typing if imports work well
+    iconName: string // Changed from component to string to avoid serialization issues
     features: string[]
     image: string
     type: 'service' | 'buyer'
@@ -17,7 +17,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "furniture",
         title: "Furniture Repair & Making",
         description: "Expert carpentry services for all your furniture needs. From repairing old chairs to creating custom sofas, our verified carpenters deliver quality craftsmanship at your doorstep.",
-        icon: Armchair,
+        iconName: "Armchair",
         features: [
             "Sofa & Chair Repair",
             "Custom Furniture Design",
@@ -33,7 +33,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "welding",
         title: "Professional Welding",
         description: "High-quality welding services for gates, grills, and structural repairs. We ensure strong, durable joints and precise fabrication work.",
-        icon: Sparkles,
+        iconName: "Sparkles",
         features: [
             "Gate & Grill Repair",
             "Structural Fabrication",
@@ -49,7 +49,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "cleaning",
         title: "Deep Cleaning Services",
         description: "Sparkling clean homes and offices. Our professional cleaners use eco-friendly products to deep clean your space, removing dust, stains, and allergens.",
-        icon: Sparkles,
+        iconName: "Sparkles",
         features: [
             "Full Home Deep Cleaning",
             "Sofa & Carpet Shampooing",
@@ -65,7 +65,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "helper",
         title: "General Helper / Labor",
         description: "Need an extra pair of hands? Hire verified helpers for shifting, loading-unloading, gardening, or any general labor tasks.",
-        icon: HelpingHand,
+        iconName: "HelpingHand",
         features: [
             "Shifting Assistance",
             "Loading & Unloading",
@@ -81,7 +81,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "electrician",
         title: "Expert Electrician",
         description: "Safety-first electrical services. From fixing fans and lights to complete house wiring, our certified electricians handle it all.",
-        icon: Zap,
+        iconName: "Zap",
         features: [
             "Wiring & Switchboard Fixes",
             "Fan & Light Installation",
@@ -97,7 +97,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "fabrication",
         title: "Steel Gate & Fabrication",
         description: "Custom steel fabrication for modern homes. We design and install steel gates, railings, and safety doors with premium finish.",
-        icon: DoorOpen,
+        iconName: "DoorOpen",
         features: [
             "SS Railing Installation",
             "Steel Gate Manufacturing",
@@ -113,7 +113,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "hydraulic",
         title: "Hydraulic Machine Service",
         description: "Specialized maintenance for hydraulic baling machines and industrial compactors used in scrap processing.",
-        icon: Cog,
+        iconName: "Cog",
         features: [
             "Pump & Valve Repair",
             "Cylinder Leakage Fix",
@@ -129,7 +129,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "plumber",
         title: "Plumbing Services",
         description: "Leak-free living. Certified plumbers for tap repairs, pipe fittings, leakage detection, and bathroom fittings installation.",
-        icon: Wrench,
+        iconName: "Wrench",
         features: [
             "Tap & Shower Repair",
             "Pipe Leakage Fix",
@@ -147,7 +147,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "laptops",
         title: "Bulk Laptop Buyer",
         description: "We buy old, non-working, or scrap laptops in bulk. Best prices for corporate lots, e-waste recyclers, and institutions.",
-        icon: Laptop,
+        iconName: "Laptop",
         features: [
             "Corporate Buyback Plans",
             "Data Destruction Certificate",
@@ -163,7 +163,7 @@ export const servicesData: Record<string, ServiceData> = {
         id: "office-scrap",
         title: "Office Scrap Buyer",
         description: "Dismantling and buying office assets including furniture, partitions, AC plants, and IT infrastructure. Complete clearance services.",
-        icon: Factory,
+        iconName: "Factory",
         features: [
             "Office Dismantling",
             "Furniture & AC Scrap",
