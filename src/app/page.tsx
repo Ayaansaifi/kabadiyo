@@ -115,16 +115,56 @@ export default async function LandingPage() {
         {/* Daily Rates Ticker */}
         <section className="container mx-auto px-4 -mt-6 relative z-10 mb-8">
           <ScrapRatesTicker />
+          {/* Promo Card 1: Bulk Pickup - using truck-load.jpg */}
+          <div className="mt-8">
+            <ErrorBoundary>
+              <PromoCard
+                title="Bulk Scrap Pickup"
+                subtitle="Got more than 50kg? Get special corporate rates."
+                cta="Book Truck"
+                href="/market"
+                gradient="from-blue-600 to-indigo-900"
+                image="/images/promo/truck-load.jpg"
+              />
+            </ErrorBoundary>
+          </div>
         </section>
 
-        <section className="container mx-auto px-4 mb-12">
+        <section className="container mx-auto px-4 mb-4">
           <ImpactStats />
+          {/* Promo Card 2: Accurate Weighing - using weighing-scrap.jpg */}
+          <div className="mt-4">
+            <ErrorBoundary>
+              <PromoCard
+                title="100% Honest Weighing"
+                subtitle="Digital scales used for every pickup. Trust guaranteed."
+                cta="Learn More"
+                href="/help"
+                gradient="from-green-600 to-emerald-900"
+                image="/images/promo/weighing-scrap.jpg"
+                delay={0.2}
+              />
+            </ErrorBoundary>
+          </div>
         </section>
 
         {/* Promo Slider & Featured Icons (New Section) */}
         <section className="container mx-auto px-4 -mt-4 mb-8">
           <PromoSlider />
           <FeaturedIcons />
+
+          {/* Promo Card 3: Shop View - using shop-view.jpg */}
+          <ErrorBoundary>
+            <PromoCard
+              title="Verified Dealers Only"
+              subtitle="We partner with registered & verified shops."
+              cta="Find Near Me"
+              href="/market"
+              gradient="from-orange-600 to-red-900"
+              image="/images/promo/shop-view.jpg"
+              delay={0.3}
+            />
+          </ErrorBoundary>
         </section>
 
         {/* COMMUNITY IMPACT SECTION (NEW) */}
@@ -270,6 +310,21 @@ export default async function LandingPage() {
               </CardContent>
             </Card>
           </div>
+        </section>
+
+        {/* Promo Card 4: Join Movement - reusing truck-load.jpg for generic impact */}
+        <section className="container mx-auto px-4 mb-12">
+          <ErrorBoundary>
+            <PromoCard
+              title="Join the Green Movement"
+              subtitle="Recycle today for a better tomorrow."
+              cta="Start Selling"
+              href="/register"
+              gradient="from-teal-600 to-cyan-900"
+              image="/images/promo/truck-load.jpg"
+              delay={0.4}
+            />
+          </ErrorBoundary>
         </section>
 
         {/* Features */}
