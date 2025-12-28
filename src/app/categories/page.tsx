@@ -144,12 +144,14 @@ export default function CategoriesPage() {
                                     </div>
 
                                     <div className="mt-3 pt-3 border-t flex justify-end">
-                                        <Link
-                                            href={`/market?item=${encodeURIComponent(item.name)}`}
+                                        <a
+                                            href={`https://wa.me/918586040076?text=Hi, I want to sell ${encodeURIComponent(item.name)}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                             className="text-xs font-semibold text-primary hover:underline"
                                         >
                                             Sell Now
-                                        </Link>
+                                        </a>
                                     </div>
                                 </motion.div>
                             ))}
