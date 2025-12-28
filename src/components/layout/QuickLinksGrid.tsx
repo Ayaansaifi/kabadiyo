@@ -17,10 +17,6 @@ interface QuickLinkItem {
 }
 
 const quickLinks: QuickLinkItem[] = [
-    { name: "Find", href: "/market", icon: <Search className="h-6 w-6" />, color: "text-white", bgColor: "from-blue-500 to-blue-600 shadow-blue-500/30" },
-    { name: "Dashboard", href: "/dashboard", icon: <LayoutDashboard className="h-6 w-6" />, color: "text-white", bgColor: "from-purple-500 to-purple-600 shadow-purple-500/30" },
-    { name: "Rewards", href: "/rewards", icon: <Gift className="h-6 w-6" />, color: "text-white", bgColor: "from-yellow-400 to-orange-500 shadow-yellow-500/30" },
-    { name: "Help", href: "/help", icon: <HelpCircle className="h-6 w-6" />, color: "text-white", bgColor: "from-green-500 to-emerald-600 shadow-green-500/30" },
     { name: "Rescue", href: "/food-rescue", icon: <Utensils className="h-6 w-6" />, color: "text-white", bgColor: "from-orange-500 to-red-500 shadow-orange-500/30" },
     { name: "Call Us", href: "tel:8586040076", icon: <Phone className="h-6 w-6" />, color: "text-white", bgColor: "from-teal-400 to-cyan-600 shadow-teal-500/30" },
     { name: "Profile", href: "/profile", icon: <User className="h-6 w-6" />, color: "text-white", bgColor: "from-indigo-500 to-violet-600 shadow-indigo-500/30" },

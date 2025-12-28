@@ -12,6 +12,8 @@ import { db } from "@/lib/db"
 import { KabadiwalaCard } from "@/components/kabadiwala-card"
 import { cookies } from "next/headers"
 import Image from "next/image"
+import { PromoSlider } from "@/components/dashboard/PromoSlider"
+import { FeaturedIcons } from "@/components/dashboard/FeaturedIcons"
 
 // Direct call number for users who don't want to create profile
 const HELPLINE_NUMBER = "8586040076"
@@ -108,9 +110,14 @@ export default async function LandingPage() {
           <ScrapRatesTicker />
         </section>
 
-        {/* Impact Stats Section */}
         <section className="container mx-auto px-4 mb-12">
           <ImpactStats />
+        </section>
+
+        {/* Promo Slider & Featured Icons (New Section) */}
+        <section className="container mx-auto px-4 -mt-4 mb-8">
+          <PromoSlider />
+          <FeaturedIcons />
         </section>
 
         {/* COMMUNITY IMPACT SECTION (NEW) */}
