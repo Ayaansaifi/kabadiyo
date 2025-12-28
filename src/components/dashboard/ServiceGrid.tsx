@@ -3,7 +3,7 @@
 import { useIsNativePlatform } from "@/hooks/useNativePlatform"
 import { motion } from "framer-motion"
 import {
-    Armchair, Hammer, Sparkles, HandHelpers, Zap,
+    Armchair, Hammer, Sparkles, HelpingHand, Zap,
     DoorOpen, Cog, Wrench, Laptop, Factory, PackageOpen
 } from "lucide-react"
 import Link from "next/link"
@@ -12,7 +12,7 @@ const services = [
     { id: 1, name: "Furniture", icon: Armchair, color: "from-amber-400 to-orange-600", href: "/services/furniture" },
     { id: 2, name: "Welding", icon: Sparkles, color: "from-blue-400 to-blue-700", href: "/services/welding" },
     { id: 3, name: "Cleaning", icon: Sparkles, color: "from-cyan-400 to-teal-600", href: "/services/cleaning" },
-    { id: 4, name: "Helper", icon: HandHelpers, color: "from-green-400 to-emerald-600", href: "/services/helper" },
+    { id: 4, name: "Helper", icon: HelpingHand, color: "from-green-400 to-emerald-600", href: "/services/helper" },
     { id: 5, name: "Electrician", icon: Zap, color: "from-yellow-300 to-yellow-600", href: "/services/electrician" },
     { id: 6, name: "Steel Gate", icon: DoorOpen, color: "from-slate-400 to-slate-700", href: "/services/fabrication" },
     { id: 7, name: "Hydraulic", icon: Cog, color: "from-red-400 to-red-700", href: "/services/hydraulic" },
