@@ -17,6 +17,7 @@ import { FeaturedIcons } from "@/components/dashboard/FeaturedIcons"
 import { PromoCard } from "@/components/dashboard/ImagePromoCards"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { AppVideo } from "@/components/dashboard/AppVideo"
+import { ServiceGrid } from "@/components/dashboard/ServiceGrid"
 
 // Direct call number for users who don't want to create profile
 const HELPLINE_NUMBER = "8586040076"
@@ -67,6 +68,13 @@ export default async function LandingPage() {
         <section className="container mx-auto px-4 mt-2">
           <ErrorBoundary>
             <AppVideo />
+          </ErrorBoundary>
+        </section>
+
+        {/* Service Grid Section (APP ONLY) */}
+        <section className="container mx-auto px-4 mt-4">
+          <ErrorBoundary>
+            <ServiceGrid />
           </ErrorBoundary>
         </section>
 
