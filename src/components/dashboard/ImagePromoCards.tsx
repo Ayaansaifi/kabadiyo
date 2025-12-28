@@ -13,6 +13,8 @@ interface PromoCardProps {
     delay?: number
 }
 
+import { useIsNativePlatform } from "@/hooks/useNativePlatform"
+
 export function PromoCard({ title, subtitle, cta, href, gradient, image, delay = 0 }: {
     title: string
     subtitle: string
@@ -22,6 +24,10 @@ export function PromoCard({ title, subtitle, cta, href, gradient, image, delay =
     image: string
     delay?: number
 }) {
+    const { isNative, isLoading } = useIsNativePlatform()
+
+    if (isLoading || !isNative) return null
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
