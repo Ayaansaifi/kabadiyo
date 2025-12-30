@@ -18,9 +18,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true, // Skip TS errors during Vercel builds
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+
   experimental: {
     // optimizeCss: true, // Enable if 'critical' package is installed
     // scrollRestoration: true,
