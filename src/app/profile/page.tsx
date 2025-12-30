@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import {
     User, MapPin, Phone, Mail, Camera, Edit2,
     Award, Star, Shield, TrendingUp, Calendar,
-    Share2, Leaf, Recycle, Medal, Zap, CheckCircle, XCircle, Clock, LogOut, Coins, Settings
+    Share2, Leaf, Recycle, Medal, Zap, CheckCircle, XCircle, Clock, LogOut, Coins, Settings, Copy
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -38,9 +38,10 @@ export default function ProfilePage() {
 
     // Data State
     const [userPoints, setUserPoints] = useState(0)
+    const [referralCode, setReferralCode] = useState("")
+    const [isCopied, setIsCopied] = useState(false)
     const [orders, setOrders] = useState<any[]>([])
     const [stats, setStats] = useState({
-        totalEarnings: 0,
         pendingOrders: 0,
         completedOrders: 0,
         totalWeight: 0
@@ -53,10 +54,11 @@ export default function ProfilePage() {
 
     const fetchProfile = async () => {
         try {
-            // Parallel Fetch: Profile + Orders + Points
-            const [profileRes, ordersRes] = await Promise.all([
+            // Parallel Fetch: Profile + Orders + Referral
+            const [profileRes, ordersRes, referralRes] = await Promise.all([
                 fetch("/api/profile"),
-                fetch("/api/orders")
+                fetch("/api/orders"),
+                fetch("/api/referral")
             ])
 
             if (profileRes.ok) {
@@ -73,6 +75,11 @@ export default function ProfilePage() {
                 setOrders(ordersData)
                 calculateStats(ordersData)
             }
+
+            if (referralRes.ok) {
+                const refData = await referralRes.json()
+                setReferralCode(refData.referralCode || "")
+            }
         } catch (e) {
             console.error("Data fetch failed", e)
         }
@@ -80,10 +87,8 @@ export default function ProfilePage() {
 
     const calculateStats = (ordersData: any[]) => {
         const completed = ordersData.filter(o => o.status === "COMPLETED")
-        const earnings = completed.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0)
 
         setStats({
-            totalEarnings: earnings,
             pendingOrders: ordersData.filter(o => o.status === "REQUESTED" || o.status === "ACCEPTED").length,
             completedOrders: completed.length,
             totalWeight: completed.reduce((acc, curr) => acc + (curr.totalWeight || 0), 0)
@@ -148,6 +153,14 @@ export default function ProfilePage() {
         }
     }
 
+    const handleCopyCode = () => {
+        if (!referralCode) return
+        navigator.clipboard.writeText(referralCode)
+        setIsCopied(true)
+        toast.success("Referral code copied!")
+        setTimeout(() => setIsCopied(false), 2000)
+    }
+
     if (!mounted) return null
 
     // Mock badges for now - connect to real data later
@@ -162,10 +175,10 @@ export default function ProfilePage() {
     const activities = orders.map(order => ({
         id: order.id,
         type: order.status === 'COMPLETED' ? 'points' as const : 'pickup' as const,
-        title: order.status === 'COMPLETED' ? 'Pickup Completed' : 'Pickup Scheduled',
-        description: `${order.items} (${order.estimatedWeight}kg)`,
+        title: order.status === 'COMPLETED' ? 'Points Earned' : 'Pickup Scheduled',
+        description: `${order.items} (${order.estimatedWeight || 0}kg)`,
         date: new Date(order.createdAt),
-        points: order.status === 'COMPLETED' ? Math.floor(order.totalAmount / 2) : undefined // Approx points
+        points: order.status === 'COMPLETED' ? (order.pointsEarned || 100) : undefined // Use real points logic
     })).slice(0, 5)
 
     return (
@@ -269,7 +282,7 @@ export default function ProfilePage() {
             {/* 2. Stats & Points Row */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-4 md:px-0 mt-8">
                 {/* Points Card */}
-                <Card className="bg-gradient-to-br from-yellow-500 to-amber-600 text-white border-0 shadow-lg relative overflow-hidden">
+                <Card className="bg-gradient-to-br from-yellow-500 to-amber-600 text-white border-0 shadow-lg relative overflow-hidden md:col-span-1">
                     <div className="absolute top-0 right-0 p-4 opacity-20">
                         <Coins className="h-24 w-24" />
                     </div>
@@ -290,18 +303,34 @@ export default function ProfilePage() {
                     </CardContent>
                 </Card>
 
-                {/* Stats Cards */}
-                <Card>
+                {/* Referral Code Card (Replaces Earnings) */}
+                <Card className="bg-gradient-to-br from-blue-500 to-indigo-600 text-white border-0 shadow-lg relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-20">
+                        <Share2 className="h-24 w-24" />
+                    </div>
                     <CardHeader className="pb-2">
-                        <CardDescription>Total Earnings</CardDescription>
-                        <CardTitle className="text-2xl">₹{stats.totalEarnings.toLocaleString()}</CardTitle>
+                        <CardDescription className="text-blue-100">Your Referral Code</CardDescription>
+                        <CardTitle className="text-2xl font-mono tracking-wider">
+                            {referralCode || "LOADING..."}
+                        </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <Progress value={70} className="h-2" />
-                        <p className="text-xs text-muted-foreground mt-2">+12% from last month</p>
+                        <div className="flex gap-2">
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                className="w-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm"
+                                onClick={handleCopyCode}
+                            >
+                                {isCopied ? <CheckCircle className="h-4 w-4 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
+                                {isCopied ? "Copied" : "Copy Code"}
+                            </Button>
+                        </div>
+                        <p className="text-[10px] text-blue-100 mt-2">Share & get 500 points!</p>
                     </CardContent>
                 </Card>
 
+                {/* Impact Card */}
                 <Card>
                     <CardHeader className="pb-2">
                         <CardDescription>Environmental Impact</CardDescription>

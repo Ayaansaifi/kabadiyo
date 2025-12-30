@@ -302,6 +302,32 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
         return groups
     }
 
+    async function handleBlock() {
+        if (!confirm("Are you sure you want to block this user?")) return
+        try {
+            await fetch(`/api/user/block`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: otherUserId })
+            })
+            toast.success("User blocked")
+            router.push("/chat")
+        } catch {
+            toast.error("Failed to block user")
+        }
+    }
+
+    async function handleClearChat() {
+        if (!confirm("Delete all messages? This cannot be undone.")) return
+        try {
+            await fetch(`/api/chat/clear/${resolvedParams.id}`, { method: "DELETE" })
+            setMessages([])
+            toast.success("Chat cleared")
+        } catch {
+            toast.error("Failed to clear chat")
+        }
+    }
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
@@ -355,6 +381,15 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
                             <Link href={`/book/${otherUserId}`}>Book Pickup</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleClearChat}>
+                            <Trash2 className="mr-2 h-4 w-4" /> Clear Chat
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleReport(messages[messages.length - 1]?.id || "general")}>
+                            <Flag className="mr-2 h-4 w-4" /> Report User
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleBlock} className="text-red-500 focus:text-red-500">
+                            <X className="mr-2 h-4 w-4" /> Block User
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
