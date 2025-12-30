@@ -85,7 +85,7 @@ export async function POST(req: Request) {
         // Handle Referral Logic
         if (referralCode) {
             const referrer = await db.user.findFirst({
-                where: { referralCode: referralCode }
+                where: { referralCode: referralCode } as any
             })
 
             if (referrer) {
