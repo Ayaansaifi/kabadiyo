@@ -35,6 +35,11 @@ export async function POST(req: Request) {
         // Hash password
         const hashedPassword = await bcrypt.hash(password, 10)
 
+        // Generate Referral Code for the new user
+        const baseCode = name.slice(0, 4).toUpperCase().replace(/\s/g, "")
+        const randomSuffix = Math.floor(1000 + Math.random() * 9000).toString()
+        const myReferralCode = `KBD${baseCode}${randomSuffix}`
+
         // Create user
         const userData: Prisma.UserCreateInput = {
             name,
@@ -42,6 +47,7 @@ export async function POST(req: Request) {
             email,
             password: hashedPassword,
             role: role || "USER",
+            referralCode: myReferralCode,
             // Phone is verified? No. properties "phoneVerified" and "emailVerified" should be null by default.
         }
 

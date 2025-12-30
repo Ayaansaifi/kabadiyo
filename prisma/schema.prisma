@@ -35,6 +35,8 @@ model User {
   emailVerified DateTime?
   phoneVerified DateTime?
 
+  referralCode  String?   @unique
+
   // Relations
   sellerProfile     SellerProfile?
   kabadiwalaProfile KabadiwalaProfile?
@@ -57,6 +59,10 @@ model User {
   stories           Story[]
   pushSubscriptions PushSubscription[]
   
+  // Referrals
+  referralsMade     Referral[] @relation("Referrer")
+  referredBy        Referral?  @relation("ReferredUser")
+
   // Gamification
   points            Int          @default(0)
   redemptions       Redemption[]
@@ -386,6 +392,20 @@ model Notification {
   createdAt DateTime @default(now())
 
   @@index([userId, isRead])
+}
+
+// NEW: Referral System Reference
+model Referral {
+  id             String   @id @default(cuid())
+  referrerId     String
+  referrer       User     @relation("Referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referredUserId String   @unique
+  referredUser   User     @relation("ReferredUser", fields: [referredUserId], references: [id], onDelete: Cascade)
+  status         String   @default("PENDING") // PENDING, COMPLETED
+  pointsEarned   Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  @@index([referrerId])
 }
 
 
