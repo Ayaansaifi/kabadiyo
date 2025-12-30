@@ -402,7 +402,30 @@ export default function SettingsPage() {
                                     <h3 className="font-medium">Delete Account</h3>
                                     <p className="text-sm text-muted-foreground">Permanently delete your account and all data</p>
                                 </div>
-                                <Button variant="destructive">Delete Account</Button>
+                                <Button
+                                    variant="destructive"
+                                    onClick={async () => {
+                                        if (confirm("⚠️ Are you sure you want to delete your account? This action cannot be undone!")) {
+                                            try {
+                                                setLoading(true)
+                                                const res = await fetch("/api/user/delete", { method: "DELETE" })
+                                                if (res.ok) {
+                                                    toast.success("Account deleted successfully")
+                                                    window.location.href = "/"
+                                                } else {
+                                                    toast.error("Failed to delete account")
+                                                }
+                                            } catch {
+                                                toast.error("Error deleting account")
+                                            } finally {
+                                                setLoading(false)
+                                            }
+                                        }
+                                    }}
+                                    disabled={loading}
+                                >
+                                    {loading ? "Deleting..." : "Delete Account"}
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>

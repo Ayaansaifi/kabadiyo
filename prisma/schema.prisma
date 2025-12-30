@@ -360,3 +360,33 @@ model Redemption {
   createdAt DateTime @default(now())
 }
 
+// REAL-TIME SCRAP RATES
+model ScrapRate {
+  id          String   @id @default(cuid())
+  name        String   @unique // e.g., "Newspaper", "Iron", "Copper"
+  category    String   // "Paper", "Metal", "Plastic", "E-Waste"
+  rate        Float    // Price per kg/unit
+  unit        String   @default("kg") // "kg", "piece", "set"
+  trend       String   @default("stable") // "up", "down", "stable"
+  isActive    Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+// IN-APP NOTIFICATIONS
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // "message", "pickup", "points", "promo", "rate_change"
+  title     String
+  body      String
+  data      String?  // JSON payload for deep linking
+  isRead    Boolean  @default(false)
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId, isRead])
+}
+
+
+
