@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 import {
     User, MapPin, Phone, Mail, Camera, Edit2,
     Award, Star, Shield, TrendingUp, Calendar,
-    Share2, Leaf, Recycle, Medal, Zap, CheckCircle, XCircle, Clock, LogOut
+    Share2, Leaf, Recycle, Medal, Zap, CheckCircle, XCircle, Clock, LogOut, Coins, Settings
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,6 +17,9 @@ import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
 import { AnimatedInput } from "@/components/ui/enhanced-input"
 import { EcoImpactVisualizer } from "@/components/profile/EcoImpactVisualizer"
+import { BadgeGrid } from "@/components/profile/BadgeGrid"
+import { ActivityFeed } from "@/components/profile/ActivityFeed"
+import Link from "next/link"
 
 export default function ProfilePage() {
     const { data: session, update } = useSession()
@@ -34,6 +37,7 @@ export default function ProfilePage() {
     const [uploading, setUploading] = useState(false)
 
     // Data State
+    const [userPoints, setUserPoints] = useState(0)
     const [orders, setOrders] = useState<any[]>([])
     const [stats, setStats] = useState({
         totalEarnings: 0,
@@ -42,15 +46,6 @@ export default function ProfilePage() {
         totalWeight: 0
     })
 
-    // Gamification Stats
-    const points = 1250 // Dynamic later
-    const level = 3
-    const impact = {
-        treesSaved: 5,
-        co2Avoided: 120, // kg
-        energySaved: 450 // kWh
-    }
-
     useEffect(() => {
         setMounted(true)
         fetchProfile()
@@ -58,7 +53,7 @@ export default function ProfilePage() {
 
     const fetchProfile = async () => {
         try {
-            // Parallel Fetch: Profile + Orders
+            // Parallel Fetch: Profile + Orders + Points
             const [profileRes, ordersRes] = await Promise.all([
                 fetch("/api/profile"),
                 fetch("/api/orders")
@@ -70,6 +65,7 @@ export default function ProfilePage() {
                 setAddress(data.address || "")
                 setProfileImage(data.image || session?.user?.image || "")
                 setCoverImage(data.coverImage || "")
+                setUserPoints(data.points || 0)
             }
 
             if (ordersRes.ok) {
@@ -124,8 +120,6 @@ export default function ProfilePage() {
         }
     }
 
-    if (!mounted) return null
-
     const handleSave = async () => {
         setLoading(true)
         try {
@@ -154,340 +148,223 @@ export default function ProfilePage() {
         }
     }
 
-    const calculateLevelProgress = () => {
-        // Simple level calculation: 500 points per level
-        return ((points % 500) / 500) * 100
-    }
+    if (!mounted) return null
 
+    // Mock badges for now - connect to real data later
     const achievements = [
-        { id: 1, name: "Eco Warrior", description: "Recycled 100kg waste", icon: <Leaf className="h-5 w-5 text-green-500" />, unlocked: true },
-        { id: 2, name: "Super Seller", description: "Completed 10 orders", icon: <Star className="h-5 w-5 text-yellow-500" />, unlocked: true },
-        { id: 3, name: "Early Adopter", description: "Joined in beta", icon: <Award className="h-5 w-5 text-blue-500" />, unlocked: true },
+        { id: 1, name: "Eco Warrior", description: "Recycled 100kg waste", icon: <Leaf className="h-5 w-5 text-green-500" />, unlocked: stats.totalWeight >= 100 },
+        { id: 2, name: "First Step", description: "Completed 1st Pickup", icon: <CheckCircle className="h-5 w-5 text-blue-500" />, unlocked: stats.completedOrders >= 1 },
+        { id: 3, name: "Super Seller", description: "Completed 10 orders", icon: <Star className="h-5 w-5 text-yellow-500" />, unlocked: stats.completedOrders >= 10 },
         { id: 4, name: "Community Hero", description: "Referred 5 friends", icon: <Share2 className="h-5 w-5 text-purple-500" />, unlocked: false },
     ]
 
+    // Generate activity feed from orders
+    const activities = orders.map(order => ({
+        id: order.id,
+        type: order.status === 'COMPLETED' ? 'points' as const : 'pickup' as const,
+        title: order.status === 'COMPLETED' ? 'Pickup Completed' : 'Pickup Scheduled',
+        description: `${order.items} (${order.estimatedWeight}kg)`,
+        date: new Date(order.createdAt),
+        points: order.status === 'COMPLETED' ? Math.floor(order.totalAmount / 2) : undefined // Approx points
+    })).slice(0, 5)
+
     return (
-        <div className="container max-w-4xl mx-auto p-4 space-y-8 pb-24">
-            {/* Header / Cover */}
-            <div className="relative h-48 md:h-64 rounded-xl overflow-hidden bg-gradient-to-r from-green-400 to-emerald-600">
-                {coverImage ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
-                ) : (
-                    <div className="absolute inset-0 bg-black/10" />
-                )}
+        <div className="container max-w-4xl mx-auto pb-24 md:py-8 space-y-8">
+            {/* 1. Hero Banner Component */}
+            <div className="relative group">
+                <div className="h-48 md:h-64 rounded-b-3xl md:rounded-3xl overflow-hidden bg-gradient-to-r from-green-400 to-emerald-600 shadow-xl relative">
+                    {coverImage ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={coverImage} alt="Cover" className="w-full h-full object-cover" />
+                    ) : (
+                        <div className="absolute inset-0 bg-black/10" />
+                    )}
 
-                <div className="absolute bottom-4 right-4">
-                    <label>
-                        <input
-                            type="file"
-                            hidden
-                            accept="image/*"
-                            onChange={(e) => handleFileUpload(e, "cover")}
-                            disabled={uploading}
-                        />
-                        <Button size="sm" variant="secondary" className="gap-2 cursor-pointer" asChild>
-                            <span>
-                                <Camera className="h-4 w-4" />
-                                {uploading ? "Uploading..." : "Change Cover"}
-                            </span>
-                        </Button>
-                    </label>
+                    {/* Dark Overlay for text readability */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+                    {isEditing && (
+                        <label className="absolute bottom-4 right-4 cursor-pointer">
+                            <input type="file" hidden accept="image/*" onChange={(e) => handleFileUpload(e, "cover")} />
+                            <div className="bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors backdrop-blur-sm">
+                                <Camera className="h-5 w-5" />
+                            </div>
+                        </label>
+                    )}
                 </div>
-            </div>
 
-            {/* Profile Info */}
-            <div className="relative -mt-20 px-4">
-                <div className="flex flex-col md:flex-row gap-6 items-start md:items-end">
+                {/* Profile Avatar & Info Overlay */}
+                <div className="absolute -bottom-12 left-6 md:left-10 flex items-end gap-4">
                     <div className="relative">
-                        <Avatar className="h-32 w-32 border-4 border-background shadow-xl">
-                            <AvatarImage src={profileImage || session?.user?.image || ""} />
-                            <AvatarFallback className="text-4xl">
-                                {name[0]?.toUpperCase()}
+                        <Avatar className="h-24 w-24 md:h-32 md:w-32 ring-4 ring-background shadow-2xl">
+                            <AvatarImage src={profileImage} className="object-cover" />
+                            <AvatarFallback className="text-2xl bg-primary/10 text-primary">
+                                {name?.[0]}
                             </AvatarFallback>
                         </Avatar>
-                        <label className="absolute bottom-0 right-0">
-                            <input
-                                type="file"
-                                hidden
-                                accept="image/*"
-                                onChange={(e) => handleFileUpload(e, "profile")}
-                                disabled={uploading}
-                            />
-                            <Button
-                                size="icon"
-                                variant="secondary"
-                                className="rounded-full shadow-lg cursor-pointer"
-                                asChild
-                            >
-                                <span><Camera className="h-4 w-4" /></span>
-                            </Button>
-                        </label>
+                        {isEditing && (
+                            <label className="absolute bottom-0 right-0 cursor-pointer">
+                                <input type="file" hidden accept="image/*" onChange={(e) => handleFileUpload(e, "profile")} />
+                                <div className="bg-primary text-white p-1.5 rounded-full hover:bg-primary/90 shadow-md ring-2 ring-background">
+                                    <Camera className="h-4 w-4" />
+                                </div>
+                            </label>
+                        )}
                     </div>
+                </div>
 
-                    <div className="flex-1 space-y-2 mb-2">
-                        <div>
-                            <h1 className="text-2xl font-bold flex items-center gap-2">
-                                {name}
-                                <Badge variant="secondary" className="gap-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                                    <Shield className="h-3 w-3" />
-                                    Verified
-                                </Badge>
-                            </h1>
-                            <p className="text-muted-foreground flex items-center gap-2">
-                                <MapPin className="h-4 w-4" />
-                                {address || "Add your address"}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="flex gap-2 w-full md:w-auto">
-                        <Button
-                            onClick={() => setIsEditing(!isEditing)}
-                            className="flex-1 md:flex-none gap-2"
-                        >
-                            <Edit2 className="h-4 w-4" />
-                            {isEditing ? "Cancel" : "Edit Profile"}
+                {/* Action Buttons (Desktop) */}
+                <div className="absolute -bottom-12 right-6 hidden md:flex gap-2">
+                    {isEditing ? (
+                        <>
+                            <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
+                            <Button onClick={handleSave} disabled={loading}>{loading ? "Saving..." : "Save Changes"}</Button>
+                        </>
+                    ) : (
+                        <Button variant="outline" onClick={() => setIsEditing(true)}>
+                            <Edit2 className="h-4 w-4 mr-2" /> Edit Profile
                         </Button>
-                        <Button variant="outline" size="icon" title="Share Profile">
-                            <Share2 className="h-4 w-4" />
-                        </Button>
-                        <Button
-                            variant="destructive"
-                            size="icon"
-                            title="Log Out"
-                            onClick={async () => {
-                                try {
-                                    await fetch("/api/auth/logout", { method: "POST" })
-                                    window.location.href = "/"
-                                } catch (e) {
-                                    toast.error("Logout failed")
-                                }
-                            }}
-                        >
-                            <LogOut className="h-4 w-4" />
-                        </Button>
-                    </div>
+                    )}
+                    <Link href="/settings">
+                        <Button variant="ghost" size="icon"><Settings className="h-5 w-5" /></Button>
+                    </Link>
                 </div>
             </div>
 
-            {/* Gamification Stats - New Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 border-green-100 dark:border-green-900">
-                    <CardContent className="pt-6">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="font-semibold text-green-700 dark:text-green-400">Level {level}</h3>
-                            <Medal className="h-5 w-5 text-green-600" />
+            {/* Mobile Name & Actions Spacer */}
+            <div className="mt-14 px-6 md:hidden flex justify-between items-start">
+                <div>
+                    <h1 className="text-2xl font-bold">{name || "User"}</h1>
+                    <p className="text-muted-foreground text-sm flex items-center gap-1">
+                        <MapPin className="h-3 w-3" /> {address || "No address set"}
+                    </p>
+                </div>
+                <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => setIsEditing(!isEditing)}>
+                        {isEditing ? "Cancel" : "Edit"}
+                    </Button>
+                    {isEditing && <Button size="sm" onClick={handleSave}>Save</Button>}
+                </div>
+            </div>
+
+            {/* Edit Form (Collapsible) */}
+            {isEditing && (
+                <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    className="px-4 md:px-0"
+                >
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Edit Profile Details</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <AnimatedInput label="Full Name" value={name} onChange={(e) => setName(e.target.value)} />
+                            <AnimatedInput label="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                        </CardContent>
+                    </Card>
+                </motion.div>
+            )}
+
+            {/* 2. Stats & Points Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-4 md:px-0 mt-8">
+                {/* Points Card */}
+                <Card className="bg-gradient-to-br from-yellow-500 to-amber-600 text-white border-0 shadow-lg relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-20">
+                        <Coins className="h-24 w-24" />
+                    </div>
+                    <CardHeader className="pb-2">
+                        <CardDescription className="text-yellow-100">Green Points</CardDescription>
+                        <CardTitle className="text-4xl font-bold flex items-center gap-2">
+                            {userPoints.toLocaleString()}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex gap-2">
+                            <Link href="/rewards" className="w-full">
+                                <Button size="sm" variant="secondary" className="w-full bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm">
+                                    Redeem Rewards
+                                </Button>
+                            </Link>
                         </div>
-                        <Progress value={calculateLevelProgress()} className="h-2 mb-2" />
-                        <p className="text-xs text-muted-foreground">
-                            {500 - (points % 500)} points to next level
-                        </p>
+                    </CardContent>
+                </Card>
+
+                {/* Stats Cards */}
+                <Card>
+                    <CardHeader className="pb-2">
+                        <CardDescription>Total Earnings</CardDescription>
+                        <CardTitle className="text-2xl">₹{stats.totalEarnings.toLocaleString()}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <Progress value={70} className="h-2" />
+                        <p className="text-xs text-muted-foreground mt-2">+12% from last month</p>
                     </CardContent>
                 </Card>
 
                 <Card>
-                    <CardContent className="pt-6 flex items-center gap-4">
-                        <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">
-                            <Star className="h-6 w-6 text-yellow-600" />
+                    <CardHeader className="pb-2">
+                        <CardDescription>Environmental Impact</CardDescription>
+                        <CardTitle className="text-2xl">{stats.totalWeight} kg</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex items-center gap-2 text-sm text-green-600">
+                            <Leaf className="h-4 w-4" /> Recycled
                         </div>
-                        <div>
-                            <p className="text-2xl font-bold">{points}</p>
-                            <p className="text-sm text-muted-foreground">Total Points</p>
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 border-indigo-100 dark:border-indigo-900">
-                    <CardContent className="pt-6 flex items-center gap-4">
-                        <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-full">
-                            <TrendingUp className="h-6 w-6 text-indigo-600" />
-                        </div>
-                        <div>
-                            <p className="text-2xl font-bold">₹{stats.totalEarnings}</p>
-                            <p className="text-sm text-muted-foreground">Total Earnings</p>
-                        </div>
+                        <p className="text-xs text-muted-foreground mt-2">Saved {stats.totalWeight * 2.5}kg CO2</p>
                     </CardContent>
                 </Card>
             </div>
 
-            <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="w-full justify-start overflow-x-auto">
-                    <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="impact">Eco Impact</TabsTrigger>
-                    <TabsTrigger value="activity">Activity</TabsTrigger>
-                </TabsList>
+            {/* 3. Main Content Tab Grid */}
+            <div className="px-4 md:px-0">
+                <Tabs defaultValue="overview" className="space-y-6">
+                    <TabsList className="grid w-full grid-cols-3 lg:w-[400px]">
+                        <TabsTrigger value="overview">Overview</TabsTrigger>
+                        <TabsTrigger value="activity">Activity</TabsTrigger>
+                        <TabsTrigger value="impact">Impact</TabsTrigger>
+                    </TabsList>
 
-                <TabsContent value="overview" className="space-y-6">
-                    {/* Personal Info Form */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Personal Information</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <AnimatedInput
-                                    label="Full Name"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    disabled={!isEditing}
-                                    icon={<User className="h-4 w-4" />}
-                                />
-                                <AnimatedInput
-                                    label="Phone Number"
-                                    value={session?.user?.phone || ""}
-                                    disabled
-                                    icon={<Phone className="h-4 w-4" />}
-                                />
-                                <AnimatedInput
-                                    label="Email Address"
-                                    value={session?.user?.email || ""}
-                                    disabled
-                                    icon={<Mail className="h-4 w-4" />}
-                                />
-                                <AnimatedInput
-                                    label="Address"
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
-                                    disabled={!isEditing}
-                                    icon={<MapPin className="h-4 w-4" />}
-                                />
+                    <TabsContent value="overview" className="space-y-6">
+                        {/* Badges Section */}
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                    <Medal className="h-5 w-5 text-yellow-500" /> Achievements
+                                </h3>
+                                <span className="text-sm text-muted-foreground">{achievements.filter(a => a.unlocked).length}/{achievements.length} Unlocked</span>
                             </div>
+                            <BadgeGrid badges={achievements} />
+                        </div>
 
-                            {isEditing && (
-                                <div className="flex justify-end pt-4">
-                                    <Button onClick={handleSave} disabled={loading}>
-                                        {loading ? "Saving..." : "Save Changes"}
-                                    </Button>
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
-
-                    {/* Achievements */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Achievements</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                {achievements.map((achievement) => (
-                                    <div
-                                        key={achievement.id}
-                                        className={`p-4 rounded-xl border flex flex-col items-center text-center gap-2 transition-colors ${achievement.unlocked
-                                            ? "bg-muted/50 border-muted-foreground/20"
-                                            : "opacity-50 grayscale"
-                                            }`}
-                                    >
-                                        <div className="p-2 bg-background rounded-full shadow-sm">
-                                            {achievement.icon}
-                                        </div>
-                                        <div>
-                                            <p className="font-semibold text-sm">{achievement.name}</p>
-                                            <p className="text-xs text-muted-foreground">{achievement.description}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-
-                <TabsContent value="impact" className="space-y-6">
-                    <EcoImpactVisualizer totalWeight={stats.totalWeight} />
-
-                    {/* Additional Impact Info */}
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 border-blue-100">
+                        {/* Recent Activity Preview */}
+                        <Card>
                             <CardHeader>
-                                <CardTitle className="text-lg">Did You Know?</CardTitle>
+                                <CardTitle className="text-base">Recent Activity</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-muted-foreground">
-                                    Recycling 1 ton of paper saves 17 trees, 7,000 gallons of water, and 4,000 kilowatts of electricity.
-                                </p>
+                                <ActivityFeed activities={activities.slice(0, 3)} />
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-orange-900/10 dark:to-yellow-900/10 border-orange-100">
+                    </TabsContent>
+
+                    <TabsContent value="activity">
+                        <Card>
                             <CardHeader>
-                                <CardTitle className="text-lg">Community Goal</CardTitle>
+                                <CardTitle>Full History</CardTitle>
+                                <CardDescription>Your interactions and transactions</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-sm font-medium">
-                                        <span>City Target: 10,000kg</span>
-                                        <span>75%</span>
-                                    </div>
-                                    <Progress value={75} className="h-2 bg-orange-200" indicatorClassName="bg-orange-500" />
-                                    <p className="text-xs text-muted-foreground">Together we are making our city cleaner!</p>
-                                </div>
+                                <ActivityFeed activities={activities} />
                             </CardContent>
                         </Card>
-                    </div>
-                </TabsContent>
+                    </TabsContent>
 
-                <TabsContent value="activity">
-                    <Card className="border-none shadow-md bg-white/50 dark:bg-card/50 backdrop-blur-sm">
-                        <CardHeader>
-                            <CardTitle>Ordering History</CardTitle>
-                            <CardDescription>Your recent sell requests and pickups</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="space-y-6">
-                                {orders.length === 0 ? (
-                                    <div className="text-center py-12 text-muted-foreground bg-muted/20 rounded-xl border border-dashed border-muted">
-                                        <div className="h-16 w-16 bg-muted/50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                            <Calendar className="h-8 w-8 text-muted-foreground" />
-                                        </div>
-                                        <h3 className="font-semibold text-lg mb-1">No Orders Yet</h3>
-                                        <p className="mb-4 max-w-xs mx-auto">Start your recycling journey today and earn rewards!</p>
-                                        <Button asChild className="rounded-full px-8">
-                                            <a href="/market">Find a Kabadiwala</a>
-                                        </Button>
-                                    </div>
-                                ) : (
-                                    orders.map((order: any, i) => (
-                                        <div key={order.id} className="flex gap-4 items-start group">
-                                            <div className="relative pt-1">
-                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center z-10 relative shadow-sm transition-transform group-hover:scale-110 
-                                                    ${order.status === 'COMPLETED' ? 'bg-green-100 text-green-600' :
-                                                        order.status === 'CANCELLED' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'}`}>
-                                                    {order.status === 'COMPLETED' ? <CheckCircle className="h-5 w-5" /> :
-                                                        order.status === 'CANCELLED' ? <XCircle className="h-5 w-5" /> : <Clock className="h-5 w-5" />}
-                                                </div>
-                                                {i !== orders.length - 1 && (
-                                                    <div className="absolute top-10 left-1/2 -translate-x-1/2 h-full w-0.5 bg-border group-hover:bg-muted-foreground/30 transition-colors" />
-                                                )}
-                                            </div>
-                                            <div className="flex-1 pb-6 border-b last:border-0 border-muted/50">
-                                                <div className="flex justify-between items-start">
-                                                    <div>
-                                                        <p className="font-bold text-foreground group-hover:text-primary transition-colors">
-                                                            {order.buyer?.kabadiwalaProfile?.businessName || "Kabadiwala Pickup"}
-                                                        </p>
-                                                        <p className="text-xs text-muted-foreground mt-0.5">
-                                                            {new Date(order.createdAt).toLocaleDateString()} • {order.items ? order.items.split(',').length : 0} Items
-                                                        </p>
-                                                    </div>
-                                                    <Badge variant={order.status === 'COMPLETED' ? 'outline' : 'secondary'} className="text-xs font-mono">
-                                                        {order.status}
-                                                    </Badge>
-                                                </div>
-                                                {order.totalAmount && (
-                                                    <p className="text-sm font-bold text-green-600 mt-2 flex items-center gap-1">
-                                                        <TrendingUp className="h-3 w-3" />
-                                                        + ₹{order.totalAmount} Earned
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-            </Tabs>
+                    <TabsContent value="impact">
+                        <EcoImpactVisualizer totalWeight={stats.totalWeight} />
+                    </TabsContent>
+                </Tabs>
+            </div>
         </div>
     )
 }

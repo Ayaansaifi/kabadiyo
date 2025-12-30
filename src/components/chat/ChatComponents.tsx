@@ -1,27 +1,41 @@
-"use client"
-
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { Check, CheckCheck, Clock } from 'lucide-react'
+import {
+    Check, CheckCheck, Clock, MoreVertical,
+    VolumeX, Ban, Flag, Trash2, Edit2, Copy
+} from 'lucide-react'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 
 interface MessageBubbleProps {
+    id?: string
     content: string
     timestamp: Date
     isSender: boolean
     status?: 'sending' | 'sent' | 'delivered' | 'read'
     senderName?: string
     senderImage?: string
+    onEdit?: (id: string, content: string) => void
+    onDelete?: (id: string) => void
 }
 
 /**
  * Enhanced Message Bubble Component
  */
 export function MessageBubble({
+    id,
     content,
     timestamp,
     isSender,
     status = 'sent',
-    senderName
+    senderName,
+    onEdit,
+    onDelete
 }: MessageBubbleProps) {
     const formatTime = (date: Date) => {
         return new Date(date).toLocaleTimeString('en-IN', {
@@ -44,83 +58,75 @@ export function MessageBubble({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.2 }}
             className={cn(
-                "flex",
+                "group flex w-full",
                 isSender ? "justify-end" : "justify-start"
             )}
         >
-            <div
-                className={cn(
-                    "max-w-[75%] rounded-2xl px-4 py-2 shadow-sm",
-                    isSender
-                        ? "bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-br-md"
-                        : "bg-white dark:bg-gray-800 text-foreground rounded-bl-md border"
+            <div className={cn(
+                "flex items-center gap-2 max-w-[75%]",
+                isSender ? "flex-row-reverse" : "flex-row"
+            )}>
+                {/* Message menu (visible on hover/long-press) */}
+                {isSender && id && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <MoreVertical className="h-3 w-3" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align={isSender ? "end" : "start"}>
+                            <DropdownMenuItem onClick={() => onEdit?.(id, content)}>
+                                <Edit2 className="h-3 w-3 mr-2" />
+                                Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                className="text-red-500 hover:text-red-600"
+                                onClick={() => onDelete?.(id)}
+                            >
+                                <Trash2 className="h-3 w-3 mr-2" />
+                                Delete
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 )}
-            >
-                {/* Sender name for group chats */}
-                {!isSender && senderName && (
-                    <p className="text-xs font-medium text-primary mb-1">
-                        {senderName}
-                    </p>
-                )}
 
-                {/* Message content */}
-                <p className="text-sm whitespace-pre-wrap break-words">
-                    {content}
-                </p>
-
-                {/* Timestamp and status */}
-                <div className={cn(
-                    "flex items-center gap-1 mt-1",
-                    isSender ? "justify-end" : "justify-start"
-                )}>
-                    <span className={cn(
-                        "text-[10px]",
-                        isSender ? "text-white/70" : "text-muted-foreground"
-                    )}>
-                        {formatTime(timestamp)}
-                    </span>
-                    {isSender && statusIcons[status]}
-                </div>
-            </div>
-        </motion.div>
-    )
-}
-
-/**
- * Typing Indicator Component
- */
-export function TypingIndicator({ userName }: { userName?: string }) {
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="flex items-center gap-2"
-        >
-            <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm border">
-                <div className="flex items-center gap-2">
-                    <div className="flex gap-1">
-                        {[0, 1, 2].map((i) => (
-                            <motion.div
-                                key={i}
-                                className="w-2 h-2 bg-green-500 rounded-full"
-                                animate={{
-                                    y: [0, -6, 0],
-                                    opacity: [0.5, 1, 0.5]
-                                }}
-                                transition={{
-                                    duration: 0.8,
-                                    repeat: Infinity,
-                                    delay: i * 0.15
-                                }}
-                            />
-                        ))}
-                    </div>
-                    {userName && (
-                        <span className="text-xs text-muted-foreground">
-                            {userName} टाइप कर रहा है...
-                        </span>
+                <div
+                    className={cn(
+                        "rounded-2xl px-4 py-2 shadow-sm relative",
+                        isSender
+                            ? "bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-br-md"
+                            : "bg-white dark:bg-gray-800 text-foreground rounded-bl-md border"
                     )}
+                >
+                    {/* Sender name for group chats */}
+                    {!isSender && senderName && (
+                        <p className="text-xs font-medium text-primary mb-1">
+                            {senderName}
+                        </p>
+                    )}
+
+                    {/* Message content */}
+                    <p className="text-sm whitespace-pre-wrap break-words">
+                        {content}
+                    </p>
+
+                    {/* Timestamp and status */}
+                    <div className={cn(
+                        "flex items-center gap-1 mt-1",
+                        isSender ? "justify-end" : "justify-start"
+                    )}>
+                        <span className={cn(
+                            "text-[10px]",
+                            isSender ? "text-white/70" : "text-muted-foreground"
+                        )}>
+                            {formatTime(timestamp)}
+                        </span>
+                        {isSender && statusIcons[status]}
+                    </div>
                 </div>
             </div>
         </motion.div>
@@ -136,9 +142,10 @@ interface ChatHeaderProps {
     isOnline?: boolean
     lastSeen?: Date
     onBack?: () => void
+    onAction?: (action: string) => void
 }
 
-export function ChatHeader({ name, image, isOnline, lastSeen, onBack }: ChatHeaderProps) {
+export function ChatHeader({ name, image, isOnline, lastSeen, onBack, onAction }: ChatHeaderProps) {
     const formatLastSeen = (date: Date) => {
         const now = new Date()
         const diff = now.getTime() - new Date(date).getTime()
@@ -153,7 +160,7 @@ export function ChatHeader({ name, image, isOnline, lastSeen, onBack }: ChatHead
     }
 
     return (
-        <div className="flex items-center gap-3 p-4 border-b bg-white dark:bg-gray-900">
+        <div className="flex items-center gap-3 p-4 border-b bg-white dark:bg-gray-900 sticky top-0 z-10 backdrop-blur-sm bg-white/80 dark:bg-gray-900/80">
             {onBack && (
                 <button
                     onClick={onBack}
@@ -194,6 +201,36 @@ export function ChatHeader({ name, image, isOnline, lastSeen, onBack }: ChatHead
                     )}
                 </p>
             </div>
+
+            {/* Settings Menu */}
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <MoreVertical className="h-5 w-5" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => onAction?.('mute')}>
+                        <VolumeX className="mr-2 h-4 w-4" />
+                        <span>Mute Notifications</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onAction?.('clear')}>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Clear Chat</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onAction?.('report')}>
+                        <Flag className="mr-2 h-4 w-4" />
+                        <span>Report</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        className="text-red-500 focus:text-red-500"
+                        onClick={() => onAction?.('block')}
+                    >
+                        <Ban className="mr-2 h-4 w-4" />
+                        <span>Block</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </div>
     )
 }

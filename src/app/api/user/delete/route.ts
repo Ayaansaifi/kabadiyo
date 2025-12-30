@@ -12,11 +12,11 @@ export async function DELETE() {
         }
 
         // Delete user data in order (respecting foreign key constraints)
-        // 1. Delete messages
-        await db.message.deleteMany({ where: { OR: [{ senderId: userId }, { receiverId: userId }] } })
+        // 1. Delete messages sent by user
+        await db.message.deleteMany({ where: { senderId: userId } })
 
         // 2. Delete story views
-        await db.storyView.deleteMany({ where: { userId } })
+        await db.storyView.deleteMany({ where: { viewerId: userId } })
 
         // 3. Delete stories
         await db.story.deleteMany({ where: { userId } })

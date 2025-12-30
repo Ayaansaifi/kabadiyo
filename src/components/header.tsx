@@ -18,6 +18,8 @@ import { LogOut } from "lucide-react"
 import { redirect } from "next/navigation"
 import { MobileProfileButton } from "@/components/layout/MobileProfileButton"
 
+import { NotificationBell } from "@/components/notifications/NotificationBell"
+
 async function getUser() {
     const cookieStore = await cookies()
     const userId = cookieStore.get("userId")?.value
@@ -79,6 +81,9 @@ export async function Header() {
                 <div className="flex items-center gap-2 ml-auto">
                     {user ? (
                         <>
+                            {/* Notifications */}
+                            <NotificationBell />
+
                             {/* Desktop: Full Name + Avatar */}
                             <Link href="/profile" className="hidden md:flex items-center gap-2 hover:opacity-80 transition-opacity">
                                 <span className="text-sm text-muted-foreground">
