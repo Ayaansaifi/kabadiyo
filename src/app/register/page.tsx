@@ -36,6 +36,7 @@ export default function RegisterPage() {
     const [confirmPassword, setConfirmPassword] = useState("")
     const [businessName, setBusinessName] = useState("")
     const [serviceArea, setServiceArea] = useState("")
+    const [referralCode, setReferralCode] = useState("")
 
     // OTP verification
     const [showOtp, setShowOtp] = useState(false)
@@ -102,7 +103,8 @@ export default function RegisterPage() {
                     password,
                     role,
                     businessName: role === "KABADIWALA" ? businessName : undefined,
-                    serviceArea: role === "KABADIWALA" ? serviceArea : undefined
+                    serviceArea: role === "KABADIWALA" ? serviceArea : undefined,
+                    referralCode: referralCode || undefined
                 }),
             })
 
@@ -455,6 +457,13 @@ export default function RegisterPage() {
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="hello@example.com"
                                         required
+                                    />
+                                    <AnimatedInput
+                                        label="Referral Code (Optional)"
+                                        icon={<User className="h-4 w-4" />}
+                                        value={referralCode}
+                                        onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                                        placeholder="Have a referral code?"
                                     />
                                 </motion.div>
                             )}

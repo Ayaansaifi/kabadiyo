@@ -6,7 +6,7 @@ import { sendOtpEmail } from "@/lib/mail"
 
 export async function POST(req: Request) {
     try {
-        const { name, phone, email, password, role, businessName, serviceArea } = await req.json()
+        const { name, phone, email, password, role, businessName, serviceArea, referralCode } = await req.json()
 
         // Validate
         if (!name || !phone || !email || !password) {
@@ -64,27 +64,57 @@ export async function POST(req: Request) {
         const otpCode = Math.floor(100000 + Math.random() * 900000).toString()
         const expires = new Date(new Date().getTime() + 10 * 60 * 1000) // 10 minutes
 
-        // Delete existing tokens for this email (just in case)
+        // Delete existing tokens
         await db.verificationToken.deleteMany({
             where: { identifier: email, type: "EMAIL" }
         })
 
         await db.verificationToken.create({
-            data: {
-                identifier: email,
-                token: otpCode,
-                expires,
-                type: "EMAIL"
-            }
+            data: { identifier: email, token: otpCode, expires, type: "EMAIL" }
         })
+
+        // Handle Referral Logic
+        if (referralCode) {
+            const referrer = await db.user.findFirst({
+                where: { referralCode: referralCode }
+            })
+
+            if (referrer) {
+                // Create Referral Record
+                try {
+                    await db.referral.create({
+                        data: {
+                            referrerId: referrer.id,
+                            referredUserId: user.id,
+                            status: 'COMPLETED',
+                            pointsEarned: 500
+                        }
+                    })
+
+                    // Award Points to Referrer
+                    await db.user.update({
+                        where: { id: referrer.id },
+                        data: { points: { increment: 500 } }
+                    })
+
+                    // Award Bonus to New User
+                    await db.user.update({
+                        where: { id: user.id },
+                        data: { points: { increment: 200 } }
+                    })
+                } catch (refError) {
+                    console.error("Referral Error:", refError)
+                }
+            }
+        }
 
         const emailSent = await sendOtpEmail(email, otpCode)
 
         if (!emailSent) {
-            // Rollback user creation if email fails (optional but good practice)
+            // Rollback user
             await db.user.delete({ where: { id: user.id } })
             return NextResponse.json({
-                error: "Failed to send OTP email. Please check server logs/configuration."
+                error: "Failed to send OTP email"
             }, { status: 500 })
         }
 

@@ -217,17 +217,23 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
     }
 
     async function handleDelete(messageId: string) {
+        // Optimistic update
+        const previousMessages = [...messages]
+        setMessages(prev => prev.map(m =>
+            m.id === messageId ? { ...m, isDeleted: true, content: "This message was deleted" } : m
+        ))
+
         try {
             const res = await fetch(`/api/chat/message/${messageId}`, {
                 method: "DELETE"
             })
-            if (res.ok) {
-                await fetchMessages()
-                toast.success("Message deleted")
-            } else {
+            if (!res.ok) {
+                // Revert on failure
+                setMessages(previousMessages)
                 toast.error("Failed to delete")
             }
         } catch {
+            setMessages(previousMessages)
             toast.error("Failed to delete")
         }
     }
@@ -260,7 +266,10 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
                 setEditingMessageId(null)
                 setEditContent("")
                 setNewMessage("")
-                await fetchMessages()
+                // Optimistic update for edit
+                setMessages(prev => prev.map(m =>
+                    m.id === editingMessageId ? { ...m, content: newMessage, editedAt: new Date().toISOString() } : m
+                ))
                 toast.success("Message edited")
             } else {
                 toast.error("Failed to edit")
@@ -319,11 +328,21 @@ export default function ChatPage({ params }: { params: Promise<{ id: string }> }
 
     async function handleClearChat() {
         if (!confirm("Delete all messages? This cannot be undone.")) return
+
+        // Optimistic update
+        const previousMessages = [...messages]
+        setMessages([])
+
         try {
-            await fetch(`/api/chat/clear/${resolvedParams.id}`, { method: "DELETE" })
-            setMessages([])
-            toast.success("Chat cleared")
+            const res = await fetch(`/api/chat/clear/${resolvedParams.id}`, { method: "DELETE" })
+            if (res.ok) {
+                toast.success("Chat cleared")
+            } else {
+                setMessages(previousMessages)
+                toast.error("Failed to clear chat")
+            }
         } catch {
+            setMessages(previousMessages)
             toast.error("Failed to clear chat")
         }
     }
