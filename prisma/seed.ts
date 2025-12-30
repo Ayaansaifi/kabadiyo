@@ -9,24 +9,14 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const rewards = [
-    {
-        title: "₹50 Cashback",
-        description: "Get ₹50 cashback on your next scrap pickup order",
-        cost: 100,
-        isActive: true,
-    },
+
     {
         title: "Free Pickup Priority",
         description: "Get priority pickup within 2 hours for your next order",
         cost: 150,
         isActive: true,
     },
-    {
-        title: "₹100 Cashback",
-        description: "Get ₹100 cashback on orders above ₹500",
-        cost: 250,
-        isActive: true,
-    },
+
     {
         title: "Plant a Tree",
         description: "We'll plant a tree in your name and send you the certificate",
@@ -39,12 +29,7 @@ const rewards = [
         cost: 500,
         isActive: true,
     },
-    {
-        title: "₹200 Cashback",
-        description: "Get ₹200 cashback on orders above ₹1000",
-        cost: 400,
-        isActive: true,
-    },
+
 ]
 
 async function main() {
