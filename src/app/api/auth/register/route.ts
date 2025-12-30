@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         const myReferralCode = `KBD${baseCode}${randomSuffix}`
 
         // Create user
-        const userData: Prisma.UserCreateInput = {
+        const userData = {
             name,
             phone,
             email,
@@ -49,6 +49,7 @@ export async function POST(req: Request) {
             role: role || "USER",
             referralCode: myReferralCode,
             // Phone is verified? No. properties "phoneVerified" and "emailVerified" should be null by default.
+            kabadiwalaProfile: undefined as any
         }
 
         // If Kabadiwala, create profile
@@ -60,10 +61,12 @@ export async function POST(req: Request) {
                     isVerified: false,
                 }
             }
+        } else {
+            delete userData.kabadiwalaProfile
         }
 
         const user = await db.user.create({
-            data: userData,
+            data: userData as Prisma.UserCreateInput,
         })
 
         // Generate and Send OTP for Email Verification
