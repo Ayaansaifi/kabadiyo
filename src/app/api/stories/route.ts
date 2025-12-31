@@ -50,13 +50,11 @@ export async function GET() {
         })
 
         // Group stories by user
-        const groupedMap = new Map<string, {
-            user: typeof stories[0]["user"]
-            stories: typeof stories
-            hasUnviewed: boolean
-        }>()
+        const groupedMap = new Map<string, any>()
 
         for (const story of stories) {
+            if (!story || !story.user) continue
+
             const userId = story.user.id
             if (!groupedMap.has(userId)) {
                 groupedMap.set(userId, {
@@ -65,12 +63,15 @@ export async function GET() {
                     hasUnviewed: false
                 })
             }
+
             const group = groupedMap.get(userId)!
-            const hasViewed = currentUser && Array.isArray(story.views) ? story.views.length > 0 : false
+            const hasViewed = currentUser && Array.isArray(story.views) && story.views.length > 0
+
             group.stories.push({
                 ...story,
-                hasViewed
-            } as any)
+                hasViewed: !!hasViewed
+            })
+
             if (!hasViewed) {
                 group.hasUnviewed = true
             }
@@ -81,14 +82,21 @@ export async function GET() {
         groups.sort((a, b) => {
             if (a.hasUnviewed && !b.hasUnviewed) return -1
             if (!a.hasUnviewed && b.hasUnviewed) return 1
-            return new Date(b.stories[0].createdAt).getTime() -
-                new Date(a.stories[0].createdAt).getTime()
+
+            const dateA = a.stories[0]?.createdAt ? new Date(a.stories[0].createdAt).getTime() : 0
+            const dateB = b.stories[0]?.createdAt ? new Date(b.stories[0].createdAt).getTime() : 0
+            return dateB - dateA
         })
 
         return NextResponse.json(groups)
-    } catch (error) {
+    } catch (error: any) {
         console.error("Stories fetch error:", error)
-        return NextResponse.json({ error: "Failed to fetch stories" }, { status: 500 })
+        return NextResponse.json({
+            error: "Failed to fetch stories",
+            message: error.message,
+            stack: process.env.NODE_ENV === "development" ? error.stack : undefined,
+            prismaError: error.code // Catch Prisma specific error codes
+        }, { status: 500 })
     }
 }
 

@@ -15,6 +15,9 @@
 - [x] Referral System fixed (Unified stored vs derived codes)
 - [x] Clear Chat functionality fixed (ID mismatch resolved)
 - [x] Loading state added (blank screen prevention)
+- [x] **Rates Page**: Created missing `/rates` page for live scrap pricing
+- [x] **Stories API**: Fixed 500 internal server error in grouping logic
+- [x] **Build**: Verified 100% successful production build (84 static pages)
 
 ## ✅ Security & Compliance
 - [x] `network_security_config.xml` - HTTPS enforcement
