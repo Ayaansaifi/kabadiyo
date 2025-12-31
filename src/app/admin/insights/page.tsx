@@ -38,7 +38,7 @@ async function getInsights() {
         })
     ])
 
-    return { users: formattedUsers, kabadiwalas, activeIps }
+    return { users, kabadiwalas, activeIps }
 }
 
 export default async function InsightsPage() {
