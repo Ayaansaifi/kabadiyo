@@ -36,10 +36,10 @@ export async function PATCH(
             return NextResponse.json({ error: "Cannot edit others' messages" }, { status: 403 })
         }
 
-        // Check if within 15 minutes
-        const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000)
-        if (message.createdAt < fifteenMinutesAgo) {
-            return NextResponse.json({ error: "Can only edit messages within 15 minutes" }, { status: 400 })
+        // Check if within 60 minutes (Advance Level: More flexibility)
+        const sixtyMinutesAgo = new Date(Date.now() - 60 * 60 * 1000)
+        if (message.createdAt < sixtyMinutesAgo) {
+            return NextResponse.json({ error: "Can only edit messages within 1 hour" }, { status: 400 })
         }
 
         // Update the message
