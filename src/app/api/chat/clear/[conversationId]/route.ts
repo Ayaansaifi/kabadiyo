@@ -8,7 +8,7 @@ export async function DELETE(
     { params }: { params: Promise<{ conversationId: string }> }
 ) {
     try {
-        const { conversationId } = await params
+        const { conversationId: otherUserId } = await params
         const cookieStore = await cookies()
         const userId = cookieStore.get("userId")?.value
 
@@ -16,11 +16,13 @@ export async function DELETE(
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }
 
-        // Verify user is part of this chat
+        // Find the chat between these two users
         const chat = await db.chat.findFirst({
             where: {
-                id: conversationId,
-                OR: [{ sellerId: userId }, { buyerId: userId }]
+                OR: [
+                    { sellerId: userId, buyerId: otherUserId },
+                    { sellerId: otherUserId, buyerId: userId }
+                ]
             }
         })
 
@@ -30,7 +32,7 @@ export async function DELETE(
 
         // Delete all messages in this chat
         await db.message.deleteMany({
-            where: { chatId: conversationId }
+            where: { chatId: chat.id }
         })
 
         return NextResponse.json({ success: true, message: "Chat cleared" })

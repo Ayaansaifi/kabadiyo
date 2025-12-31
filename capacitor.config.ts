@@ -7,7 +7,7 @@ const config: CapacitorConfig = {
   server: {
     // Use your Vercel URL for production
     url: 'https://kabadiyo.com',
-    cleartext: true
+    cleartext: false
   }
 };
 

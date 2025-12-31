@@ -15,15 +15,26 @@ export async function GET() {
 
         const user = await db.user.findUnique({
             where: { id: userId },
-            select: { id: true, name: true, phone: true }
+            select: { id: true, name: true, phone: true, referralCode: true }
         })
 
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 })
         }
 
-        // Generate referral code from user ID (simplified)
-        const referralCode = `KBD${user.id.slice(-6).toUpperCase()}`
+        // Return stored referral code. If not present, generate and save it.
+        let referralCode = user.referralCode
+
+        if (!referralCode) {
+            const baseCode = user.name ? user.name.slice(0, 4).toUpperCase().replace(/\s/g, "") : "USER"
+            const randomSuffix = Math.floor(1000 + Math.random() * 9000).toString()
+            referralCode = `KBD${baseCode}${randomSuffix}`
+
+            await db.user.update({
+                where: { id: userId },
+                data: { referralCode }
+            })
+        }
 
         // Get referral stats (users who signed up with this code)
         // For now, return placeholder - can be enhanced with ReferralHistory model
@@ -60,12 +71,9 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
         }
 
-        // Find referrer by code (extract userId from code)
-        const referrerId = referralCode.replace("KBD", "").toLowerCase()
-
-        // Award points to referrer
+        // Find referrer by exact code
         const referrer = await db.user.findFirst({
-            where: { id: { endsWith: referrerId } }
+            where: { referralCode: referralCode } as any
         })
 
         if (!referrer) {

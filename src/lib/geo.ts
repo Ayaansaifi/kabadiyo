@@ -8,7 +8,7 @@ export async function getGeoInfo(ip: string) {
     try {
         // Using ip-api.com (Free for non-commercial, rate limited)
         // In production, consider Vercel headers (x-vercel-ip-city) or a paid service
-        const res = await fetch(`http://ip-api.com/json/${ip}`)
+        const res = await fetch(`https://ip-api.com/json/${ip}`)
         const data = await res.json()
         if (data.status === 'success') {
             return {
