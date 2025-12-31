@@ -19,6 +19,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { AppVideo } from "@/components/dashboard/AppVideo"
 import { ServiceGrid } from "@/components/dashboard/ServiceGrid"
 import { EcoImpactVisualizer } from "@/components/profile/EcoImpactVisualizer"
+import { checkIsNativePlatform } from "@/hooks/useNativePlatform"
 
 // Direct call number for users who don't want to create profile
 const HELPLINE_NUMBER = "8586040076"

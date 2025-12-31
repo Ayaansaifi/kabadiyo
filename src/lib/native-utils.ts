@@ -20,6 +20,7 @@ export async function triggerHaptic() {
  */
 export async function authenticateBiometric(): Promise<boolean> {
     try {
+        // @ts-ignore - plugin may not be installed in some environments
         const { NativeBiometric, BiometryType } = await import("@capacitor-community/native-biometric")
 
         const result = await NativeBiometric.isAvailable()

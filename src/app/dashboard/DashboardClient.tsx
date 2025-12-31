@@ -315,4 +315,3 @@ export function DashboardClient({ initialUser }: { initialUser: User }) {
         </div>
     )
 }
-}
