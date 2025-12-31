@@ -26,9 +26,10 @@ const buyers = [
 ]
 
 export function ServiceGrid() {
+    // Show on all platforms so user can see their custom facilities/services
     const { isNative, isLoading } = useIsNativePlatform()
 
-    if (isLoading || !isNative) return null
+    if (isLoading) return null
 
     return (
         <div className="w-full mb-8 space-y-6">

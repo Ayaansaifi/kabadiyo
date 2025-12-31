@@ -68,8 +68,8 @@ export function AppSlider() {
         return () => clearInterval(timer)
     }, [])
 
-    // Don't render on website or during loading
-    if (isLoading || !isNative) {
+    // Show on all platforms for the "Real App" feel
+    if (isLoading) {
         return null
     }
 

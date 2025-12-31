@@ -121,7 +121,7 @@ function WebsiteTextLinks() {
     )
 }
 
-// Main Component - Shows App UI in app, Website UI on web
+// Main Component - Shows the premium Icon Grid on all platforms for the "Beautiful App" feel
 export function QuickLinksGrid() {
     const { isNative, isLoading } = useIsNativePlatform()
 
@@ -130,11 +130,16 @@ export function QuickLinksGrid() {
         return <div className="h-32 animate-pulse bg-muted/20 rounded-xl" />
     }
 
-    // APP: Show icon grid
-    if (isNative) {
-        return <AppIconGrid />
-    }
-
-    // WEBSITE: Show original text links
-    return <WebsiteTextLinks />
+    // Always show the premium AppIconGrid to fulfill the user's "Beautiful App" vision
+    return (
+        <div className="space-y-12">
+            <AppIconGrid />
+            {/* Still show traditional links for SEO/Accessibility on web */}
+            {!isNative && (
+                <div className="pt-8 border-t border-muted/20">
+                    <WebsiteTextLinks />
+                </div>
+            )}
+        </div>
+    )
 }

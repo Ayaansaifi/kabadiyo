@@ -11,7 +11,7 @@ export function AppVideo() {
     const [isMuted, setIsMuted] = useState(true)
     const videoRef = useRef<HTMLVideoElement>(null)
 
-    if (isLoading || !isNative) return null
+    if (isLoading) return null
 
     const togglePlay = () => {
         if (videoRef.current) {
