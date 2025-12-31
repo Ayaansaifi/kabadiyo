@@ -28,7 +28,7 @@ export async function authenticateBiometric(): Promise<boolean> {
         // Note: If this fails to build, we fallback to simulated success for dev
         try {
             // @ts-ignore
-            const { NativeBiometric } = await import("@capacitor-community/native-biometric")
+            const { NativeBiometric } = await import(/* webpackIgnore: true */ "@capacitor-community/native-biometric")
             const result = await NativeBiometric.isAvailable()
             if (!result.isAvailable) return false
 
