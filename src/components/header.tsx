@@ -20,6 +20,8 @@ import { MobileProfileButton } from "@/components/layout/MobileProfileButton"
 
 import { NotificationBell } from "@/components/notifications/NotificationBell"
 
+import { Suspense } from "react"
+
 async function getUser() {
     try {
         const cookieStore = await cookies()
@@ -27,7 +29,7 @@ async function getUser() {
         if (!userId) return null
         return await db.user.findUnique({ where: { id: userId } })
     } catch (error) {
-        console.error("Header: Failed to get user:", error)
+        // Silently handle expected errors during static generation
         return null
     }
 }
@@ -40,96 +42,121 @@ async function logout() {
     redirect("/")
 }
 
-export async function Header() {
-    const user = await getUser()
-
+export function Header() {
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container flex h-14 items-center px-4">
-                {/* APP ONLY: Profile avatar on LEFT side (before logo on mobile) */}
-                {user && <MobileProfileButton userName={user.name} />}
-
-                <Link href="/" className="mr-6 flex items-center space-x-2 ml-2 md:ml-0">
-                    <span className="font-bold text-xl text-primary">Kabadiyo</span>
-                </Link>
-
-                {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-6 flex-1">
-                    <Link href="/market" className="text-sm font-medium hover:text-primary transition-colors">
-                        Find Kabadiwala
-                    </Link>
-                    <Link href="/help" className="text-sm font-medium hover:text-primary transition-colors">
-                        Help
-                    </Link>
-                    {user && user.role === "KABADIWALA" && (
-                        <>
-                            <Link href="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
-                                Dashboard
-                            </Link>
-                            <Link href="/orders" className="text-sm font-medium hover:text-primary transition-colors">
-                                Orders
-                            </Link>
-                        </>
-                    )}
-                    {user && (
-                        <>
-                            <Link href="/chat" className="text-sm font-medium hover:text-primary transition-colors">
-                                Messages
-                            </Link>
-                            <Link href="/settings" className="text-sm font-medium hover:text-primary transition-colors">
-                                Settings
-                            </Link>
-                        </>
-                    )}
-                </nav>
-
-                <div className="flex items-center gap-2 ml-auto">
-                    {user ? (
-                        <>
-                            {/* Notifications */}
-                            <NotificationBell />
-
-                            {/* Desktop: Full Name + Avatar */}
-                            <Link href="/profile" className="hidden md:flex items-center gap-2 hover:opacity-80 transition-opacity">
-                                <span className="text-sm text-muted-foreground">
-                                    Hi, {user.name}
-                                </span>
-                                <Avatar className="h-8 w-8 ring-2 ring-primary/20">
-                                    <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                                        {user.name?.[0] || 'U'}
-                                    </AvatarFallback>
-                                </Avatar>
-                            </Link>
-
-                            {/* Desktop Only: Logout Button */}
-                            <form action={logout} className="hidden md:block">
-                                <Button variant="ghost" size="icon" type="submit">
-                                    <LogOut className="h-4 w-4" />
-                                </Button>
-                            </form>
-                        </>
-                    ) : (
-                        <>
-                            {/* Desktop: Login/Signup */}
-                            <div className="hidden md:flex gap-2">
-                                <Link href="/login"><Button variant="ghost">Login</Button></Link>
-                                <Link href="/register"><Button>Sign Up</Button></Link>
-                            </div>
-
-                            {/* Mobile: Login & Signup Buttons */}
-                            <div className="flex gap-2 md:hidden">
-                                <Link href="/login">
-                                    <Button size="sm" variant="outline">Login</Button>
-                                </Link>
-                                <Link href="/register">
-                                    <Button size="sm">Sign Up</Button>
-                                </Link>
-                            </div>
-                        </>
-                    )}
-                </div>
+                <Suspense fallback={<HeaderSkeleton />}>
+                    <HeaderContent />
+                </Suspense>
             </div>
         </header>
+    )
+}
+
+function HeaderSkeleton() {
+    return (
+        <div className="flex h-14 items-center w-full px-4">
+            <div className="mr-6 flex items-center space-x-2">
+                <span className="font-bold text-xl text-primary">Kabadiyo</span>
+            </div>
+            <div className="flex-1" />
+            <div className="flex items-center gap-2">
+                <div className="h-8 w-20 bg-muted animate-pulse rounded-md hidden md:block" />
+                <div className="h-8 w-20 bg-muted animate-pulse rounded-md hidden md:block" />
+            </div>
+        </div>
+    )
+}
+
+async function HeaderContent() {
+    const user = await getUser()
+
+    return (
+        <>
+            {/* APP ONLY: Profile avatar on LEFT side (before logo on mobile) */}
+            {user && <MobileProfileButton userName={user.name} />}
+
+            <Link href="/" className="mr-6 flex items-center space-x-2 ml-2 md:ml-0">
+                <span className="font-bold text-xl text-primary">Kabadiyo</span>
+            </Link>
+
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex items-center gap-6 flex-1">
+                <Link href="/market" className="text-sm font-medium hover:text-primary transition-colors">
+                    Find Kabadiwala
+                </Link>
+                <Link href="/help" className="text-sm font-medium hover:text-primary transition-colors">
+                    Help
+                </Link>
+                {user && user.role === "KABADIWALA" && (
+                    <>
+                        <Link href="/dashboard" className="text-sm font-medium hover:text-primary transition-colors">
+                            Dashboard
+                        </Link>
+                        <Link href="/orders" className="text-sm font-medium hover:text-primary transition-colors">
+                            Orders
+                        </Link>
+                    </>
+                )}
+                {user && (
+                    <>
+                        <Link href="/chat" className="text-sm font-medium hover:text-primary transition-colors">
+                            Messages
+                        </Link>
+                        <Link href="/settings" className="text-sm font-medium hover:text-primary transition-colors">
+                            Settings
+                        </Link>
+                    </>
+                )}
+            </nav>
+
+            <div className="flex items-center gap-2 ml-auto">
+                {user ? (
+                    <>
+                        {/* Notifications */}
+                        <NotificationBell />
+
+                        {/* Desktop: Full Name + Avatar */}
+                        <Link href="/profile" className="hidden md:flex items-center gap-2 hover:opacity-80 transition-opacity">
+                            <span className="text-sm text-muted-foreground">
+                                Hi, {user.name}
+                            </span>
+                            <Avatar className="h-8 w-8 ring-2 ring-primary/20">
+                                <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                                    {user.name?.[0] || 'U'}
+                                </AvatarFallback>
+                            </Avatar>
+                        </Link>
+
+                        {/* Desktop Only: Logout Button */}
+                        <form action={logout} className="hidden md:block">
+                            <Button variant="ghost" size="icon" type="submit">
+                                <LogOut className="h-4 w-4" />
+                            </Button>
+                        </form>
+                    </>
+                ) : (
+                    <>
+                        {/* Desktop: Login/Signup */}
+                        <div className="hidden md:flex gap-2">
+                            <Link href="/login"><Button variant="ghost">Login</Button></Link>
+                            <Link href="/register"><Button>Sign Up</Button></Link>
+                        </div>
+
+                        {/* Mobile: Login & Signup Buttons */}
+                        <div className="flex gap-2 md:hidden">
+                            <Link href="/login">
+                                <Button size="sm" variant="outline">Login</Button>
+                            </Link>
+                            <Link href="/register">
+                                <Button size="sm">Sign Up</Button>
+                            </Link>
+                        </div>
+                    </>
+                )}
+            </div>
+        </>
     )
 }
 

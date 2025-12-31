@@ -10,22 +10,22 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Smartphone, Camera, Globe } from "lucide-react"
 
 async function getInsights() {
-    // RAW SQL to bypass stale Prisma Client types
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const users: any[] = await db.$queryRaw`
-        SELECT name, address, role, latitude, longitude, cameraAccess, locationAccess, lastActive 
-        FROM User 
-        WHERE role = 'USER' 
-        ORDER BY lastActive DESC 
-        LIMIT 20
-    `
-
-    // Convert booleans from SQLite (0/1) to JS boolean if needed (Prisma raw might return 1/0)
-    const formattedUsers = users.map(u => ({
-        ...u,
-        cameraAccess: Boolean(u.cameraAccess),
-        locationAccess: Boolean(u.locationAccess)
-    }))
+    // Replaced raw SQL with Prisma findMany for better stability and type safety
+    const users = await db.user.findMany({
+        where: { role: 'USER' },
+        select: {
+            name: true,
+            address: true,
+            role: true,
+            latitude: true,
+            longitude: true,
+            cameraAccess: true,
+            locationAccess: true,
+            lastActive: true
+        },
+        orderBy: { lastActive: 'desc' },
+        take: 20
+    })
 
     const [kabadiwalas, activeIps] = await Promise.all([
         db.kabadiwalaProfile.findMany({
