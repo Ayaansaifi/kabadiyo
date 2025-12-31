@@ -8,9 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Switch } from "@/components/ui/switch"
 import { toast } from "sonner"
 
+import { triggerHaptic, authenticateBiometric } from "@/lib/native-utils"
+
 export function SecurityCenter() {
-    const [score, setScore] = useState(0)
-    const [isScanning, setIsScanning] = useState(false)
     const [settings, setSettings] = useState({
         biometric: false,
         haptics: true,
@@ -18,31 +18,39 @@ export function SecurityCenter() {
         autoLock: true
     })
 
+    // Load saved settings
     useEffect(() => {
-        // Initial score calculation simulation
-        let s = 65
-        if (settings.biometric) s += 15
-        if (settings.autoLock) s += 10
-        if (settings.privacyMode) s += 10
-        setScore(s)
-    }, [settings])
+        const saved = localStorage.getItem('kabadi_native_settings')
+        if (saved) {
+            setSettings(JSON.parse(saved))
+        }
+    }, [])
 
-    const runSecurityScan = () => {
-        setIsScanning(true)
-        setScore(0)
-        let current = 0
-        const interval = setInterval(() => {
-            current += 5
-            setScore(current)
-            if (current >= 92) {
-                clearInterval(interval)
-                setIsScanning(false)
-                toast.success("Security Scan Complete: Your app is 92% Secure!")
+    const updateSetting = async (key: keyof typeof settings, value: boolean) => {
+        if (key === 'biometric' && value === true) {
+            const success = await authenticateBiometric()
+            if (!success) {
+                toast.error("Biometric setup failed or cancelled")
+                return
             }
-        }, 50)
+            toast.success("Biometric Authentication Enabled")
+        }
+
+        if (key === 'haptics' && value === true) {
+            triggerHaptic()
+        }
+
+        const newSettings = { ...settings, [key]: value }
+        setSettings(newSettings)
+        localStorage.setItem('kabadi_native_settings', JSON.stringify(newSettings))
+
+        if (key !== 'biometric') {
+            toast.success(`${key.charAt(0).toUpperCase() + key.slice(1)} ${value ? 'Enabled' : 'Disabled'}`)
+        }
     }
 
     const clearCache = () => {
+        triggerHaptic()
         toast.promise(
             new Promise((resolve) => setTimeout(resolve, 1500)),
             {
@@ -55,31 +63,12 @@ export function SecurityCenter() {
 
     return (
         <div className="space-y-6">
-            {/* Security Pulse Header */}
-            <Card className="overflow-hidden border-none bg-gradient-to-br from-green-600/10 to-emerald-600/5 shadow-inner">
-                <CardContent className="p-8 flex flex-col items-center text-center">
-                    <motion.div
-                        animate={isScanning ? { scale: [1, 1.1, 1], rotate: [0, 180, 360] } : {}}
-                        transition={{ repeat: Infinity, duration: 2 }}
-                        className={`w-20 h-20 rounded-full flex items-center justify-center mb-4 ${score > 80 ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}
-                    >
-                        {score > 80 ? <ShieldCheck className="h-10 w-10" /> : <AlertTriangle className="h-10 w-10" />}
-                    </motion.div>
-
-                    <h2 className="text-3xl font-black mb-2">{score}% Secure</h2>
-                    <p className="text-sm text-muted-foreground mb-6 max-w-xs">
-                        {isScanning ? "Scanning ecosystem for threats..." : "Overall security status of your Kabadiyo account."}
-                    </p>
-
-                    <Button
-                        onClick={runSecurityScan}
-                        disabled={isScanning}
-                        className="rounded-full px-8 bg-black text-white dark:bg-white dark:text-black hover:scale-105 transition-transform"
-                    >
-                        {isScanning ? "Scanning..." : "Run Security Audit"}
-                    </Button>
-                </CardContent>
-            </Card>
+            {/* Native Support Info */}
+            <div className="px-2 py-4 bg-green-500/5 rounded-2xl border border-green-500/10 mb-4 text-center">
+                <ShieldCheck className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                <h3 className="text-lg font-black text-green-700 dark:text-green-400">Device Security Active</h3>
+                <p className="text-xs text-muted-foreground">Your Kabadiyo app is protected by system-level encryption.</p>
+            </div>
 
             {/* Advance Controls */}
             <div className="grid gap-4 md:grid-cols-2">
@@ -93,7 +82,7 @@ export function SecurityCenter() {
                         <span className="text-xs text-muted-foreground">App Lock / Fast Login</span>
                         <Switch
                             checked={settings.biometric}
-                            onCheckedChange={(v) => setSettings(s => ({ ...s, biometric: v }))}
+                            onCheckedChange={(v) => updateSetting('biometric', v)}
                         />
                     </CardContent>
                 </Card>
@@ -108,7 +97,7 @@ export function SecurityCenter() {
                         <span className="text-xs text-muted-foreground">Realistic Vibration Feel</span>
                         <Switch
                             checked={settings.haptics}
-                            onCheckedChange={(v) => setSettings(s => ({ ...s, haptics: v }))}
+                            onCheckedChange={(v) => updateSetting('haptics', v)}
                         />
                     </CardContent>
                 </Card>

@@ -34,7 +34,7 @@ const featuredLinks = [
 export function FeaturedIcons() {
     const { isNative, isLoading } = useIsNativePlatform()
 
-    if (isLoading) return <div className="grid grid-cols-4 gap-3 mb-12 px-2 h-20 animate-pulse bg-muted rounded-xl" />
+    if (isLoading || !isNative) return null
 
     return (
         <div className="grid grid-cols-4 gap-3 mb-12 px-2">

@@ -266,14 +266,16 @@ export default async function LandingPage() {
 
 
 
-        {/* ECO SYSTEM IMPACT CARD */}
-        <section className="container mx-auto px-4 mb-12">
-          <ErrorBoundary>
-            <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-1 rounded-3xl">
-              <EcoImpactVisualizer totalWeight={42.5} />
-            </div>
-          </ErrorBoundary>
-        </section>
+        {/* ECO SYSTEM IMPACT CARD (APP ONLY) */}
+        {checkIsNativePlatform() && (
+          <section className="container mx-auto px-4 mb-12">
+            <ErrorBoundary>
+              <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-1 rounded-3xl">
+                <EcoImpactVisualizer totalWeight={42.5} />
+              </div>
+            </ErrorBoundary>
+          </section>
+        )}
 
         {/* Featured Kabadiwalas Section */}
         {featuredKabadiwalas.length > 0 && (

@@ -45,7 +45,7 @@ export function PromoSlider() {
         return () => clearInterval(timer)
     }, [])
 
-    if (isLoading) return <div className="h-40 w-full animate-pulse bg-muted rounded-2xl mb-8" />
+    if (isLoading || !isNative) return null
 
     const nextSlide = () => {
         setDirection(1)

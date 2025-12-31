@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Home, LayoutDashboard, Utensils, MessageCircle, User, Plus } from "lucide-react"
+import { triggerHaptic } from "@/lib/native-utils"
 
 export function MobileNav() {
     const pathname = usePathname()
@@ -17,12 +18,16 @@ export function MobileNav() {
                 const res = await fetch("/api/chat/unread")
                 if (res.ok) {
                     const data = await res.json()
-                    setUnreadCount(data.count || 0)
+                    const newCount = data.count || 0
+                    if (newCount > unreadCount) {
+                        triggerHaptic() // Pulse on new message
+                    }
+                    setUnreadCount(newCount)
                 }
             } catch { /* Silent fail */ }
         }
         fetchUnread()
-        const interval = setInterval(fetchUnread, 30000)
+        const interval = setInterval(fetchUnread, 15000) // Faster polling for real-time feel
         return () => clearInterval(interval)
     }, [])
 
@@ -41,9 +46,7 @@ export function MobileNav() {
     ]
 
     const haptic = () => {
-        if (typeof window !== "undefined" && "vibrate" in navigator) {
-            navigator.vibrate(12)
-        }
+        triggerHaptic()
     }
 
     const isChatDetail = pathname.startsWith("/chat/") && pathname.split("/").length > 2

@@ -20,7 +20,7 @@ export default function PrivacyPolicyPage() {
             </header>
 
             <main className="container mx-auto px-4 py-8 max-w-3xl prose prose-neutral dark:prose-invert">
-                <p className="text-muted-foreground">Last Updated: December 31, 2024</p>
+                <p className="text-muted-foreground">Last Updated: January 1, 2026</p>
 
                 <h2>1. Introduction</h2>
                 <p>
@@ -37,6 +37,16 @@ export default function PrivacyPolicyPage() {
                     <li><strong>Email Address:</strong> For account recovery and important notifications.</li>
                     <li><strong>Address:</strong> To schedule scrap pickups at your location.</li>
                     <li><strong>Profile Photo:</strong> To enhance your profile visibility (optional).</li>
+                </ul>
+
+                <h3>Biometric Data (App Only)</h3>
+                <p>
+                    If you enable biometric authentication (Fingerprint or Face Unlock), the authentication
+                    process is handled entirely by your device&apos;s operating system.
+                </p>
+                <ul>
+                    <li><strong>No Storage:</strong> We do <strong>NOT</strong> collect, store, or have access to your biometric data.</li>
+                    <li><strong>Local Verification:</strong> The app only receives a success or failure notification from the device system.</li>
                 </ul>
 
                 <h3>Usage Data</h3>
