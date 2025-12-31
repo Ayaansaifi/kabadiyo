@@ -21,10 +21,15 @@ import { MobileProfileButton } from "@/components/layout/MobileProfileButton"
 import { NotificationBell } from "@/components/notifications/NotificationBell"
 
 async function getUser() {
-    const cookieStore = await cookies()
-    const userId = cookieStore.get("userId")?.value
-    if (!userId) return null
-    return db.user.findUnique({ where: { id: userId } })
+    try {
+        const cookieStore = await cookies()
+        const userId = cookieStore.get("userId")?.value
+        if (!userId) return null
+        return await db.user.findUnique({ where: { id: userId } })
+    } catch (error) {
+        console.error("Header: Failed to get user:", error)
+        return null
+    }
 }
 
 async function logout() {

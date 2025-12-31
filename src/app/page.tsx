@@ -57,6 +57,8 @@ async function getUserFavorites() {
 export default async function LandingPage() {
   const featuredKabadiwalas = await getFeaturedKabadiwalas()
   const favoriteIds = await getUserFavorites()
+  const cookieStore = await cookies()
+  const isLoggedIn = !!cookieStore.get("userId")
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -106,7 +108,7 @@ export default async function LandingPage() {
 
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
               {/* Conditional Dashboard Button */}
-              {(await cookies()).get("userId") ? (
+              {isLoggedIn ? (
                 <Button asChild size="lg" className="h-14 px-10 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 active:scale-95 transition-all w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-600 border-0">
                   <Link href="/dashboard">
                     <LayoutDashboard className="mr-2 h-5 w-5" /> Go to Dashboard

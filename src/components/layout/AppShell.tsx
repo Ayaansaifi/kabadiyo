@@ -17,7 +17,7 @@ export function AppShell({ children }: AppShellProps) {
         // Only run on mobile/Capacitor environment
         const setupBackHandler = async () => {
             try {
-                const { App } = await import("@capacitor/app")
+                const { App } = await import(/* webpackIgnore: true */ "@capacitor/app")
 
                 // Listen for hardware back button
                 App.addListener("backButton", ({ canGoBack }) => {
@@ -52,7 +52,7 @@ export function AppShell({ children }: AppShellProps) {
 
         return () => {
             // Cleanup listener on unmount
-            import("@capacitor/app").then(({ App }) => {
+            import(/* webpackIgnore: true */ "@capacitor/app").then(({ App }) => {
                 App.removeAllListeners()
             }).catch(() => { })
         }

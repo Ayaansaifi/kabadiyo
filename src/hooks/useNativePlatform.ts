@@ -13,7 +13,7 @@ export function useIsNativePlatform() {
     useEffect(() => {
         const checkPlatform = async () => {
             try {
-                const { Capacitor } = await import("@capacitor/core")
+                const { Capacitor } = await import(/* webpackIgnore: true */ "@capacitor/core")
                 setIsNative(Capacitor.isNativePlatform())
             } catch {
                 // Capacitor not available (running on web)
