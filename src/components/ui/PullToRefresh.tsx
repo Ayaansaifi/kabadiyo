@@ -41,7 +41,7 @@ export function PullToRefresh({ onRefresh, children }: PullToRefreshProps) {
     }
 
     return (
-        <div ref={containerRef} className="relative overflow-hidden touch-none">
+        <div ref={containerRef} className="relative overflow-hidden touch-pan-y">
             {/* Refresh Indicator */}
             <motion.div
                 className="absolute top-0 left-0 right-0 flex justify-center pt-4 z-50 pointer-events-none"

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,7 +9,12 @@ import { toast } from "sonner"
 
 export function ReferralWidget() {
     const [copied, setCopied] = useState(false)
-    const [referralCode] = useState(() => "KABADI-" + Math.random().toString(36).substring(2, 7).toUpperCase())
+    const [referralCode, setReferralCode] = useState("KABADI-LOADING")
+
+    useEffect(() => {
+        // Generate on client side only to avoid hydration mismatch
+        setReferralCode("KABADI-" + Math.random().toString(36).substring(2, 7).toUpperCase())
+    }, [])
 
     const handleCopy = () => {
         navigator.clipboard.writeText(referralCode)

@@ -68,7 +68,7 @@ export function ScrapRatesTicker() {
                         transition={{
                             repeat: Infinity,
                             ease: "linear",
-                            duration: rates.length * 3 // Adjust speed based on item count
+                            duration: Math.max(rates.length * 3, 20) // Minimum 20s to avoid 0
                         }}
                     >
                         {tickerRates.map((item, i) => (
@@ -78,7 +78,7 @@ export function ScrapRatesTicker() {
                                     <IndianRupee className="h-3 w-3" />{item.rate}
                                 </span>
                                 <span className={`text-xs flex items-center ${item.trend === 'up' ? 'text-green-400' :
-                                        item.trend === 'down' ? 'text-red-400' : 'text-slate-500'
+                                    item.trend === 'down' ? 'text-red-400' : 'text-slate-500'
                                     }`}>
                                     {item.trend === 'up' && <ArrowUp className="h-3 w-3 mr-0.5" />}
                                     {item.trend === 'down' && <ArrowDown className="h-3 w-3 mr-0.5" />}

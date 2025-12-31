@@ -67,11 +67,18 @@ interface FavoriteKabadiwala {
 
 
 export function DashboardClient({ initialUser }: { initialUser: User }) {
-    const { isNative } = useIsNativePlatform()
+    const { isNative, isLoading: platformLoading } = useIsNativePlatform()
     const [user] = useState(initialUser)
     const [orders, setOrders] = useState<Order[]>([])
     const [favorites, setFavorites] = useState<FavoriteKabadiwala[]>([])
     const [loading, setLoading] = useState(true)
+
+    // Wait for platform check to avoid hydration flicker
+    if (platformLoading) {
+        return <div className="min-h-screen flex items-center justify-center bg-background">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+    }
 
     const fetchData = async () => {
         setLoading(true)
