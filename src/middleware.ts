@@ -6,10 +6,7 @@
  */
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import NextAuth from "next-auth"
-import { authConfig } from "./auth.config"
-
-const { auth } = NextAuth(authConfig)
+import { auth } from "@/auth"
 
 // Rate limiting storage (in-memory for demo, use Redis in production)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()

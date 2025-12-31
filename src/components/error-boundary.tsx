@@ -63,7 +63,22 @@ export class ErrorBoundary extends Component<Props, State> {
                 <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-orange-50 dark:from-gray-900 dark:to-gray-800 p-4">
                     <Card className="w-full max-w-lg shadow-xl border-red-200 dark:border-red-800">
                         <CardHeader className="text-center">
-                            <div className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4">
+                            <div
+                                className="mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-4 cursor-help"
+                                onClick={() => {
+                                    // Hidden debug: clicking icon 5 times shows error in production
+                                    const now = Date.now();
+                                    // @ts-ignore
+                                    this._clickCount = (this._clickCount || 0) + 1;
+                                    // @ts-ignore
+                                    if (this._clickCount >= 3) {
+                                        this.setState({ errorInfo: {} as any }); // Force update to show error
+                                        // @ts-ignore
+                                        this._showDebug = true;
+                                        this.forceUpdate();
+                                    }
+                                }}
+                            >
                                 <AlertTriangle className="h-8 w-8 text-red-600 dark:text-red-400" />
                             </div>
                             <CardTitle className="text-2xl text-red-600 dark:text-red-400">
@@ -82,17 +97,22 @@ export class ErrorBoundary extends Component<Props, State> {
                                 We apologize, an unexpected error occurred. Please try again.
                             </p>
 
-                            {process.env.NODE_ENV === 'development' && this.state.error && (
-                                <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-auto max-h-40">
+                            {(process.env.NODE_ENV === 'development' || (this as any)._showDebug) && this.state.error && (
+                                <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-auto max-h-60 border border-red-500/30">
                                     <div className="flex items-center gap-2 mb-2">
                                         <Bug className="h-4 w-4 text-red-500" />
                                         <span className="text-sm font-mono font-semibold text-red-500">
                                             {this.state.error.name}
                                         </span>
                                     </div>
-                                    <pre className="text-xs text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
+                                    <pre className="text-xs text-gray-600 dark:text-gray-400 whitespace-pre-wrap font-mono">
                                         {this.state.error.message}
                                     </pre>
+                                    {this.state.errorInfo && (
+                                        <pre className="text-[10px] text-gray-400 mt-2 border-t pt-2 overflow-x-auto">
+                                            {this.state.errorInfo.componentStack}
+                                        </pre>
+                                    )}
                                 </div>
                             )}
                         </CardContent>
