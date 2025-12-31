@@ -17,6 +17,8 @@ import { signOut } from "next-auth/react"
 import { PasswordStrengthMeter, AnimatedInput } from "@/components/ui/enhanced-input"
 import { ActiveSessions } from "@/components/sessions/ActiveSessions"
 
+import { SecurityCenter } from "@/components/settings/SecurityCenter"
+
 export default function SettingsPage() {
     const { theme, setTheme } = useTheme()
     const [mounted, setMounted] = useState(false)
@@ -24,7 +26,6 @@ export default function SettingsPage() {
 
     // Security State
     const [twoFactor, setTwoFactor] = useState(false)
-
 
     // Password Change State
     const [currentPassword, setCurrentPassword] = useState("")
@@ -51,7 +52,6 @@ export default function SettingsPage() {
 
     useEffect(() => {
         setMounted(true)
-
 
         // Load settings from localStorage
         const savedNotifications = localStorage.getItem('kabadi_notifications')
@@ -99,8 +99,6 @@ export default function SettingsPage() {
         toast.success(`Language changed to ${value === 'en' ? 'English' : 'Hindi'}`)
     }
 
-
-
     if (!mounted) return null
 
     const handlePasswordChange = async (e: React.FormEvent) => {
@@ -137,15 +135,11 @@ export default function SettingsPage() {
         }
     }
 
-
-
     const toggleTwoFactor = async (checked: boolean) => {
-        // Save to localStorage first (works offline)
         setTwoFactor(checked)
         localStorage.setItem('kabadi_2fa', String(checked))
         toast.success(checked ? '🔐 2FA Enabled - Your account is more secure!' : '2FA Disabled')
 
-        // Then try API call (optional, for server sync)
         try {
             await fetch('/api/user/security', {
                 method: 'POST',
@@ -156,7 +150,6 @@ export default function SettingsPage() {
                 })
             })
         } catch {
-            // API might fail but localStorage is already saved
             console.log('API sync pending')
         }
     }
@@ -167,19 +160,23 @@ export default function SettingsPage() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
             >
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-2">
-                    Settings
-                </h1>
-                <p className="text-muted-foreground">
-                    Manage your account preferences and security
+                <div className="flex items-center gap-2 mb-2">
+                    <Shield className="h-6 w-6 text-green-600" />
+                    <h1 className="text-3xl font-black bg-gradient-to-r from-green-600 via-emerald-600 to-teal-500 bg-clip-text text-transparent">
+                        App Center
+                    </h1>
+                </div>
+                <p className="text-muted-foreground text-sm">
+                    Manage your advance ecosystem preferences & security
                 </p>
             </motion.div>
 
             <Tabs defaultValue="general" className="w-full">
-                <TabsList className="grid w-full grid-cols-3 lg:w-[400px] mb-8">
-                    <TabsTrigger value="general">General</TabsTrigger>
-                    <TabsTrigger value="security">Security</TabsTrigger>
-                    <TabsTrigger value="privacy">Privacy</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-4 lg:w-[500px] mb-8 bg-muted/50 p-1 rounded-full">
+                    <TabsTrigger value="general" className="rounded-full">General</TabsTrigger>
+                    <TabsTrigger value="security" className="rounded-full">Auth</TabsTrigger>
+                    <TabsTrigger value="advance" className="rounded-full">Security+</TabsTrigger>
+                    <TabsTrigger value="privacy" className="rounded-full">Privacy</TabsTrigger>
                 </TabsList>
 
                 {/* General Settings */}
@@ -429,6 +426,11 @@ export default function SettingsPage() {
                             </div>
                         </CardContent>
                     </Card>
+                </TabsContent>
+
+                {/* Advance Security Setting */}
+                <TabsContent value="advance" className="space-y-6">
+                    <SecurityCenter />
                 </TabsContent>
 
                 {/* Privacy Settings */}

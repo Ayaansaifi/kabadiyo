@@ -40,6 +40,12 @@ export function MobileNav() {
         { name: "Profile", href: "/profile", icon: User }
     ]
 
+    const haptic = () => {
+        if (typeof window !== "undefined" && "vibrate" in navigator) {
+            navigator.vibrate(12)
+        }
+    }
+
     const isChatDetail = pathname.startsWith("/chat/") && pathname.split("/").length > 2
     if (isChatDetail) return null
 
@@ -56,7 +62,7 @@ export function MobileNav() {
                         if (item.isSpecial) {
                             return (
                                 <div key="fab" className="relative flex-1 flex flex-col items-center justify-center -translate-y-6">
-                                    <Link href={item.href}>
+                                    <Link href={item.href} onClick={haptic}>
                                         <motion.div
                                             whileTap={{ scale: 0.9, rotate: 90 }}
                                             className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-xl shadow-green-500/40 border-4 border-white dark:border-background"
@@ -75,6 +81,7 @@ export function MobileNav() {
                             <Link
                                 key={item.name}
                                 href={item.href}
+                                onClick={haptic}
                                 className="relative flex-1 flex flex-col items-center justify-center h-full group"
                             >
                                 {/* Active Dot Indicator */}

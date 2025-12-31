@@ -31,11 +31,10 @@ const featuredLinks = [
         bgClass: "bg-gradient-to-br from-emerald-500 to-teal-600 shadow-teal-500/40"
     },
 ]
-
 export function FeaturedIcons() {
     const { isNative, isLoading } = useIsNativePlatform()
 
-    if (isLoading || !isNative) return null
+    if (isLoading) return <div className="grid grid-cols-4 gap-3 mb-12 px-2 h-20 animate-pulse bg-muted rounded-xl" />
 
     return (
         <div className="grid grid-cols-4 gap-3 mb-12 px-2">

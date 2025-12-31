@@ -18,6 +18,7 @@ import { PromoCard } from "@/components/dashboard/ImagePromoCards"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { AppVideo } from "@/components/dashboard/AppVideo"
 import { ServiceGrid } from "@/components/dashboard/ServiceGrid"
+import { EcoImpactVisualizer } from "@/components/profile/EcoImpactVisualizer"
 
 // Direct call number for users who don't want to create profile
 const HELPLINE_NUMBER = "8586040076"
@@ -264,6 +265,15 @@ export default async function LandingPage() {
         </section>
 
 
+
+        {/* ECO SYSTEM IMPACT CARD */}
+        <section className="container mx-auto px-4 mb-12">
+          <ErrorBoundary>
+            <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-1 rounded-3xl">
+              <EcoImpactVisualizer totalWeight={42.5} />
+            </div>
+          </ErrorBoundary>
+        </section>
 
         {/* Featured Kabadiwalas Section */}
         {featuredKabadiwalas.length > 0 && (

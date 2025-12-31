@@ -26,7 +26,7 @@ export function PromoCard({ title, subtitle, cta, href, gradient, image, delay =
 }) {
     const { isNative, isLoading } = useIsNativePlatform()
 
-    if (isLoading || !isNative) return null
+    if (isLoading) return <div className="h-48 w-full animate-pulse bg-muted rounded-2xl" />
 
     return (
         <motion.div
