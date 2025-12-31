@@ -56,6 +56,17 @@ Wait karein jab tak niche pop-up na aaye: *"Generate Signed Bundle: bundle(s) ge
 
 ---
 
+### 6. "Real App" Feel (Browser Hatayein)
+Agar app open karne par browser ka header dikh raha hai ya redirect ho raha hai, toh iska matlab hai "Digital Asset Links" set nahi hain.
+
+1. **SHA-256 Fingerprint Lein**: Google Play Console mein jayein: **App Signing** > Copy **SHA-256 certificate fingerprint**.
+2. **File Update Karein**: `public/.well-known/assetlinks.json` file mein jaakar `"PASTE_YOUR_SHA256_FINGERPRINT_HERE"` ki jagah apna code paste karein.
+3. **Live Upload Karein**: Is file ko apni website (`kabadiyo.com`) par upload karein takki ye yahan dikhe: `https://kabadiyo.com/.well-known/assetlinks.json`.
+4. **Result**: Ek baar ye verify ho gaya, toh aapka app **Pure Native** dikhega (no browser bar!).
+
+---
+
 ### 📦 Quick Tips:
 - **Testing**: Agar mobile par install karke check karna hai, toh Bundle ki jagah **APK** select karein Step 4 mein.
+- **Offline Logic**: Aapka app Next.js par bana hai, isliye ise Internet ki zaroorat padegi login aur data dikhane ke liye. 
 - **Errors**: Agar Gradle error aaye, toh click karein `File > Invalidate Caches... > Invalidate and Restart`.
