@@ -19,6 +19,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { AppVideo } from "@/components/dashboard/AppVideo"
 import { ServiceGrid } from "@/components/dashboard/ServiceGrid"
 import { EcoImpactVisualizer } from "@/components/profile/EcoImpactVisualizer"
+import { MobileOnly } from "@/components/common/MobileOnly"
 
 // Direct call number for users who don't want to create profile
 const HELPLINE_NUMBER = "8586040076"
@@ -68,23 +69,29 @@ export default async function LandingPage() {
         </section>
 
         {/* Video Section (APP ONLY) */}
-        <section className="container mx-auto px-4 mt-2">
-          <ErrorBoundary>
-            <AppVideo />
-          </ErrorBoundary>
-        </section>
+        <MobileOnly>
+          <section className="container mx-auto px-4 mt-2">
+            <ErrorBoundary>
+              <AppVideo />
+            </ErrorBoundary>
+          </section>
+        </MobileOnly>
 
         {/* Service Grid Section (APP ONLY) */}
-        <section className="container mx-auto px-4 mt-4">
-          <ErrorBoundary>
-            <ServiceGrid />
-          </ErrorBoundary>
-        </section>
+        <MobileOnly>
+          <section className="container mx-auto px-4 mt-4">
+            <ErrorBoundary>
+              <ServiceGrid />
+            </ErrorBoundary>
+          </section>
+        </MobileOnly>
 
         {/* APP ONLY: Slider showing collection process */}
-        <div className="container mx-auto px-4 mt-2">
-          <AppSlider />
-        </div>
+        <MobileOnly>
+          <div className="container mx-auto px-4 mt-2">
+            <AppSlider />
+          </div>
+        </MobileOnly>
 
         {/* Hero Section */}
         <section className="relative py-24 px-4 text-center overflow-hidden">
@@ -149,300 +156,102 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        <section className="container mx-auto px-4 mb-4">
-          <ImpactStats />
-          {/* Promo Card 2: Bulk Laptops */}
-          <div className="mt-4">
+        {/* ECO SYSTEM IMPACT CARD (APP ONLY) */}
+        <MobileOnly>
+          <section className="container mx-auto px-4 mb-12">
             <ErrorBoundary>
-              <PromoCard
-                title="Bulk Laptop Buyers"
-                subtitle="Best prices for old/dead laptops & e-waste. Corporate pickup available."
-                cta="Sell Laptops"
-                href="/sell/laptops"
-                gradient="from-purple-600 to-violet-900"
-                image="/images/promo/bulk-laptops.png"
-                delay={0.2}
-              />
+              <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-1 rounded-3xl">
+                <EcoImpactVisualizer totalWeight={42.5} />
+              </div>
             </ErrorBoundary>
-          </div>
-        </section>
-
-        {/* Promo Slider & Featured Icons */}
-        <section className="container mx-auto px-4 -mt-4 mb-8">
-          <PromoSlider />
-          <FeaturedIcons />
-
-          {/* Promo Card 3: Office Clearance */}
-          <ErrorBoundary>
-            <PromoCard
-              title="Office Scrap Clearance"
-              subtitle="Full office dismantling & furniture buying service."
-              cta="Get Quote"
-              href="/sell/office-scrap"
-              gradient="from-orange-600 to-red-900"
-              image="/images/promo/office-clearance.png"
-              delay={0.3}
-            />
-          </ErrorBoundary>
-        </section>
-
-        <section className="container mx-auto px-4 mb-12">
-          {/* Promo Card 4: Our Team */}
-          <ErrorBoundary>
-            <PromoCard
-              title="Verified & Trusted Team"
-              subtitle="Our professional team ensures safe & honest service."
-              cta="Meet Us"
-              href="/help"
-              gradient="from-teal-600 to-cyan-900"
-              image="/images/promo/our-team.png"
-              delay={0.4}
-            />
-          </ErrorBoundary>
-        </section>
-
-        {/* COMMUNITY IMPACT SECTION (NEW) */}
-        <section className="py-16 px-4 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-950/20 dark:to-background">
-          <div className="container mx-auto max-w-6xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Making a Difference Together ❤️</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                We are more than just a business. Join us in our mission to help the needy and reduce food waste.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-
-              {/* Donation Card */}
-              <Card className="overflow-hidden border-orange-200 shadow-xl bg-white dark:bg-card">
-                <CardContent className="p-0 flex flex-col md:flex-row">
-                  <div className="bg-orange-600 p-8 flex flex-col justify-center items-center text-white md:w-2/5">
-                    <Image
-                      src="/donate-qr.png"
-                      alt="Donation QR Code"
-                      width={300}
-                      height={300}
-                      className="rounded-xl shadow-lg mb-4 bg-white p-3"
-                    />
-                    <p className="font-bold text-center text-sm opacity-90">SCAN TO DONATE</p>
-                  </div>
-                  <div className="p-8 md:w-3/5 flex flex-col justify-center">
-                    <div className="flex items-center gap-2 text-orange-600 font-bold mb-2">
-                      <Heart className="h-5 w-5 fill-current" />
-                      <span>Support the Cause</span>
-                    </div>
-                    <h3 className="text-2xl font-bold mb-2">Share Your Profit</h3>
-                    <p className="text-muted-foreground mb-6">
-                      If you are a Kabadiwala and made a profit, consider sharing a small part.
-                      Your donation helps us feed the poor and support our team.
-                    </p>
-                    <p className="text-xs text-muted-foreground italic">
-                      * All donations are voluntary and used 100% for social welfare.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Food Rescue Card */}
-              <Card className="overflow-hidden border-green-200 shadow-xl bg-white dark:bg-card h-full">
-                <CardContent className="p-8 flex flex-col h-full justify-center text-center items-center">
-                  <div className="h-16 w-16 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full flex items-center justify-center mb-6">
-                    <Utensils className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">Leftover Food? Don&apos;t Throw It!</h3>
-                  <p className="text-muted-foreground mb-8 max-w-md">
-                    Have excess food from a wedding or party? Let us know.
-                    We will pick it up and distribute it to the hungry.
-                  </p>
-                  <Button asChild size="lg" className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20">
-                    <Link href="/food-rescue">
-                      Start Food Rescue (Annadaan) <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-
-            </div>
-          </div>
-        </section>
-
-
-
-        {/* ECO SYSTEM IMPACT CARD (APP ONLY - platform detection handled by component) */}
-        <section className="container mx-auto px-4 mb-12">
-          <ErrorBoundary>
-            <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-1 rounded-3xl">
-              <EcoImpactVisualizer totalWeight={42.5} />
-            </div>
-          </ErrorBoundary>
-        </section>
+          </section>
+        </MobileOnly>
 
         {/* Featured Kabadiwalas Section */}
         {featuredKabadiwalas.length > 0 && (
           <section className="py-16 px-4 bg-muted/50">
             <div className="container mx-auto">
-              <div className="flex justify-between items-end mb-10">
+              <div className="flex flex-col md:flex-row justify-between items-center mb-12">
                 <div>
-                  <h3 className="text-2xl font-bold mb-2">Top Rated Kabadiwalas</h3>
-                  <p className="text-muted-foreground">Trusted scrap dealers near you</p>
+                  <h2 className="text-3xl font-bold mb-2">Verified Kabadiwalas</h2>
+                  <p className="text-muted-foreground">Top rated scrap dealers near you</p>
                 </div>
-                <Button asChild variant="ghost">
-                  <Link href="/market">
-                    View All <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+                <Button variant="ghost" className="mt-4 md:mt-0" asChild>
+                  <Link href="/market">View All <ArrowRight className="ml-2 h-4 w-4" /></Link>
                 </Button>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredKabadiwalas.map((profile) => (
-                  <KabadiwalaCard
-                    key={profile.id}
-                    profile={profile as any}
-                    isFavorited={favoriteIds.includes(profile.userId)}
-                  />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {featuredKabadiwalas.map((kabadiwala) => (
+                  <ErrorBoundary key={kabadiwala.id}>
+                    <KabadiwalaCard
+                      kabadiwala={kabadiwala}
+                      isFavorite={favoriteIds.includes(kabadiwala.id)}
+                    />
+                  </ErrorBoundary>
                 ))}
               </div>
             </div>
           </section>
         )}
 
-        {/* Direct Call Section - For users who don't want to register */}
-        <section className="py-12 px-4 bg-gradient-to-r from-green-500/10 via-green-500/5 to-green-500/10">
-          <div className="container mx-auto max-w-3xl">
-            <Card className="border-2 border-green-500/30 bg-gradient-to-br from-green-50 to-white dark:from-green-950/30 dark:to-background overflow-hidden">
-              <CardContent className="p-8">
-                <div className="flex flex-col md:flex-row items-center gap-6">
-                  <div className="p-4 bg-green-500/10 rounded-full">
-                    <Phone className="h-10 w-10 text-green-600" />
-                  </div>
-                  <div className="flex-1 text-center md:text-left">
-                    <h3 className="text-2xl font-bold mb-2">Don&apos;t Want to Register?</h3>
-                    <p className="text-muted-foreground mb-4">
-                      No problem! Simply call our helpline number and sell your scrap directly.
-                      Our team will arrange pickup at your doorstep.
-                    </p>
-                    <div className="flex flex-col sm:flex-row items-center gap-4">
-                      <a
-                        href={`tel:${HELPLINE_NUMBER}`}
-                        className="inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold text-lg transition-colors"
-                      >
-                        <Phone className="h-5 w-5" />
-                        Call Now: {HELPLINE_NUMBER}
-                      </a>
-                      <div className="text-sm text-muted-foreground">
-                        <p>📞 Available 9 AM - 8 PM</p>
-                        <p>💬 Hindi & English</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-6 pt-6 border-t grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
-                  <div>
-                    <p className="font-semibold text-lg">📦 Free Pickup</p>
-                    <p className="text-sm text-muted-foreground">At your doorstep</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-lg">💵 Cash Payment</p>
-                    <p className="text-sm text-muted-foreground">On the spot</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-lg">⚖️ Fair Rates</p>
-                    <p className="text-sm text-muted-foreground">Market price</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-
-        {/* Promo Card 4: Join Movement - reusing truck-load.jpg for generic impact */}
-        <section className="container mx-auto px-4 mb-12">
-          <ErrorBoundary>
-            <PromoCard
-              title="Join the Green Movement"
-              subtitle="Recycle today for a better tomorrow."
-              cta="Start Selling"
-              href="/register"
-              gradient="from-teal-600 to-cyan-900"
-              image="/images/promo/truck-load.jpg"
-              delay={0.4}
-            />
-          </ErrorBoundary>
-        </section>
-
-        {/* Features */}
-        <section className="py-16 px-4">
+        {/* Why Choose Us */}
+        <section className="py-20 px-4">
           <div className="container mx-auto">
-            <h3 className="text-2xl font-bold text-center mb-10">Why Choose Our App?</h3>
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">Why Choose Kabadiwala?</h2>
+
             <div className="grid md:grid-cols-3 gap-8">
-              <FeatureCard
-                icon={<Star className="h-10 w-10 text-yellow-500" />}
-                title="Rated Dealers"
-                description="Choose the best Kabadiwala based on real user reviews and ratings."
-              />
-              <FeatureCard
-                icon={<MessageCircle className="h-10 w-10 text-blue-500" />}
-                title="Direct Chat"
-                description="Chat directly with the dealer to negotiate prices and confirm details."
-              />
-              <FeatureCard
-                icon={<MapPin className="h-10 w-10 text-green-500" />}
-                title="Doorstep Pickup"
-                description="Schedule a pickup at your convenience. Instant cash payment."
-              />
+              <Card className="border-none shadow-lg bg-green-50 dark:bg-green-900/10">
+                <CardContent className="pt-8 text-center">
+                  <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center mb-4">
+                    <MapPin className="h-8 w-8 text-green-600 dark:text-green-400" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Local & Verified</h3>
+                  <p className="text-muted-foreground">Connect with verified scrap dealers in your specific neighborhood.</p>
+                </CardContent>
+              </Card>
+              <Card className="border-none shadow-lg bg-blue-50 dark:bg-blue-900/10">
+                <CardContent className="pt-8 text-center">
+                  <div className="mx-auto w-16 h-16 bg-blue-100 dark:bg-blue-800 rounded-full flex items-center justify-center mb-4">
+                    <Utensils className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Food Sharing</h3>
+                  <p className="text-muted-foreground">Donate excess food to the needy through our Annadaan initiative.</p>
+                </CardContent>
+              </Card>
+              <Card className="border-none shadow-lg bg-purple-50 dark:bg-purple-900/10">
+                <CardContent className="pt-8 text-center">
+                  <div className="mx-auto w-16 h-16 bg-purple-100 dark:bg-purple-800 rounded-full flex items-center justify-center mb-4">
+                    <Heart className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Eco Impact</h3>
+                  <p className="text-muted-foreground">Track your environmental contribution with every sale.</p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
 
-        {/* How It Works */}
-        <section className="py-16 px-4 bg-muted/30">
-          <div className="container mx-auto max-w-4xl">
-            <h3 className="text-2xl font-bold text-center mb-10">How It Works</h3>
-            <div className="grid md:grid-cols-4 gap-6">
-              <Step number="1" title="Find" description="Browse local Kabadiwalas" />
-              <Step number="2" title="Chat" description="Discuss rates & details" />
-              <Step number="3" title="Book" description="Schedule pickup time" />
-              <Step number="4" title="Earn" description="Get cash on delivery" />
+        {/* CTA Section */}
+        <section className="py-20 px-4 bg-primary text-primary-foreground">
+          <div className="container mx-auto text-center max-w-2xl">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to clear the clutter?</h2>
+            <p className="text-lg opacity-90 mb-8">
+              Join thousands of users making the planet greener, one pickup at a time.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" variant="secondary" className="text-primary font-bold">
+                <Link href="/register">Get Started Now</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                <a href={`tel:${HELPLINE_NUMBER}`}>
+                  <Phone className="mr-2 h-4 w-4" /> Call {HELPLINE_NUMBER}
+                </a>
+              </Button>
             </div>
           </div>
         </section>
       </main>
-
-      <footer className="border-t py-8 text-muted-foreground mb-20 md:mb-0 bg-gradient-to-b from-muted/30 to-background">
-        <div className="container mx-auto px-4">
-          {/* Quick Links Icon Grid */}
-          <QuickLinksGrid />
-
-          {/* Copyright */}
-          <div className="text-center pt-6 mt-6 border-t border-muted">
-            <p className="text-xs">&copy; 2025 Kabadiyo.com. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
-  )
-}
-
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
-  return (
-    <Card className="hover:shadow-lg transition-shadow">
-      <CardContent className="pt-6 text-center flex flex-col items-center">
-        <div className="mb-4 p-3 bg-accent rounded-full">{icon}</div>
-        <h3 className="text-xl font-semibold mb-2">{title}</h3>
-        <p className="text-muted-foreground">{description}</p>
-      </CardContent>
-    </Card>
-  )
-}
-
-function Step({ number, title, description }: { number: string, title: string, description: string }) {
-  return (
-    <div className="text-center">
-      <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground text-xl font-bold flex items-center justify-center mx-auto mb-3">
-        {number}
-      </div>
-      <h4 className="font-semibold text-lg">{title}</h4>
-      <p className="text-sm text-muted-foreground">{description}</p>
     </div>
   )
 }

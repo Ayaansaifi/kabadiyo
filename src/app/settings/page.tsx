@@ -18,6 +18,8 @@ import { PasswordStrengthMeter, AnimatedInput } from "@/components/ui/enhanced-i
 import { ActiveSessions } from "@/components/sessions/ActiveSessions"
 
 import { SecurityCenter } from "@/components/settings/SecurityCenter"
+import { BiometricSettings } from "@/components/settings/BiometricSettings"
+import { Fingerprint } from "lucide-react"
 
 export default function SettingsPage() {
     const { theme, setTheme } = useTheme()
@@ -377,6 +379,20 @@ export default function SettingsPage() {
                                     onCheckedChange={toggleTwoFactor}
                                 />
                             </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Biometric Auth (Native Only) */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Fingerprint className="h-5 w-5 text-blue-500" />
+                                Biometric Access
+                            </CardTitle>
+                            <CardDescription>Quick logic for mobile app</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <BiometricSettings />
                         </CardContent>
                     </Card>
 
