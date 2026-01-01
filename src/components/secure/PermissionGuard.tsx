@@ -1,10 +1,10 @@
+"use client"
+
 import { useEffect, useState, ReactNode } from 'react';
-import { Camera } from '@capacitor/camera';
-import { Geolocation } from '@capacitor/geolocation';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, MapPin, Camera as CameraIcon, AlertTriangle } from 'lucide-react';
+import { Shield, MapPin, Camera as CameraIcon, Loader2 } from 'lucide-react';
 
 type PermissionType = 'camera' | 'location';
 
@@ -24,36 +24,39 @@ export function PermissionGuard({ type, children, fallback, onPermissionGranted 
 
     const checkPermission = async () => {
         try {
-            let permissionStatus;
+            let permissionStatus: string = 'prompt';
+
             if (type === 'camera') {
+                const { Camera } = await import(/* webpackIgnore: true */ '@capacitor/camera');
                 const state = await Camera.checkPermissions();
                 permissionStatus = state.camera;
             } else if (type === 'location') {
+                const { Geolocation } = await import(/* webpackIgnore: true */ '@capacitor/geolocation');
                 const state = await Geolocation.checkPermissions();
                 permissionStatus = state.location;
             }
 
             setStatus(permissionStatus as any);
         } catch (error) {
-            console.error("Permission check failed", error);
-            // On web or error, default to prompt/loading logic or assume granted if not strict
-            // For safety in hybrid, assume 'prompt' to ask
-            setStatus('prompt');
+            // On web or error, assume granted (permissions handled by browser)
+            console.log("Permission check not available (web mode), assuming granted");
+            setStatus('granted');
         }
     };
 
     const requestPermission = async () => {
         try {
-            let result;
             if (type === 'camera') {
-                result = await Camera.requestPermissions();
+                const { Camera } = await import(/* webpackIgnore: true */ '@capacitor/camera');
+                const result = await Camera.requestPermissions();
                 if (result.camera === 'granted') {
                     setStatus('granted');
                     onPermissionGranted?.();
                     return;
                 }
             } else if (type === 'location') {
-                result = await Geolocation.requestPermissions();
+                const { Geolocation } = await import(/* webpackIgnore: true */ '@capacitor/geolocation');
+                const result = await Geolocation.requestPermissions();
                 if (result.location === 'granted') {
                     setStatus('granted');
                     onPermissionGranted?.();
@@ -65,11 +68,19 @@ export function PermissionGuard({ type, children, fallback, onPermissionGranted 
             toast.error(`Permission denied. Please enable ${type} access in settings.`);
         } catch (error) {
             console.error("Permission request failed", error);
-            setStatus('denied');
+            // On web, assume granted
+            setStatus('granted');
         }
     };
 
-    if (status === 'loading') return <div className="p-4 text-center text-muted-foreground animate-pulse">Checking permissions...</div>;
+    if (status === 'loading') {
+        return (
+            <div className="p-4 text-center text-muted-foreground animate-pulse flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Checking permissions...
+            </div>
+        );
+    }
 
     if (status === 'granted') return <>{children}</>;
 
@@ -114,3 +125,4 @@ export function PermissionGuard({ type, children, fallback, onPermissionGranted 
 
     return null;
 }
+
