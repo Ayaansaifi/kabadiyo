@@ -69,29 +69,23 @@ export default async function LandingPage() {
         </section>
 
         {/* Video Section (APP ONLY) */}
-        <MobileOnly>
-          <section className="container mx-auto px-4 mt-2">
-            <ErrorBoundary>
-              <AppVideo />
-            </ErrorBoundary>
-          </section>
-        </MobileOnly>
+        <section className="container mx-auto px-4 mt-2">
+          <ErrorBoundary>
+            <AppVideo />
+          </ErrorBoundary>
+        </section>
 
-        {/* Service Grid Section (APP ONLY) */}
-        <MobileOnly>
-          <section className="container mx-auto px-4 mt-4">
-            <ErrorBoundary>
-              <ServiceGrid />
-            </ErrorBoundary>
-          </section>
-        </MobileOnly>
+        {/* Service Grid Section */}
+        <section className="container mx-auto px-4 mt-4">
+          <ErrorBoundary>
+            <ServiceGrid />
+          </ErrorBoundary>
+        </section>
 
-        {/* APP ONLY: Slider showing collection process */}
-        <MobileOnly>
-          <div className="container mx-auto px-4 mt-2">
-            <AppSlider />
-          </div>
-        </MobileOnly>
+        {/* Slider showing collection process */}
+        <div className="container mx-auto px-4 mt-2">
+          <AppSlider />
+        </div>
 
         {/* Hero Section */}
         <section className="relative py-24 px-4 text-center overflow-hidden">
@@ -156,16 +150,14 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* ECO SYSTEM IMPACT CARD (APP ONLY) */}
-        <MobileOnly>
-          <section className="container mx-auto px-4 mb-12">
-            <ErrorBoundary>
-              <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-1 rounded-3xl">
-                <EcoImpactVisualizer totalWeight={42.5} />
-              </div>
-            </ErrorBoundary>
-          </section>
-        </MobileOnly>
+        {/* ECO SYSTEM IMPACT CARD */}
+        <section className="container mx-auto px-4 mb-12">
+          <ErrorBoundary>
+            <div className="bg-gradient-to-r from-emerald-500/10 to-teal-500/10 p-1 rounded-3xl">
+              <EcoImpactVisualizer totalWeight={42.5} />
+            </div>
+          </ErrorBoundary>
+        </section>
 
         {/* Featured Kabadiwalas Section */}
         {featuredKabadiwalas.length > 0 && (

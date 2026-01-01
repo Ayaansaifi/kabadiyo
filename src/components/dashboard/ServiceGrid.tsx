@@ -1,6 +1,5 @@
 "use client"
 
-import { useIsNativePlatform } from "@/hooks/useNativePlatform"
 import { motion } from "framer-motion"
 import {
     Armchair, Hammer, Sparkles, HelpingHand, Zap,
@@ -26,10 +25,7 @@ const buyers = [
 ]
 
 export function ServiceGrid() {
-    // Show on all platforms so user can see their custom facilities/services
-    const { isNative, isLoading } = useIsNativePlatform()
-
-    if (isLoading) return null
+    // Universal component for both App and Web
 
     return (
         <div className="w-full mb-8 space-y-6">

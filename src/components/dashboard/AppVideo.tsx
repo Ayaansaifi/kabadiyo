@@ -3,15 +3,10 @@
 import { useState, useRef } from "react"
 import { motion } from "framer-motion"
 import { Play, Pause, Volume2, VolumeX } from "lucide-react"
-import { useIsNativePlatform } from "@/hooks/useNativePlatform"
-
 export function AppVideo() {
-    const { isNative, isLoading } = useIsNativePlatform()
     const [isPlaying, setIsPlaying] = useState(false)
     const [isMuted, setIsMuted] = useState(true)
     const videoRef = useRef<HTMLVideoElement>(null)
-
-    if (isLoading) return null
 
     const togglePlay = () => {
         if (videoRef.current) {

@@ -74,11 +74,6 @@ export function DashboardClient({ initialUser }: { initialUser: User }) {
     const [loading, setLoading] = useState(true)
 
     // Wait for platform check to avoid hydration flicker
-    if (platformLoading) {
-        return <div className="min-h-screen flex items-center justify-center bg-background">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-    }
 
     const fetchData = async () => {
         setLoading(true)
@@ -113,6 +108,12 @@ export function DashboardClient({ initialUser }: { initialUser: User }) {
     useEffect(() => {
         fetchData()
     }, [])
+
+    if (platformLoading) {
+        return <div className="min-h-screen flex items-center justify-center bg-background">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+    }
 
     const totalOrders = orders.length
     const completedOrders = orders.filter(o => o.status === "COMPLETED").length
