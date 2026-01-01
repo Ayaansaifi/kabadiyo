@@ -10,6 +10,7 @@ import { Providers } from "@/components/providers";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { ConnectionStatus } from "@/components/ui/realtime-status";
 import { WebFooter } from "@/components/layout/WebFooter";
+import { InstallAppBanner } from "@/components/layout/InstallAppBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -171,6 +172,7 @@ export default function RootLayout({
             <AppShell>
               <main className="pb-20 md:pb-0">{children}</main>
               <WebFooter />
+              <InstallAppBanner />
             </AppShell>
             <MobileNav />
             <Toaster />

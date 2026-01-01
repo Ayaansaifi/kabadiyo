@@ -6,14 +6,23 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Home, LayoutDashboard, Utensils, MessageCircle, User, Plus } from "lucide-react"
 import { triggerHaptic } from "@/lib/native-utils"
+import { useIsNativePlatform } from "@/hooks/useNativePlatform"
 
 export function MobileNav() {
     const pathname = usePathname()
+    const { isNative, isLoading } = useIsNativePlatform()
     const [unreadCount, setUnreadCount] = useState(0)
 
     // Fetch unread messages count
+    const isChatDetail = pathname.startsWith("/chat/") && pathname.split("/").length > 2
+
     useEffect(() => {
         const fetchUnread = async () => {
+
+            // Hide on Chat Details OR if not running on Native App (Mobile Web should use Header Nav)
+            if (isChatDetail || (!isNative && !isLoading)) return null
+
+            if (isLoading) return null
             try {
                 const res = await fetch("/api/chat/unread")
                 if (res.ok) {
@@ -49,7 +58,6 @@ export function MobileNav() {
         triggerHaptic()
     }
 
-    const isChatDetail = pathname.startsWith("/chat/") && pathname.split("/").length > 2
     if (isChatDetail) return null
 
     return (

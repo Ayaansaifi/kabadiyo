@@ -17,6 +17,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { LogOut } from "lucide-react"
 import { redirect } from "next/navigation"
 import { MobileProfileButton } from "@/components/layout/MobileProfileButton"
+import { MobileWebMenu } from "@/components/layout/MobileWebMenu"
 
 import { NotificationBell } from "@/components/notifications/NotificationBell"
 
@@ -77,6 +78,9 @@ async function HeaderContent() {
             {/* APP ONLY: Profile avatar on LEFT side (before logo on mobile) */}
             {user && <MobileProfileButton userName={user.name} />}
 
+            {/* WEB ONLY: Hamburger Menu on LEFT side (mobile) */}
+            <MobileWebMenu userRole={user?.role} isLoggedIn={!!user} />
+
             <Link href="/" className="mr-6 flex items-center space-x-2 ml-2 md:ml-0">
                 <span className="font-bold text-xl text-primary">Kabadiyo</span>
             </Link>
@@ -85,6 +89,9 @@ async function HeaderContent() {
             <nav className="hidden md:flex items-center gap-6 flex-1">
                 <Link href="/market" className="text-sm font-medium hover:text-primary transition-colors">
                     Find Kabadiwala
+                </Link>
+                <Link href="/rate-list" className="text-sm font-medium hover:text-primary transition-colors">
+                    Rate List
                 </Link>
                 <Link href="/help" className="text-sm font-medium hover:text-primary transition-colors">
                     Help
@@ -142,16 +149,6 @@ async function HeaderContent() {
                         <div className="hidden md:flex gap-2">
                             <Link href="/login"><Button variant="ghost">Login</Button></Link>
                             <Link href="/register"><Button>Sign Up</Button></Link>
-                        </div>
-
-                        {/* Mobile: Login & Signup Buttons */}
-                        <div className="flex gap-2 md:hidden">
-                            <Link href="/login">
-                                <Button size="sm" variant="outline">Login</Button>
-                            </Link>
-                            <Link href="/register">
-                                <Button size="sm">Sign Up</Button>
-                            </Link>
                         </div>
                     </>
                 )}
