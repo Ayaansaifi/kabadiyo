@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { toast } from "sonner"
+import { BiometricLockGuard } from "@/components/secure/BiometricLockGuard"
 
 interface AppShellProps {
     children: React.ReactNode
@@ -58,5 +59,9 @@ export function AppShell({ children }: AppShellProps) {
         }
     }, [pathname, router])
 
-    return <>{children}</>
+    return (
+        <BiometricLockGuard>
+            {children}
+        </BiometricLockGuard>
+    )
 }
