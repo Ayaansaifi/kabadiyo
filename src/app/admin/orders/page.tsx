@@ -10,6 +10,9 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { OrderAdminActions } from "./order-admin-actions"
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getOrders() {
     return await db.order.findMany({
         include: {

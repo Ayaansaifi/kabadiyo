@@ -11,6 +11,9 @@ import { Badge } from "@/components/ui/badge"
 import { KabadiwalaActions } from "./kabadiwala-actions" // Client component
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getKabadiwalas() {
     return await db.kabadiwalaProfile.findMany({
         include: {

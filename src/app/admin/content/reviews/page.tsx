@@ -10,6 +10,9 @@ import {
 import { ReviewActions } from "./review-actions" // Client component
 import { Star } from "lucide-react"
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getReviews() {
     return await db.review.findMany({
         include: {

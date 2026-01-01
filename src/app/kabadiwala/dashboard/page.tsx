@@ -17,6 +17,9 @@ import { DealerEarningsChart } from "@/components/dashboard/DealerEarningsChart"
 import { InventoryManager } from "@/components/dashboard/InventoryManager"
 import { BusinessStatus } from "@/components/dashboard/BusinessStatus"
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getUser() {
     const cookieStore = await cookies()
     const userId = cookieStore.get("userId")?.value

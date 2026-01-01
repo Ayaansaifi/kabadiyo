@@ -9,6 +9,9 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { MapPin, Smartphone, Camera, Globe } from "lucide-react"
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getInsights() {
     // Replaced raw SQL with Prisma findMany for better stability and type safety
     const users = await db.user.findMany({

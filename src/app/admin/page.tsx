@@ -2,6 +2,9 @@ import { db } from "@/lib/db"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users, ShoppingBag, Flag, Coins, Recycle } from "lucide-react"
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getStats() {
     try {
         const [

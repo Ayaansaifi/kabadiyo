@@ -11,6 +11,9 @@ export const metadata: Metadata = {
     description: "Locate verified scrap dealers in your area. Check ratings, book pickups, and get the best rates for your scrap.",
 }
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getKabadiwalas() {
     try {
         const kabadiwalas = await db.kabadiwalaProfile.findMany({

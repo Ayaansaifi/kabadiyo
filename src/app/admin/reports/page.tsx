@@ -10,6 +10,9 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { ReportActions } from "./report-actions" // Client component
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getReports() {
     return await db.messageReport.findMany({
         where: { isResolved: false }, // Only show unresolved

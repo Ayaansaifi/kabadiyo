@@ -11,6 +11,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { UserActions } from "./user-actions" // Client component for actions
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getUsers() {
     return await db.user.findMany({
         orderBy: { createdAt: 'desc' },

@@ -3,6 +3,9 @@ import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { ChatListClient } from "./ChatListClient"
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 export default async function ChatListPage() {
     const cookieStore = await cookies()
     const userId = cookieStore.get("userId")?.value

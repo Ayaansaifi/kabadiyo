@@ -11,6 +11,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getSystemData() {
     const [accessLogs, rateLimits] = await Promise.all([
         db.adminAccessLog.findMany({

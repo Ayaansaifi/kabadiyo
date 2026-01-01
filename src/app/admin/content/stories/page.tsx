@@ -5,6 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { StoryActions } from "./story-actions" // Client component
 import { formatDistanceToNow } from "date-fns"
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic'
+
 async function getStories() {
     return await db.story.findMany({
         where: {
