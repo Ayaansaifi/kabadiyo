@@ -185,8 +185,8 @@ export default async function LandingPage() {
                 {featuredKabadiwalas.map((kabadiwala) => (
                   <ErrorBoundary key={kabadiwala.id}>
                     <KabadiwalaCard
-                      kabadiwala={kabadiwala}
-                      isFavorite={favoriteIds.includes(kabadiwala.id)}
+                      profile={kabadiwala}
+                      isFavorited={favoriteIds.includes(kabadiwala.id)}
                     />
                   </ErrorBoundary>
                 ))}
