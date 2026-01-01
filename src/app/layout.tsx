@@ -9,6 +9,7 @@ import { UserTracker } from "@/components/user-tracker";
 import { Providers } from "@/components/providers";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { ConnectionStatus } from "@/components/ui/realtime-status";
+import { WebFooter } from "@/components/layout/WebFooter";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -169,6 +170,7 @@ export default function RootLayout({
             <Header />
             <AppShell>
               <main className="pb-20 md:pb-0">{children}</main>
+              <WebFooter />
             </AppShell>
             <MobileNav />
             <Toaster />
